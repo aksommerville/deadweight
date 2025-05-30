@@ -12,6 +12,12 @@ struct modal_gameover {
 static void _gameover_del(struct modal *modal) {
 }
 
+/* Input.
+ */
+ 
+static void _gameover_input(struct modal *modal) {
+}
+
 /* Update.
  */
  
@@ -31,6 +37,7 @@ static void _gameover_render(struct modal *modal) {
 static int _gameover_init(struct modal *modal) {
   modal->name="gameover";
   modal->del=_gameover_del;
+  modal->input=_gameover_input;
   modal->update=_gameover_update;
   modal->render=_gameover_render;
   modal->opaque=1;

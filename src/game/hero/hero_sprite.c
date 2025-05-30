@@ -11,7 +11,6 @@ static void _hero_del(struct sprite *sprite) {
  
 static int _hero_init(struct sprite *sprite) {
   fprintf(stderr,"%s %f,%f\n",__func__,sprite->x,sprite->y);
-  SPRITE->input_blackout=1; // Buttons must go false before we acknowledge.
   return 0;
 }
 
@@ -22,34 +21,25 @@ static void hero_choose(struct sprite *sprite) {
   int x=(int)(sprite->x*NS_sys_tilesize);
   int y=(int)(sprite->y*NS_sys_tilesize);
   modal_new_pause(x,y);
-  SPRITE->input_blackout=1;
+  g.input_blackout|=EGG_BTN_WEST;
 }
 
 /* Update.
  */
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
-  int input=egg_input_get_one(0);
-  if (SPRITE->input_blackout) {
-    if (input&(EGG_BTN_LEFT|EGG_BTN_RIGHT|EGG_BTN_UP|EGG_BTN_DOWN|EGG_BTN_SOUTH|EGG_BTN_WEST)) {
-      input=0;
-    } else { // All meaningful buttons are released. End the blackout.
-      SPRITE->input_blackout=0;
-    }
+  if (g.input!=g.pvinput) {
+    if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) { hero_choose(sprite); return; }
+    if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) hero_item_begin(sprite);
+    else if (!(g.input&EGG_BTN_SOUTH)&&(g.pvinput&EGG_BTN_SOUTH)) hero_item_end(sprite);
   }
-  if (input!=SPRITE->pvinput) {
-    if ((input&EGG_BTN_WEST)&&!(SPRITE->pvinput&EGG_BTN_WEST)) { hero_choose(sprite); return; }
-    if ((input&EGG_BTN_SOUTH)&&!(SPRITE->pvinput&EGG_BTN_SOUTH)) hero_item_begin(sprite);
-    else if (!(input&EGG_BTN_SOUTH)&&(SPRITE->pvinput&EGG_BTN_SOUTH)) hero_item_end(sprite);
-    SPRITE->pvinput=input;
-  }
-  if (input&EGG_BTN_SOUTH) hero_item_update(sprite,elapsed);
+  if (g.input&EGG_BTN_SOUTH) hero_item_update(sprite,elapsed);
   
-  switch (input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
+  switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
     case EGG_BTN_LEFT: sprite->x-=6.0*elapsed; break;
     case EGG_BTN_RIGHT: sprite->x+=6.0*elapsed; break;
   }
-  switch (input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
+  switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
     case EGG_BTN_UP: sprite->y-=6.0*elapsed; break;
     case EGG_BTN_DOWN: sprite->y+=6.0*elapsed; break;
   }

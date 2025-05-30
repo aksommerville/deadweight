@@ -46,6 +46,9 @@ extern struct g {
   int mapc;
   struct sprdef sprdefv[SPRDEF_LIMIT];
   int sprdefc;
+  int input;
+  int pvinput;
+  int input_blackout; // These bits must go false before core will report them true again.
   
 // Session state:
   struct map *map; // WEAK, owned by (g.mapv).

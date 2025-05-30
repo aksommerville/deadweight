@@ -33,6 +33,23 @@ int egg_client_init() {
 }
 
 void egg_client_update(double elapsed) {
+
+  int input=egg_input_get_one(0);
+  if (g.input_blackout) {
+    g.input_blackout&=input;
+    input&=~g.input_blackout;
+  }
+  if ((input!=g.pvinput)||(input!=g.input)) {
+    g.pvinput=g.input;
+    g.input=input;
+    if ((g.input&EGG_BTN_AUX3)&&!(g.pvinput&EGG_BTN_AUX3)) {
+      egg_terminate(0);
+      return;
+    }
+    modals_input();
+    g.input&=~g.input_blackout;
+  }
+  
   modals_update(elapsed);
   if (!g.modalc) { // If the modal stack is depleted, launch Hello.
     if (!modal_new_hello()) egg_terminate(1);

@@ -27,7 +27,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Modals. Do a heavy intelligent modal stack, eg dialogue should overlay play and be its own modal.
 - [x] Map loader with transitions.
 - [x] State engine. Build in a distinction between persistent fields and screen-scoped ones.
-- [ ] Move input management to the global level. I'm just like two steps in and it's already a mess.
+- [x] Move input management to the global level. I'm just like two steps in and it's already a mess.
 - [ ] Sprites.
 - - [ ] Hero.
 - - [ ] Princess.

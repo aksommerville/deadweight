@@ -17,8 +17,6 @@ struct modal_pause {
   int phase;
   double phaseclock;
   int pocketx,pockety; // where we live when not displayed
-  int pvinput;
-  int input_blackout;
 };
 
 #define MODAL ((struct modal_pause*)modal)
@@ -42,9 +40,36 @@ static void pause_activate(struct modal *modal) {
 }
 
 static void pause_cancel(struct modal *modal) {
+  if (MODAL->phase==PAUSE_PHASE_END) return; // alright already, i'm working on it!
   egg_play_sound(RID_sound_dismiss);
-  MODAL->phase=PAUSE_PHASE_END;
-  MODAL->phaseclock=0.0;
+  if (MODAL->phase==PAUSE_PHASE_BEGIN) {
+    // Set clock to the appropriate moment of the animation.
+    double t=MODAL->phaseclock/PAUSE_BEGIN_TIME;
+    t=1.0-t;
+    if (t<0.0) t=0.0; else if (t>1.0) t=1.0;
+    MODAL->phaseclock=t*PAUSE_END_TIME;
+    MODAL->phase=PAUSE_PHASE_END;
+  } else {
+    MODAL->phase=PAUSE_PHASE_END;
+    MODAL->phaseclock=0.0;
+  }
+}
+
+/* Input state change.
+ */
+ 
+static void _pause_input(struct modal *modal) {
+  if (MODAL->phase==PAUSE_PHASE_RUN) {
+    if ((g.input&EGG_BTN_LEFT)&&!(g.pvinput&EGG_BTN_LEFT)) pause_move(modal,-1,0);
+    if ((g.input&EGG_BTN_RIGHT)&&!(g.pvinput&EGG_BTN_RIGHT)) pause_move(modal,1,0);
+    if ((g.input&EGG_BTN_UP)&&!(g.pvinput&EGG_BTN_UP)) pause_move(modal,0,-1);
+    if ((g.input&EGG_BTN_DOWN)&&!(g.pvinput&EGG_BTN_DOWN)) pause_move(modal,0,1);
+    if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) pause_activate(modal);
+  }
+  if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+    g.input_blackout|=EGG_BTN_WEST;
+    pause_cancel(modal);
+  }
 }
 
 /* Update.
@@ -67,23 +92,6 @@ static void _pause_update(struct modal *modal,double elapsed) {
       } break;
       
     case PAUSE_PHASE_RUN: {
-        int input=egg_input_get_one(0);
-        if (MODAL->input_blackout) {
-          if (input&(EGG_BTN_LEFT|EGG_BTN_RIGHT|EGG_BTN_UP|EGG_BTN_DOWN|EGG_BTN_SOUTH|EGG_BTN_WEST)) {
-            input=0;
-          } else {
-            MODAL->input_blackout=0;
-          }
-        }
-        if (input!=MODAL->pvinput) {
-          if ((input&EGG_BTN_LEFT)&&!(MODAL->pvinput&EGG_BTN_LEFT)) pause_move(modal,-1,0);
-          if ((input&EGG_BTN_RIGHT)&&!(MODAL->pvinput&EGG_BTN_RIGHT)) pause_move(modal,1,0);
-          if ((input&EGG_BTN_UP)&&!(MODAL->pvinput&EGG_BTN_UP)) pause_move(modal,0,-1);
-          if ((input&EGG_BTN_DOWN)&&!(MODAL->pvinput&EGG_BTN_DOWN)) pause_move(modal,0,1);
-          if ((input&EGG_BTN_SOUTH)&&!(MODAL->pvinput&EGG_BTN_SOUTH)) pause_activate(modal);
-          if ((input&EGG_BTN_WEST)&&!(MODAL->pvinput&EGG_BTN_WEST)) pause_cancel(modal);
-          MODAL->pvinput=input;
-        }
       } break;
   }
 }
@@ -128,6 +136,7 @@ static void _pause_render(struct modal *modal) {
 static int _pause_init(struct modal *modal,int x,int y) {
   modal->name="pause";
   modal->del=_pause_del;
+  modal->input=_pause_input;
   modal->update=_pause_update;
   modal->render=_pause_render;
   modal->opaque=0;
@@ -137,7 +146,6 @@ static int _pause_init(struct modal *modal,int x,int y) {
   MODAL->phase=PAUSE_PHASE_BEGIN;
   MODAL->pocketx=x;
   MODAL->pockety=y;
-  MODAL->input_blackout=1;
   
   return 0;
 }

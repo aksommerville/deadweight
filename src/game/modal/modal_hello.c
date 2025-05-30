@@ -2,7 +2,6 @@
 
 struct modal_hello {
   struct modal hdr;
-  int pvinput;
 };
 
 #define MODAL ((struct modal_hello*)modal)
@@ -31,25 +30,30 @@ static void _hello_cancel(struct modal *modal) {
   fprintf(stderr,"%s\n",__func__);
 }
 
+/* Input state change.
+ */
+ 
+static void _hello_input(struct modal *modal) {
+  fprintf(stderr,"%s 0x%04x\n",__func__,g.input);
+  if ((g.input&EGG_BTN_LEFT)&&!(g.pvinput&EGG_BTN_LEFT)) _hello_move(modal,-1,0);
+  if ((g.input&EGG_BTN_RIGHT)&&!(g.pvinput&EGG_BTN_RIGHT)) _hello_move(modal,1,0);
+  if ((g.input&EGG_BTN_UP)&&!(g.pvinput&EGG_BTN_UP)) _hello_move(modal,0,-1);
+  if ((g.input&EGG_BTN_DOWN)&&!(g.pvinput&EGG_BTN_DOWN)) _hello_move(modal,0,1);
+  if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) {
+    g.input_blackout|=EGG_BTN_SOUTH;
+    _hello_activate(modal);
+  }
+  if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) _hello_cancel(modal);
+  if ((g.input&EGG_BTN_AUX1)&&!(g.pvinput&EGG_BTN_AUX1)) {
+    g.input_blackout|=EGG_BTN_AUX1;
+    _hello_activate(modal);
+  }
+}
+
 /* Update.
  */
  
 static void _hello_update(struct modal *modal,double elapsed) {
-  if (!modal->top) {
-    MODAL->pvinput=0xffff;
-  } else {
-    int input=egg_input_get_one(0);
-    if (input!=MODAL->pvinput) {
-      if ((input&EGG_BTN_LEFT)&&!(MODAL->pvinput&EGG_BTN_LEFT)) _hello_move(modal,-1,0);
-      if ((input&EGG_BTN_RIGHT)&&!(MODAL->pvinput&EGG_BTN_RIGHT)) _hello_move(modal,1,0);
-      if ((input&EGG_BTN_UP)&&!(MODAL->pvinput&EGG_BTN_UP)) _hello_move(modal,0,-1);
-      if ((input&EGG_BTN_DOWN)&&!(MODAL->pvinput&EGG_BTN_DOWN)) _hello_move(modal,0,1);
-      if ((input&EGG_BTN_SOUTH)&&!(MODAL->pvinput&EGG_BTN_SOUTH)) _hello_activate(modal);
-      if ((input&EGG_BTN_WEST)&&!(MODAL->pvinput&EGG_BTN_WEST)) _hello_cancel(modal);
-      if ((input&EGG_BTN_AUX1)&&!(MODAL->pvinput&EGG_BTN_AUX1)) _hello_activate(modal);
-      MODAL->pvinput=input;
-    }
-  }
 }
 
 /* Render.
@@ -69,6 +73,7 @@ static void _hello_render(struct modal *modal) {
 static int _hello_init(struct modal *modal) {
   modal->name="hello";
   modal->del=_hello_del;
+  modal->input=_hello_input;
   modal->update=_hello_update;
   modal->render=_hello_render;
   modal->opaque=1;

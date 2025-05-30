@@ -12,6 +12,7 @@
 struct modal {
   const char *name; // For logging etc.
   void (*del)(struct modal *modal);
+  void (*input)(struct modal *modal);
   void (*update)(struct modal *modal,double elapsed);
   void (*render)(struct modal *modal);
   int opaque; // Nonzero if layers under me can skip render.
@@ -22,6 +23,7 @@ struct modal {
 
 /* Hooks for main.c.
  */
+void modals_input();
 void modals_update(double elapsed);
 void modals_render();
 

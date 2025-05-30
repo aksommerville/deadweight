@@ -1,5 +1,19 @@
 #include "game/game.h"
 
+/* Global input state changed.
+ */
+ 
+void modals_input() {
+  int i=g.modalc;
+  while (i-->0) {
+    struct modal *modal=g.modalv[i];
+    if (modal->defunct) continue;
+    int passive=modal->passive;
+    if (modal->input) modal->input(modal);
+    if (!passive) break;
+  }
+}
+
 /* Update.
  */
  

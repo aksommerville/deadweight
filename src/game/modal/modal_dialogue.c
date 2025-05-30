@@ -12,6 +12,12 @@ struct modal_dialogue {
 static void _dialogue_del(struct modal *modal) {
 }
 
+/* Input.
+ */
+ 
+static void _dialogue_input(struct modal *modal) {
+}
+
 /* Update.
  */
  
@@ -31,6 +37,7 @@ static void _dialogue_render(struct modal *modal) {
 static int _dialogue_init(struct modal *modal) {
   modal->name="dialogue";
   modal->del=_dialogue_del;
+  modal->input=_dialogue_input;
   modal->update=_dialogue_update;
   modal->render=_dialogue_render;
   modal->opaque=0;
