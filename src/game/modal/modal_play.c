@@ -16,6 +16,7 @@ static void _play_del(struct modal *modal) {
  */
  
 static void _play_update(struct modal *modal,double elapsed) {
+  sprites_update(elapsed);
 }
 
 /* Render.

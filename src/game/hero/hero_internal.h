@@ -5,8 +5,14 @@
 
 struct sprite_hero {
   struct sprite hdr;
+  int pvinput;
+  int input_blackout;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
+
+void hero_item_begin(struct sprite *sprite);
+void hero_item_end(struct sprite *sprite);
+void hero_item_update(struct sprite *sprite,double elapsed);
 
 #endif

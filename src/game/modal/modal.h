@@ -36,7 +36,7 @@ struct modal *modal_new(int len);
 struct modal *modal_new_hello();
 struct modal *modal_new_play();
 struct modal *modal_new_gameover();
-struct modal *modal_new_pause();
+struct modal *modal_new_pause(int x,int y); // Animates popping up from (x,y), presumably the hero's position.
 struct modal *modal_new_dialogue();
 
 #endif
