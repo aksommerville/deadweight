@@ -35,6 +35,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   }
   if (g.input&EGG_BTN_SOUTH) hero_item_update(sprite,elapsed);
   
+  //XXX very temporary
   switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
     case EGG_BTN_LEFT: sprite->x-=6.0*elapsed; break;
     case EGG_BTN_RIGHT: sprite->x+=6.0*elapsed; break;
@@ -42,6 +43,31 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
     case EGG_BTN_UP: sprite->y-=6.0*elapsed; break;
     case EGG_BTN_DOWN: sprite->y+=6.0*elapsed; break;
+  }
+  int talking_now=0;
+  int i=g.spritec;
+  int px=0,py=0;
+  while (i-->0) {
+    struct sprite *princess=g.spritev[i];
+    if (princess->defunct||(princess->type!=&sprite_type_princess)) continue;
+    double dx=princess->x-sprite->x;
+    if ((dx<-1.0)||(dx>1.0)) continue;
+    double dy=princess->y-sprite->y;
+    if ((dy<-1.0)||(dy>1.0)) continue;
+    talking_now=1;
+    px=(int)(princess->x*NS_sys_tilesize);
+    py=(int)(princess->y*NS_sys_tilesize);
+    break;
+  }
+  if (talking_now!=SPRITE->talking) {
+    if (SPRITE->talking=talking_now) {
+      struct strings_insertion insv[]={
+        {'s',.s={.v="Dot",.c=3}},
+        {'i',.i=123},
+        {'r',.r={.rid=1,.ix=5}},
+      };
+      modal_new_dialogue(px,py,1,4,insv,sizeof(insv)/sizeof(insv[0]));
+    }
   }
 }
 

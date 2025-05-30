@@ -126,6 +126,7 @@ static void _pause_render(struct modal *modal) {
       
     case PAUSE_PHASE_RUN: {
         graf_draw_rect(&g.graf,PAUSE_TOTAL_X,PAUSE_TOTAL_Y,PAUSE_TOTAL_W,PAUSE_TOTAL_H,nes_colors[0]);
+        //TODO everything important
       } break;
   }
 }
