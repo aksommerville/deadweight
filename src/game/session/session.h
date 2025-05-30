@@ -16,4 +16,17 @@ int session_reset();
 
 int enter_map(int rid,int transition);
 
+struct listener {
+  int listenerid;
+  int k;
+  void *userdata;
+  void (*cb)(int k,int v,void *userdata);
+};
+
+int store_listen(int k,void (*cb)(int k,int v,void *userdata),void *userdata); // => listenerid or <=0
+void store_unlisten(int listenerid);
+
+int store_get(int k);
+int store_set(int k,int v); // => adjusted value
+
 #endif

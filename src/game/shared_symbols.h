@@ -10,6 +10,7 @@
 #define NS_sys_maph 14
 
 #define CMD_map_image     0x20 /* u16:imageid */
+#define CMD_map_field     0x40 /* u16:k u16:v ; Set a store field at load. */
 #define CMD_map_neighbors 0x60 /* u16:left u16:right u16:up u16:down */
 #define CMD_map_sprite    0x61 /* u16:pos u16:spriteid u32:reserved */
 #define CMD_map_door      0x62 /* u16:pos u16:mapid u16:dstpos u16:reserved */
@@ -35,5 +36,25 @@
   _(dummy) \
   _(hero) \
   _(princess)
+
+#define NS_fld_zero              0 /* immutable */
+#define NS_fld_one               1 /* immutable */
+#define NS_fld_got_broom         2 /* have item... */
+#define NS_fld_got_pepper        3
+#define NS_fld_got_bell          4
+#define NS_fld_got_stopwatch     5
+#define NS_fld_got_camera        6
+#define NS_fld_got_snowglobe     7
+#define NS_fld_got_wand          8
+#define NS_fld_got_bomb          9
+#define NS_fld_got_candy        10
+#define NS_fld_qty_pepper       11 /* quantity of item... */
+#define NS_fld_qty_bomb         12
+#define NS_fld_qty_candy        13
+#define NS_fld_equipped         14 /* Which item equipped (0,NS_fld_got_*) */
+#define NS_fld_escort           15 /* Princess is saved and following me. Clears if she dies. */
+#define NS_fld_boss_visited     16
+#define NS_fld_boss_dead        17
+#define FLD_COUNT               18
 
 #endif

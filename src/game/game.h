@@ -6,6 +6,8 @@
 
 #define MAP_LIMIT 40 /* Should match the count of map resources; more is ok. */
 #define SPRDEF_LIMIT 40 /* '' sprite */
+#define STORE_SIZE 64 /* bytes */
+#define LISTENER_LIMIT 32
 
 #define TRANSITION_NONE 0
 #define TRANSITION_LEFT 1
@@ -50,6 +52,10 @@ extern struct g {
   struct sprite **spritev;
   int spritec,spritea;
   int sprites_sort_dir;
+  uint8_t store[STORE_SIZE];
+  struct listener listenerv[LISTENER_LIMIT];
+  int listenerc;
+  int listenerid_next;
 
 // Room state:
 } g;

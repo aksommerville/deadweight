@@ -26,7 +26,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Starter graphics.
 - [x] Modals. Do a heavy intelligent modal stack, eg dialogue should overlay play and be its own modal.
 - [x] Map loader with transitions.
-- [ ] State engine. Build in a distinction between persistent fields and screen-scoped ones.
+- [x] State engine. Build in a distinction between persistent fields and screen-scoped ones.
 - [ ] Sprites.
 - - [ ] Hero.
 - - [ ] Princess.
@@ -66,7 +66,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 ## Agenda
 
 - [x] 2025-05-30T07:00 F Jam begins.
-- [ ] 2025-05-30 EOD   F Have global framework ready: Modals, map loader, state engine, sprite loader.
+- [x] 2025-05-30 EOD   F Have global framework ready: Modals, map loader, state engine, sprite loader.
 - [ ] 2025-05-31 EOD   S Hero, Princess, transitions, dialogue.
 - [ ] 2025-06-01 EOD   U Sprites and items.
 - [ ] 2025-06-06 EOD   F Rough world layout.

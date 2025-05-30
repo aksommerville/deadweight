@@ -1,5 +1,36 @@
 #include "game/game.h"
 
+/* Store field metadata.
+ */
+ 
+static struct store_def {
+  int p,c; // bits, little-endianly
+} store_defv[FLD_COUNT];
+
+static int store_defv_init() {
+  struct store_def *def=store_defv;
+  int i=FLD_COUNT;
+  for (;i-->0;def++) def->c=1;
+  
+  // Call out any fields with a size other than 1:
+  store_defv[NS_fld_qty_pepper].c=7;
+  store_defv[NS_fld_qty_bomb  ].c=7;
+  store_defv[NS_fld_qty_candy ].c=7;
+  store_defv[NS_fld_equipped  ].c=4;
+  
+  int p=0;
+  for (def=store_defv,i=FLD_COUNT;i-->0;def++) {
+    def->p=p;
+    p+=def->c;
+  }
+  int limit=STORE_SIZE<<3;
+  if (p>limit) {
+    fprintf(stderr,"!!! STORE_SIZE==%d (%d bits) but we need %d bits\n",STORE_SIZE,limit,p);
+    return -1;
+  }
+  return 0;
+}
+
 /* Receive tilesheet, there should only be one.
  */
  
@@ -68,6 +99,8 @@ static void load_sprite(int rid,const void *src,int srcc) {
  */
  
 int session_init() {
+
+  if (store_defv_init()<0) return -1;
   
   /* Load all resources.
    */
@@ -95,8 +128,11 @@ int session_reset() {
   int i=g.mapc;
   for (;i-->0;map++) memcpy(map->cellv,map->rocellv,sizeof(map->cellv));
 
-  //TODO Wipe store.
+  // Wipe store.
+  memset(g.store,0,sizeof(g.store));
+  g.store[0]=2; // NS_fld_one=1
   
+  // Load the home map.
   if (enter_map(RID_map_home,TRANSITION_NONE)<0) {
     fprintf(stderr,"Loading map:%d failed.\n",RID_map_home);
     return -1;
@@ -127,10 +163,103 @@ int enter_map(int rid,int transition) {
           uint32_t arg=(cmd.argv[4]<<24)|(cmd.argv[5]<<16)|(cmd.argv[6]<<8)|cmd.argv[7];
           sprite_spawn(x+0.5,y+0.5,rid,0,arg);
         } break;
+      case CMD_map_field: {
+          uint16_t k=(cmd.argv[0]<<8)|cmd.argv[1];
+          uint16_t v=(cmd.argv[2]<<8)|cmd.argv[3];
+          store_set(k,v);
+        } break;
     }
   }
   
   //TODO Prepare transition.
   
   return 0;
+}
+
+/* Add listener.
+ */
+ 
+int store_listen(int k,void (*cb)(int k,int v,void *userdata),void *userdata) {
+  if (!cb) return -1;
+  if (g.listenerc>=LISTENER_LIMIT) {
+    fprintf(stderr,"LISTENER_LIMIT breached (%d)\n",LISTENER_LIMIT);
+    return -1;
+  }
+  if (g.listenerid_next<1) g.listenerid_next=1;
+  struct listener *listener=g.listenerv+g.listenerc++;
+  listener->listenerid=g.listenerid_next++;
+  listener->k=k;
+  listener->userdata=userdata;
+  listener->cb=cb;
+  return listener->listenerid;
+}
+
+/* Remove listener.
+ */
+ 
+void store_unlisten(int listenerid) {
+  if (listenerid<1) return;
+  int i=g.listenerc;
+  struct listener *listener=g.listenerv+i-1;
+  for (;i-->0;listener--) {
+    if (listener->listenerid!=listenerid) continue;
+    g.listenerc--;
+    memmove(listener,listener+1,sizeof(struct listener)*(g.listenerc-i));
+    return;
+  }
+}
+
+/* Unregulated store access.
+ * We'll do this one bit at a time because most fields are 1-bit, and the more efficient way is error-prone.
+ */
+ 
+static int store_read(const uint8_t *src,int p,int c) {
+  src+=p>>3;
+  uint8_t mask=1<<(p&7);
+  int v=0,i=0;
+  for (;i<c;i++) {
+    if ((*src)&mask) v|=1<<i;
+    if (!(mask<<=1)) { mask=1; src++; }
+  }
+  return v;
+}
+
+static void store_write(uint8_t *dst,int p,int c,int v) {
+  dst+=p>>3;
+  uint8_t mask=1<<(p&7);
+  int i=0;
+  for (;i<c;i++) {
+    if (v&(i<<1)) (*dst)|=mask; else (*dst)&=~mask;
+    if (!(mask<<=1)) { mask=1; dst++; }
+  }
+}
+
+/* Get store field.
+ */
+
+int store_get(int k) {
+  if ((k<0)||(k>=FLD_COUNT)) return 0;
+  const struct store_def *def=store_defv+k;
+  return store_read(g.store,def->p,def->c);
+}
+
+/* Set store field.
+ */
+ 
+int store_set(int k,int v) {
+  if ((k<1)||(k>=FLD_COUNT)) return 0;
+  if (k==1) return 1; // Fields 0 and 1 are immutable, with values 0 and 1.
+  const struct store_def *def=store_defv+k;
+  int limit=(1<<def->c)-1;
+  if (v<0) v=0; else if (v>limit) v=limit;
+  int pv=store_read(g.store,def->p,def->c);
+  if (pv==v) return v;
+  store_write(g.store,def->p,def->c,v);
+  struct listener *listener=g.listenerv;
+  int i=g.listenerc;
+  for (;i-->0;listener++) {
+    if (listener->k!=k) continue;
+    listener->cb(k,v,listener->userdata);
+  }
+  return v;
 }
