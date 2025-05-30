@@ -1,0 +1,3 @@
+sprtype (u16:sprtype)princess
+image image:sprites
+tile 0x40 0

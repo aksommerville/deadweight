@@ -25,7 +25,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 - [x] Starter graphics.
 - [x] Modals. Do a heavy intelligent modal stack, eg dialogue should overlay play and be its own modal.
-- [ ] Map loader with transitions.
+- [x] Map loader with transitions.
 - [ ] State engine. Build in a distinction between persistent fields and screen-scoped ones.
 - [ ] Sprites.
 - - [ ] Hero.

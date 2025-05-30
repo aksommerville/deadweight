@@ -22,7 +22,8 @@ static void _play_update(struct modal *modal,double elapsed) {
  */
  
 static void _play_render(struct modal *modal) {
-  graf_draw_rect(&g.graf,0,0,FBW,FBH,0x00ff00ff);
+  graf_draw_tile_buffer(&g.graf,g.texid_tiles,NS_sys_tilesize>>1,NS_sys_tilesize>>1,g.map->cellv,NS_sys_mapw,NS_sys_maph,NS_sys_mapw);
+  sprites_render(0,0);
 }
 
 /* Init.

@@ -22,8 +22,8 @@ static void _hello_move(struct modal *modal,int dx,int dy) {
 
 static void _hello_activate(struct modal *modal) {
   fprintf(stderr,"%s\n",__func__);
+  if (session_reset()<0) return;
   modal->defunct=1;
-  session_reset();
   modal_new_play();
 }
 

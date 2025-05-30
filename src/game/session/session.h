@@ -6,6 +6,14 @@
 #ifndef SESSION_H
 #define SESSION_H
 
-static inline void session_reset() {}
+/* Just once. main.c will call.
+ */
+int session_init();
+
+/* Start of each session. Hello modal will call.
+ */
+int session_reset();
+
+int enter_map(int rid,int transition);
 
 #endif

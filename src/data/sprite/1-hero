@@ -1,0 +1,3 @@
+sprtype (u16:sprtype)hero
+image image:sprites
+tile 0x00 0

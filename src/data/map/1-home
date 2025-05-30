@@ -15,3 +15,5 @@
 
 image image:tiles
 neighbors 0x0002 0x0004 0x0003 0x0005
+sprite @8,6 sprite:hero 0x00000000
+sprite @11,10 sprite:princess 0x00000000
