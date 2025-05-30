@@ -18,18 +18,48 @@ int egg_client_init() {
   
   if (!(g.font=font_new())) return -1;
   if (font_add_image_resource(g.font,0x0020,RID_image_font9_0020)<0) return -1;
+  if (egg_texture_load_image(g.texid_tilefont=egg_texture_new(),RID_image_tilefont)<0) return -1;
   
   srand_auto();
+  
+  if (!modal_new_hello()) return -1;
   
   return 0;
 }
 
 void egg_client_update(double elapsed) {
-  // TODO
+  modals_update(elapsed);
+  if (!g.modalc) { // If the modal stack is depleted, launch Hello.
+    if (!modal_new_hello()) egg_terminate(1);
+  }
 }
 
 void egg_client_render() {
   graf_reset(&g.graf);
-  graf_draw_rect(&g.graf,0,0,FBW,FBH,0x0058f8ff);
+  modals_render();
   graf_flush(&g.graf);
+}
+
+// https://lospec.com/palette-list/nintendo-entertainment-system
+const uint32_t nes_colors[55]={
+  0x000000ff,0xfcfcfcff,0xf8f8f8ff,0xbcbcbcff,0x7c7c7cff,
+  0xa4e4fcff,0x3cbcfcff,0x0078f8ff,0x0000fcff,0xb8b8f8ff,
+  0x6888fcff,0x0058f8ff,0x0000bcff,0xd8b8f8ff,0x9878f8ff,
+  0x6844fcff,0x4428bcff,0xf8b8f8ff,0xf878f8ff,0xd800ccff,
+  0x940084ff,0xf8a4c0ff,0xf85898ff,0xe40058ff,0xa80020ff,
+  0xf0d0b0ff,0xf87858ff,0xf83800ff,0xa81000ff,0xfce0a8ff,
+  0xfca044ff,0xe45c10ff,0x881400ff,0xf8d878ff,0xf8b800ff,
+  0xac7c00ff,0x503000ff,0xd8f878ff,0xb8f818ff,0x00b800ff,
+  0x007800ff,0xb8f8b8ff,0x58d854ff,0x00a800ff,0x006800ff,
+  0xb8f8d8ff,0x58f898ff,0x00a844ff,0x005800ff,0x00fcfcff,
+  0x00e8d8ff,0x008888ff,0x004058ff,0xf8d8f8ff,0x787878ff,
+};
+
+void dw_draw_string(int x,int y,const char *src,int srcc,int colorp) {
+  if (!src) return;
+  if (srcc<0) { srcc=0; while (src[srcc]) srcc++; }
+  if ((colorp<0)||(colorp>=55)) colorp=1;
+  graf_set_tint(&g.graf,nes_colors[colorp]);
+  graf_draw_tile_buffer(&g.graf,g.texid_tilefont,x,y,(void*)src,srcc,1,srcc);
+  graf_set_tint(&g.graf,0);
 }
