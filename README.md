@@ -14,7 +14,8 @@ What happens to the Princess when the Hero dies?
 I guess she resets to initial position like everything else.
 
 Strict single-screen presentation. Most volatile state will reset with screen changes.
-256x244 pixels fb, makes exactly 16x14 cells of 16x16 pixels.
+256x224 pixels fb, makes exactly 16x14 cells of 16x16 pixels.
+Don't use doors or ladders: There's just a single plane to the world.
 
 Actions like Full Moon: (A) to use, (B) to choose.
 One thing equipped at a time.
@@ -22,7 +23,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 ## TODO
 
-- [ ] Starter graphics.
+- [x] Starter graphics.
 - [ ] Modals. Do a heavy intelligent modal stack, eg dialogue should overlay play and be its own modal.
 - [ ] Map loader with transitions.
 - [ ] State engine. Build in a distinction between persistent fields and screen-scoped ones.
