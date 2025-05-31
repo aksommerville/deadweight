@@ -24,6 +24,9 @@ struct sprite {
   uint32_t arg;
   const void *cmdv;
   int cmdc;
+  int solid; // Participates in physics.
+  int airborne; // "hole" cell physics are passable.
+  double phl,phr,pht,phb; // Physical bounds relative to (x,y). (phl,pht) are typically negative and (phr,phb) positive.
 };
 
 struct sprite_type {
@@ -60,5 +63,18 @@ SPRTYPE_FOR_EACH
 #undef _
 
 const struct sprdef *sprdef_by_id(int rid);
+
+/* Impulse physics: When a solid sprite moves, we immediately resolve all collisions.
+ * These both work for non-solid sprites, but are trivial, you might as well update (x,y) yourself.
+ * "move" takes a delta and assumes that the current position is valid.
+ * "warp" takes an absolute position and puts you somewhere valid as near as possible to that.
+ * Both return 0 if no motion, 2 if placed exactly as requested, or 1 if adjusted.
+ * Move may skip intervening blockages if the delta is too wide, keep it small.
+ * If warp returns zero, it leaves (sprite) in an undefined position. You must put it somewhere else.
+ */
+int sprite_move(struct sprite *sprite,double dx,double dy);
+int sprite_warp(struct sprite *sprite,double x,double y);
+
+int sprite_position_valid(const struct sprite *sprite);
 
 #endif

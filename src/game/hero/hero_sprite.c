@@ -10,6 +10,10 @@ static void _hero_del(struct sprite *sprite) {
  */
  
 static int _hero_init(struct sprite *sprite) {
+  sprite->phl=-0.400;
+  sprite->phr=0.400;
+  sprite->pht=-0.250; // extra headroom
+  sprite->phb=0.500; // bottom of tiles tends to be exact
   SPRITE->facedir=DIR_S;
   return 0;
 }
@@ -42,8 +46,8 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   //XXX very temporary
   SPRITE->walking=0;
   switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
-    case EGG_BTN_LEFT: sprite->x-=6.0*elapsed; SPRITE->walking=1; break;
-    case EGG_BTN_RIGHT: sprite->x+=6.0*elapsed; SPRITE->walking=1; break;
+    case EGG_BTN_LEFT: sprite_move(sprite,-6.0*elapsed,0.0); SPRITE->walking=1; break;
+    case EGG_BTN_RIGHT: sprite_move(sprite,6.0*elapsed,0.0); SPRITE->walking=1; break;
     default: if ((SPRITE->facedir==DIR_W)||(SPRITE->facedir==DIR_E)) {
         switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
           case EGG_BTN_UP: SPRITE->facedir=DIR_N; break;
@@ -52,8 +56,8 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
       }
   }
   switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
-    case EGG_BTN_UP: sprite->y-=6.0*elapsed; SPRITE->walking=1; break;
-    case EGG_BTN_DOWN: sprite->y+=6.0*elapsed; SPRITE->walking=1; break;
+    case EGG_BTN_UP: sprite_move(sprite,0.0,-6.0*elapsed); SPRITE->walking=1; break;
+    case EGG_BTN_DOWN: sprite_move(sprite,0.0,6.0*elapsed); SPRITE->walking=1; break;
     default: if ((SPRITE->facedir==DIR_N)||(SPRITE->facedir==DIR_S)) {
         switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
           case EGG_BTN_LEFT: SPRITE->facedir=DIR_W; break;
@@ -69,31 +73,6 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   } else {
     SPRITE->animclock=0.0;
     SPRITE->animframe=0;
-  }
-  int talking_now=0;
-  int i=g.spritec;
-  int px=0,py=0;
-  while (i-->0) {
-    struct sprite *princess=g.spritev[i];
-    if (princess->defunct||(princess->type!=&sprite_type_princess)) continue;
-    double dx=princess->x-sprite->x;
-    if ((dx<-1.0)||(dx>1.0)) continue;
-    double dy=princess->y-sprite->y;
-    if ((dy<-1.0)||(dy>1.0)) continue;
-    talking_now=1;
-    px=(int)(princess->x*NS_sys_tilesize);
-    py=(int)(princess->y*NS_sys_tilesize);
-    break;
-  }
-  if (talking_now!=SPRITE->talking) {
-    if (SPRITE->talking=talking_now) {
-      struct strings_insertion insv[]={
-        {'s',.s={.v="Dot",.c=3}},
-        {'i',.i=123},
-        {'r',.r={.rid=1,.ix=2}},
-      };
-      modal_new_dialogue(px,py,1,5,insv,sizeof(insv)/sizeof(insv[0]));
-    }
   }
 }
 

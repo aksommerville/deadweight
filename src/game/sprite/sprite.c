@@ -72,12 +72,22 @@ struct sprite *sprite_spawn(double x,double y,uint16_t rid,const struct sprite_t
   sprite->y=y;
   sprite->arg=arg;
   sprite->layer=128;
+  sprite->phl=-0.5;
+  sprite->pht=-0.5;
+  sprite->phr=0.5;
+  sprite->phb=0.5;
   
   if (cmdc) {
     struct rom_command_reader reader={.v=cmdv,.c=cmdc};
     struct rom_command cmd;
     while (rom_command_reader_next(&cmd,&reader)>0) {
       switch (cmd.opcode) {
+        case CMD_sprite_solid: {
+            sprite->solid=1;
+          } break;
+        case CMD_sprite_airborne: {
+            sprite->airborne=1;
+          } break;
         case CMD_sprite_tile: {
             sprite->tileid=cmd.argv[0];
             sprite->xform=cmd.argv[1];

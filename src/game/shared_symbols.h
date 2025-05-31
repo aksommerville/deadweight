@@ -15,10 +15,12 @@
 #define CMD_map_sprite    0x61 /* u16:pos u16:spriteid u32:reserved */
 #define CMD_map_door      0x62 /* u16:pos u16:mapid u16:dstpos u16:reserved */
 
-#define CMD_sprite_image   0x20 /* u16:imageid */
-#define CMD_sprite_tile    0x21 /* u8:tileid u8:xform */
-#define CMD_sprite_sprtype 0x22 /* u16:sprtype */
-#define CMD_sprite_layer   0x23 /* u8:layer u8:reserved */
+#define CMD_sprite_solid    0x01
+#define CMD_sprite_airborne 0x02
+#define CMD_sprite_image    0x20 /* u16:imageid */
+#define CMD_sprite_tile     0x21 /* u8:tileid u8:xform */
+#define CMD_sprite_sprtype  0x22 /* u16:sprtype */
+#define CMD_sprite_layer    0x23 /* u8:layer u8:reserved */
 
 #define NS_tilesheet_physics     1
 #define NS_tilesheet_neighbors   0
