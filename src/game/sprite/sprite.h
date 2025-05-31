@@ -51,6 +51,7 @@ void sprites_delete_volatile(); // Immediately delete all except (g.hero,g.princ
 
 void sprites_update(double elapsed);
 void sprites_render(int offx,int offy);
+void sprites_render_volatile(); // Skip hero and princess, and no offset.
 
 const struct sprite_type *sprite_type_by_id(uint16_t sprtype);
 

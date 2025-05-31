@@ -23,6 +23,8 @@ int egg_client_init() {
   if (egg_texture_load_image(g.texid_sprites=egg_texture_new(),RID_image_sprites)<0) return -1;
   // Being a jam game, we'll try to keep all the map tiles in one image, and ditto all the sprite tiles.
   
+  if (egg_texture_load_raw(g.transition_texid=egg_texture_new(),FBW,FBH,FBW<<2,0,0)<0) return -1;
+  
   if (session_init()<0) return -1;
   
   srand_auto();

@@ -162,7 +162,13 @@ int enter_map(int rid,int transition) {
       } break;
   }
   
-  //TODO Prepare transition.
+  if (transition) {
+    // The previous-scene snapshot (g.transition_texid) must already have been prepared by modal_play.
+    g.transition=transition;
+    g.transition_clock=0.0;
+  } else {
+    g.transition=0;
+  }
   
   return 0;
 }

@@ -220,6 +220,24 @@ void sprites_render(int offx,int offy) {
   }
 }
 
+void sprites_render_volatile() {
+  int i=0;
+  struct sprite **p=g.spritev;
+  for (;i<g.spritec;i++,p++) {
+    struct sprite *sprite=*p;
+    if (sprite->defunct) continue;
+    if (sprite==g.hero) continue;
+    if (sprite==g.princess) continue;
+    int x=(int)(sprite->x*NS_sys_tilesize+0.5);
+    int y=(int)(sprite->y*NS_sys_tilesize+0.5);
+    if (sprite->type->render) {
+      sprite->type->render(sprite,x,y);
+    } else {
+      graf_draw_tile(&g.graf,g.texid_sprites,x,y,sprite->tileid,sprite->xform);
+    }
+  }
+}
+
 /* Type by id.
  */
 

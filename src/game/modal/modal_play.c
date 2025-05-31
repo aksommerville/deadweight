@@ -28,13 +28,20 @@ static int play_navigate(struct modal *modal,int dx,int dy) {
   int np=nlat*WORLDW+nlng;
   struct map *nmap=g.maps_by_position[np];
   if (!nmap) return 0;
-  fprintf(stderr,"%s: Navigate from map:%d (%+d,%+d) to map:%d\n",__func__,g.map->rid,dx,dy,nmap->rid);
-  int transition=TRANSITION_NONE;
+  int transition;
        if (dx<0) transition=TRANSITION_LEFT;
   else if (dx>0) transition=TRANSITION_RIGHT;
   else if (dy<0) transition=TRANSITION_UP;
   else if (dy>0) transition=TRANSITION_DOWN;
   else return -1;
+  
+  // Draw the outgoing scene into (g.transition_texid).
+  graf_set_output(&g.graf,g.transition_texid);
+  graf_draw_tile_buffer(&g.graf,g.texid_tiles,(NS_sys_tilesize>>1),(NS_sys_tilesize>>1),g.map->cellv,NS_sys_mapw,NS_sys_maph,NS_sys_mapw);
+  sprites_render_volatile();
+  graf_set_output(&g.graf,1);
+  graf_flush(&g.graf);
+  
   return enter_map(nmap->rid,transition);
 }
 
@@ -51,15 +58,36 @@ static void _play_update(struct modal *modal,double elapsed) {
     else if (g.hero->y<0.0) play_navigate(modal,0,-1);
     else if (g.hero->y>NS_sys_maph) play_navigate(modal,0,1);
   }
+  
+  if (g.transition) {
+    if ((g.transition_clock+=elapsed)>=TRANSITION_TIME) {
+      g.transition=0;
+    }
+  }
 }
 
 /* Render.
  */
  
 static void _play_render(struct modal *modal) {
-  //TODO transition
-  graf_draw_tile_buffer(&g.graf,g.texid_tiles,NS_sys_tilesize>>1,NS_sys_tilesize>>1,g.map->cellv,NS_sys_mapw,NS_sys_maph,NS_sys_mapw);
-  sprites_render(0,0);
+  int dstx=0,dsty=0;
+  
+  // If a transition is in progress, bump (dstx,dsty) and draw the previous-scene snapshot.
+  if (g.transition&&(g.transition_clock<TRANSITION_TIME)) {
+    double t=g.transition_clock/TRANSITION_TIME;
+    int pvx=0,pvy=0;
+    switch (g.transition) {
+      case TRANSITION_LEFT: dstx-=FBW; dstx+=(int)(FBW*t); pvx=dstx+FBW; break;
+      case TRANSITION_RIGHT: dstx+=FBW; dstx-=(int)(FBW*t); pvx=dstx-FBW; break;
+      case TRANSITION_UP: dsty-=FBH; dsty+=(int)(FBH*t); pvy=dsty+FBH; break;
+      case TRANSITION_DOWN: dsty+=FBH; dsty-=(int)(FBH*t); pvy=dsty-FBH; break;
+    }
+    graf_draw_decal(&g.graf,g.transition_texid,pvx,pvy,0,0,FBW,FBH,0);
+  }
+
+  // Draw the new scene.
+  graf_draw_tile_buffer(&g.graf,g.texid_tiles,dstx+(NS_sys_tilesize>>1),dsty+(NS_sys_tilesize>>1),g.map->cellv,NS_sys_mapw,NS_sys_maph,NS_sys_mapw);
+  sprites_render(dstx,dsty);
 }
 
 /* Init.

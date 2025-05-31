@@ -21,6 +21,8 @@
 #define TRANSITION_RESET 5
 #define TRANSITION_TELEPORT 6
 
+#define TRANSITION_TIME 0.333
+
 #define DIR_N 0x40
 #define DIR_W 0x10
 #define DIR_E 0x08
@@ -72,6 +74,9 @@ extern struct g {
   int listenerid_next;
 
 // Room state:
+  int transition;
+  double transition_clock;
+  int transition_texid;
 } g;
 
 extern const uint32_t nes_colors[55];

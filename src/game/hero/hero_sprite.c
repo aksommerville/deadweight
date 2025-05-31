@@ -10,7 +10,6 @@ static void _hero_del(struct sprite *sprite) {
  */
  
 static int _hero_init(struct sprite *sprite) {
-  fprintf(stderr,"%s %f,%f\n",__func__,sprite->x,sprite->y);
   SPRITE->facedir=DIR_S;
   return 0;
 }
