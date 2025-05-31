@@ -65,5 +65,6 @@ extern struct g {
 
 extern const uint32_t nes_colors[55];
 void dw_draw_string(int x,int y,const char *src,int srcc,int colorp);
+void dw_draw_string_res(int x,int y,int xalign,int yalign,int rid,int ix,int colorp);
 
 #endif

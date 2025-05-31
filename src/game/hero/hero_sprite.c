@@ -64,9 +64,9 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
       struct strings_insertion insv[]={
         {'s',.s={.v="Dot",.c=3}},
         {'i',.i=123},
-        {'r',.r={.rid=1,.ix=5}},
+        {'r',.r={.rid=1,.ix=2}},
       };
-      modal_new_dialogue(px,py,1,4,insv,sizeof(insv)/sizeof(insv[0]));
+      modal_new_dialogue(px,py,1,5,insv,sizeof(insv)/sizeof(insv[0]));
     }
   }
 }

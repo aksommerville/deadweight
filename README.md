@@ -42,7 +42,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Target-shooting monsters.
 - - [ ] Sentinel monsters. Stands in one place, attacks when you draw near.
 - [ ] Boss fight, immediately before rescue, once per session.
-- [ ] Dialogue.
+- [x] Dialogue.
 - [ ] Items.
 - - [ ] Broom. Like Full Moon.
 - - [ ] Pepper. Burn everything within some radius. Light candles. Kill Princess.
@@ -54,7 +54,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Bomb. Destroy things, esp Princesses.
 - - [ ] Candy. Distact monsters.
 - [ ] Modals.
-- - [ ] Hello.
+- - [x] Hello.
 - - [ ] Game over. Success only. Game will not be loseable.
 - - [ ] Pause. Inventory and options, like Full Moon.
 - [ ] Maps.

@@ -2,6 +2,10 @@
 
 struct modal_hello {
   struct modal hdr;
+  int title_texid,title_w,title_h;
+  const char *msg_copyright,*msg_press_start;
+  int msg_copyrightc,msg_press_startc;
+  double blinkclock;
 };
 
 #define MODAL ((struct modal_hello*)modal)
@@ -10,31 +14,28 @@ struct modal_hello {
  */
  
 static void _hello_del(struct modal *modal) {
+  egg_texture_del(MODAL->title_texid);
 }
 
 /* Digested input.
  */
  
 static void _hello_move(struct modal *modal,int dx,int dy) {
-  fprintf(stderr,"%s %+d,%+d\n",__func__,dx,dy);
 }
 
 static void _hello_activate(struct modal *modal) {
-  fprintf(stderr,"%s\n",__func__);
   if (session_reset()<0) return;
   modal->defunct=1;
   modal_new_play();
 }
 
 static void _hello_cancel(struct modal *modal) {
-  fprintf(stderr,"%s\n",__func__);
 }
 
 /* Input state change.
  */
  
 static void _hello_input(struct modal *modal) {
-  fprintf(stderr,"%s 0x%04x\n",__func__,g.input);
   if ((g.input&EGG_BTN_LEFT)&&!(g.pvinput&EGG_BTN_LEFT)) _hello_move(modal,-1,0);
   if ((g.input&EGG_BTN_RIGHT)&&!(g.pvinput&EGG_BTN_RIGHT)) _hello_move(modal,1,0);
   if ((g.input&EGG_BTN_UP)&&!(g.pvinput&EGG_BTN_UP)) _hello_move(modal,0,-1);
@@ -54,17 +55,22 @@ static void _hello_input(struct modal *modal) {
  */
  
 static void _hello_update(struct modal *modal,double elapsed) {
+  MODAL->blinkclock+=elapsed;
+  if (MODAL->blinkclock>0.900) {
+    MODAL->blinkclock-=0.900;
+  }
 }
 
 /* Render.
  */
  
 static void _hello_render(struct modal *modal) {
-  //TODO
-  graf_draw_rect(&g.graf,0,0,FBW,FBH,0x0000ffff);
-  dw_draw_string(20,20,"Rescue the princess!",-1,1);
-  dw_draw_string(20,28,"Press \x14 to use or \x15 to choose.",-1,1);
-  dw_draw_string(20,36,"\x10 \x11 \x12 \x13",-1,18);
+  graf_draw_rect(&g.graf,0,0,FBW,FBH,nes_colors[0]);
+  graf_draw_decal(&g.graf,MODAL->title_texid,(FBW>>1)-(MODAL->title_w>>1),20,0,0,MODAL->title_w,MODAL->title_h,0);
+  dw_draw_string((FBW>>1)-(4*MODAL->msg_copyrightc),184,MODAL->msg_copyright,MODAL->msg_copyrightc,4);
+  if (MODAL->blinkclock<0.750) {
+    dw_draw_string((FBW>>1)-(4*MODAL->msg_press_startc),145,MODAL->msg_press_start,MODAL->msg_press_startc,23);
+  }
 }
 
 /* Init.
@@ -78,6 +84,12 @@ static int _hello_init(struct modal *modal) {
   modal->render=_hello_render;
   modal->opaque=1;
   modal->passive=0;
+  
+  egg_texture_load_image(MODAL->title_texid=egg_texture_new(),RID_image_title);
+  egg_texture_get_status(&MODAL->title_w,&MODAL->title_h,MODAL->title_texid);
+  MODAL->msg_copyrightc=strings_get(&MODAL->msg_copyright,1,3);
+  MODAL->msg_press_startc=strings_get(&MODAL->msg_press_start,1,4);
+  
   return 0;
 }
 
