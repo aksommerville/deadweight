@@ -102,6 +102,28 @@ int session_reset() {
   memset(g.store,0,sizeof(g.store));
   g.store[0]=2; // NS_fld_one=1
   
+  // Delete all sprites.
+  while (g.spritec>0) {
+    g.spritec--;
+    sprite_del(g.spritev[g.spritec]);
+  }
+  
+  if (1) {
+    fprintf(stderr,"*** %s:%d: Enabling treasures. ***\n",__FILE__,__LINE__);
+    store_set(NS_fld_got_broom,1);
+    store_set(NS_fld_got_pepper,1);
+    store_set(NS_fld_got_compass,1);
+    store_set(NS_fld_got_stopwatch,1);
+    store_set(NS_fld_got_camera,1);
+    store_set(NS_fld_got_snowglobe,1);
+    store_set(NS_fld_got_wand,1);
+    store_set(NS_fld_got_bomb,1);
+    store_set(NS_fld_got_candy,1);
+    store_set(NS_fld_qty_pepper,99);
+    store_set(NS_fld_qty_bomb,22);
+    store_set(NS_fld_qty_candy,9);
+  }
+  
   // Load the home map.
   if (enter_map(RID_map_home,TRANSITION_NONE)<0) {
     fprintf(stderr,"Loading map:%d failed.\n",RID_map_home);

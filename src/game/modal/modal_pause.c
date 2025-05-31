@@ -7,16 +7,30 @@
 #define PAUSE_BEGIN_TIME 0.400
 #define PAUSE_END_TIME   0.200
 
-#define PAUSE_TOTAL_W 100
-#define PAUSE_TOTAL_H  60
+#define PAUSE_MARGIN 4
+#define PAUSE_TOTAL_W (PAUSE_MARGIN*5+NS_sys_tilesize*3+9*8)
+#define PAUSE_TOTAL_H  (PAUSE_MARGIN*4+NS_sys_tilesize*3)
 #define PAUSE_TOTAL_X ((FBW>>1)-(PAUSE_TOTAL_W>>1))
 #define PAUSE_TOTAL_Y ((FBH>>1)-(PAUSE_TOTAL_H>>1))
+
+#define PAUSE_LABEL_LIMIT 12 /* 9 items + resume + quit + new game */
 
 struct modal_pause {
   struct modal hdr;
   int phase;
   double phaseclock;
   int pocketx,pockety; // where we live when not displayed
+  struct label {
+    int x,y,w,h;
+    uint8_t tileid,xform;
+    const char *text;
+    int textc;
+    int qty; // <0 to suppress
+  } labelv[PAUSE_LABEL_LIMIT];
+  int labelc;
+  int labelp;
+  double animclock;
+  int animframe;
 };
 
 #define MODAL ((struct modal_pause*)modal)
@@ -31,15 +45,53 @@ static void _pause_del(struct modal *modal) {
  */
  
 static void pause_move(struct modal *modal,int dx,int dy) {
-  fprintf(stderr,"%s %+d,%+d\n",__func__,dx,dy);
+  if (MODAL->labelc<9) return; // There's supposed to be a label for each item, whether possessed or not. We assume so.
+  
   egg_play_sound(RID_sound_uimotion);
+  
+  // If there was no initial selection, pick one of the edge middles, opposite the pressed key.
+  if ((MODAL->labelp<0)||(MODAL->labelp>=MODAL->labelc)) {
+    if (dx<0) MODAL->labelp=5;
+    else if (dx>0) MODAL->labelp=3;
+    else if (dy<0) MODAL->labelp=7;
+    else MODAL->labelp=1;
+    return;
+  }
+  
+  /* With one previously selected, move generically.
+   * They're laid out in a grid so it's fair to assume that some aligned neighbor will exist.
+   */
+  struct label *prev=MODAL->labelv+MODAL->labelp;
+  struct label *next=0;
+  int nextd=9999;
+  int i=MODAL->labelc;
+  while (i-->0) {
+    struct label *q=MODAL->labelv+i;
+    if (q==prev) continue;
+    int d;
+    if (dx) {
+      if (q->y+q->h<=prev->y) continue;
+      if (q->y>=prev->y+prev->h) continue;
+      if (dx<0) d=prev->x-q->x;
+      else d=q->x-prev->x;
+      if (d<0) d+=FBW;
+    } else {
+      if (q->x+q->w<=prev->x) continue;
+      if (q->x>=prev->x+prev->w) continue;
+      if (dy<0) d=prev->y-q->y;
+      else d=q->y-prev->y;
+      if (d<0) d+=FBH;
+    }
+    if (!next||(d<nextd)||((d==nextd)&&((q->x<next->x)||(q->y<next->y)))) {
+      next=q;
+      nextd=d;
+    }
+  }
+  if (!next) return;
+  MODAL->labelp=next-MODAL->labelv;
 }
 
-static void pause_activate(struct modal *modal) {
-  fprintf(stderr,"%s\n",__func__);
-}
-
-static void pause_cancel(struct modal *modal) {
+static void pause_dismiss(struct modal *modal) {
   if (MODAL->phase==PAUSE_PHASE_END) return; // alright already, i'm working on it!
   egg_play_sound(RID_sound_dismiss);
   if (MODAL->phase==PAUSE_PHASE_BEGIN) {
@@ -55,6 +107,34 @@ static void pause_cancel(struct modal *modal) {
   }
 }
 
+static void pause_pick_item(struct modal *modal,int itemid) {
+  store_set(NS_fld_equipped,itemid);
+  pause_dismiss(modal);
+}
+
+static void pause_main_menu(struct modal *modal) {
+  modal->defunct=1;
+  modal_new_hello();
+}
+
+static void pause_new_game(struct modal *modal) {
+  modal->defunct=1;
+  if (session_reset()<0) return;
+  int i=g.modalc; while (i-->0) {
+    if (g.modalv[i]->ctor==modal_new_play) g.modalv[i]->defunct=1;
+  }
+  modal_new_play();
+}
+
+static void pause_activate(struct modal *modal) {
+  switch (MODAL->labelp) {
+    case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: pause_pick_item(modal,NS_fld_got_broom+MODAL->labelp); break;
+    case 9: modal->defunct=1; break;
+    case 10: pause_main_menu(modal); break;
+    case 11: pause_new_game(modal); break;
+  }
+}
+
 /* Input state change.
  */
  
@@ -64,11 +144,14 @@ static void _pause_input(struct modal *modal) {
     if ((g.input&EGG_BTN_RIGHT)&&!(g.pvinput&EGG_BTN_RIGHT)) pause_move(modal,1,0);
     if ((g.input&EGG_BTN_UP)&&!(g.pvinput&EGG_BTN_UP)) pause_move(modal,0,-1);
     if ((g.input&EGG_BTN_DOWN)&&!(g.pvinput&EGG_BTN_DOWN)) pause_move(modal,0,1);
-    if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) pause_activate(modal);
+    if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) {
+      g.input_blackout|=EGG_BTN_SOUTH;
+      pause_activate(modal);
+    }
   }
   if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
     g.input_blackout|=EGG_BTN_WEST;
-    pause_cancel(modal);
+    pause_activate(modal);
   }
 }
 
@@ -76,6 +159,10 @@ static void _pause_input(struct modal *modal) {
  */
  
 static void _pause_update(struct modal *modal,double elapsed) {
+  if ((MODAL->animclock-=elapsed)<0.0) {
+    MODAL->animclock+=0.150;
+    if (++(MODAL->animframe)>=6) MODAL->animframe=0;
+  }
   switch (MODAL->phase) {
     
     case PAUSE_PHASE_BEGIN: {
@@ -126,9 +213,68 @@ static void _pause_render(struct modal *modal) {
       
     case PAUSE_PHASE_RUN: {
         graf_draw_rect(&g.graf,PAUSE_TOTAL_X,PAUSE_TOTAL_Y,PAUSE_TOTAL_W,PAUSE_TOTAL_H,nes_colors[0]);
-        //TODO everything important
+        
+        if ((MODAL->labelp>=0)&&(MODAL->labelp<MODAL->labelc)) { // cursor
+          struct label *label=MODAL->labelv+MODAL->labelp;
+          if (label->textc) {
+            graf_draw_rect(&g.graf,label->x,label->y,label->w,label->h,nes_colors[7]);
+          } else {
+            graf_draw_tile(&g.graf,g.texid_sprites,label->x+(label->w>>1),label->y+(label->h>>1),0x39+MODAL->animframe,0);
+          }
+        }
+        
+        struct label *label=MODAL->labelv;
+        int i=MODAL->labelc;
+        for (;i-->0;label++) {
+          if (label->tileid) {
+            graf_draw_tile(&g.graf,g.texid_sprites,label->x+(label->w>>1),label->y+(label->h>>1),label->tileid,label->xform);
+          } else if (label->textc) {
+            dw_draw_string(label->x+4,label->y+(label->h>>1),label->text,label->textc,1);
+          }
+        }
+        for (label=MODAL->labelv,i=MODAL->labelc;i-->0;label++) {
+          if (label->qty<0) continue;
+          graf_draw_tile(&g.graf,g.texid_sprites,label->x+label->w,label->y+label->h,0x90+(label->qty%10),0);
+          if (label->qty>=10) {
+            graf_draw_tile(&g.graf,g.texid_sprites,label->x+label->w-4,label->y+label->h,0x90+(label->qty/10),0);
+            // Quantities >99 will never be permitted.
+          }
+        }
       } break;
   }
+}
+
+/* Add label.
+ */
+ 
+static void pause_add_item_label(struct modal *modal,int col,int row,int kgot,int kqty) {
+  int colw=PAUSE_MARGIN+NS_sys_tilesize;
+  if (MODAL->labelc>=PAUSE_LABEL_LIMIT) return;
+  struct label *label=MODAL->labelv+MODAL->labelc++;
+  memset(label,0,sizeof(struct label));
+  label->x=PAUSE_TOTAL_X+PAUSE_MARGIN+col*colw;
+  label->y=PAUSE_TOTAL_Y+PAUSE_MARGIN+row*colw;
+  label->w=NS_sys_tilesize;
+  label->h=NS_sys_tilesize;
+  label->qty=-1;
+  if (store_get(kgot)) {
+    label->tileid=0x30+kgot-NS_fld_got_broom;
+    if (kqty) {
+      label->qty=store_get(kqty);
+    }
+  }
+}
+
+static void pause_add_string_label(struct modal *modal,int row,int rid,int ix) {
+  if (MODAL->labelc>=PAUSE_LABEL_LIMIT) return;
+  struct label *label=MODAL->labelv+MODAL->labelc++;
+  memset(label,0,sizeof(struct label));
+  label->textc=strings_get(&label->text,rid,ix);
+  label->x=PAUSE_TOTAL_X+PAUSE_MARGIN*4+NS_sys_tilesize*3;
+  label->y=PAUSE_TOTAL_Y+PAUSE_MARGIN+row*8;
+  label->w=label->textc*8+1;
+  label->h=8;
+  label->qty=-1;
 }
 
 /* Init.
@@ -136,6 +282,7 @@ static void _pause_render(struct modal *modal) {
  
 static int _pause_init(struct modal *modal,int x,int y) {
   modal->name="pause";
+  modal->ctor=modal_new_pause;
   modal->del=_pause_del;
   modal->input=_pause_input;
   modal->update=_pause_update;
@@ -147,6 +294,23 @@ static int _pause_init(struct modal *modal,int x,int y) {
   MODAL->phase=PAUSE_PHASE_BEGIN;
   MODAL->pocketx=x;
   MODAL->pockety=y;
+  MODAL->labelp=-1;
+  
+  pause_add_item_label(modal,0,0,NS_fld_got_broom,0);
+  pause_add_item_label(modal,1,0,NS_fld_got_pepper,NS_fld_qty_pepper);
+  pause_add_item_label(modal,2,0,NS_fld_got_compass,0);
+  pause_add_item_label(modal,0,1,NS_fld_got_stopwatch,0);
+  pause_add_item_label(modal,1,1,NS_fld_got_camera,0);
+  pause_add_item_label(modal,2,1,NS_fld_got_snowglobe,0);
+  pause_add_item_label(modal,0,2,NS_fld_got_wand,0);
+  pause_add_item_label(modal,1,2,NS_fld_got_bomb,NS_fld_qty_bomb);
+  pause_add_item_label(modal,2,2,NS_fld_got_candy,NS_fld_qty_candy);
+  pause_add_string_label(modal,0,1,5); // Resume
+  pause_add_string_label(modal,1,1,6); // Main Menu
+  pause_add_string_label(modal,2,1,7); // New Game
+  
+  int equipped=store_get(NS_fld_equipped);
+  MODAL->labelp=equipped-NS_fld_got_broom;
   
   return 0;
 }

@@ -95,6 +95,7 @@ static void _play_render(struct modal *modal) {
  
 static int _play_init(struct modal *modal) {
   modal->name="play";
+  modal->ctor=modal_new_play;
   modal->del=_play_del;
   modal->input=_play_input;
   modal->update=_play_update;

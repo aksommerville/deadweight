@@ -78,6 +78,7 @@ static void _hello_render(struct modal *modal) {
  
 static int _hello_init(struct modal *modal) {
   modal->name="hello";
+  modal->ctor=modal_new_hello;
   modal->del=_hello_del;
   modal->input=_hello_input;
   modal->update=_hello_update;

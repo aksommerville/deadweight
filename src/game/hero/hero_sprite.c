@@ -164,7 +164,12 @@ static void hero_update_animation(struct sprite *sprite,double elapsed) {
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
   if (g.input!=g.pvinput) {
-    if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) hero_choose(sprite);
+    if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+      hero_choose(sprite);
+      SPRITE->indx=SPRITE->indy=0;
+      SPRITE->walking=0;
+      return;
+    }
     if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) hero_item_begin(sprite);
     else if (!(g.input&EGG_BTN_SOUTH)&&(g.pvinput&EGG_BTN_SOUTH)) hero_item_end(sprite);
     hero_update_ind(sprite);

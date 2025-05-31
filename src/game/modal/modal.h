@@ -11,6 +11,7 @@
 
 struct modal {
   const char *name; // For logging etc.
+  void *ctor;
   void (*del)(struct modal *modal);
   void (*input)(struct modal *modal);
   void (*update)(struct modal *modal,double elapsed);

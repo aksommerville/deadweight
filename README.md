@@ -47,7 +47,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Items.
 - - [ ] Broom. Like Full Moon.
 - - [ ] Pepper. Burn everything within some radius. Light candles. Kill Princess.
-- - [ ] Bell. Goes jingle jingle.
+- - [ ] Compass. Points toward the Princess.
 - - [ ] Stopwatch. Like Too Heavy.
 - - [ ] Camera. Like Too Heavy. Maybe prompt when actuated "warp or replace?"
 - - [ ] Snowglobe. Like Full Moon.
@@ -57,7 +57,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Modals.
 - - [x] Hello.
 - - [ ] Game over. Success only. Game will not be loseable.
-- - [ ] Pause. Inventory and options, like Full Moon.
+- - [x] Pause. Inventory and options, like Full Moon.
 - [ ] Maps.
 - [ ] Proper graphics.
 - [ ] Sound effects.

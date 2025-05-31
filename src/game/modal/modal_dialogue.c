@@ -157,6 +157,7 @@ static int dialogue_measure_word(const char *src,int srcc) {
  
 static int _dialogue_init(struct modal *modal,const char *msg,int msgc,int x,int y) {
   modal->name="dialogue";
+  modal->ctor=modal_new_dialogue;
   modal->del=_dialogue_del;
   modal->input=_dialogue_input;
   modal->update=_dialogue_update;

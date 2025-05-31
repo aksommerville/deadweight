@@ -54,7 +54,7 @@
 #define NS_fld_one               1 /* immutable */
 #define NS_fld_got_broom         2 /* have item... */
 #define NS_fld_got_pepper        3
-#define NS_fld_got_bell          4
+#define NS_fld_got_compass       4
 #define NS_fld_got_stopwatch     5
 #define NS_fld_got_camera        6
 #define NS_fld_got_snowglobe     7
