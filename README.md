@@ -30,7 +30,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Move input management to the global level. I'm just like two steps in and it's already a mess.
 - [ ] Sprites.
 - - [x] Hero.
-- - [ ] Princess.
+- - [x] Princess.
 - - [ ] Switchable flamethrowers.
 - - [ ] Pushable blocks.
 - - [ ] Switchable doors.
