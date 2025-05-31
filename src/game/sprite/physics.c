@@ -131,6 +131,15 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
     sprite->y+=dy;
     return 2;
   }
+  if ( // Both axes want to move? Do them one at a time.
+    ((dx<-0.0)||(dx>0.0))&&
+    ((dy<-0.0)||(dy>0.0))
+  ) {
+    int xresult=sprite_move(sprite,dx,0.0);
+    int yresult=sprite_move(sprite,0.0,dy);
+    if (xresult==yresult) return 2;
+    return 1; // Any mismatched results, the combined answer is 1 (partial).
+  }
   double ox=sprite->x;
   double oy=sprite->y;
   double nx=ox+dx;
