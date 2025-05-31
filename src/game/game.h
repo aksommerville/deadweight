@@ -65,6 +65,7 @@ extern struct g {
   struct sprite **spritev;
   int spritec,spritea;
   int sprites_sort_dir;
+  struct sprite *hero,*princess; // WEAK, OPTIONAL
   uint8_t store[STORE_SIZE];
   struct listener listenerv[LISTENER_LIMIT];
   int listenerc;

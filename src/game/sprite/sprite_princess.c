@@ -23,6 +23,16 @@ static int _princess_init(struct sprite *sprite) {
  */
  
 static void _princess_update(struct sprite *sprite,double elapsed) {
+  //XXX very temporary. advance toward the hero dumbly.
+  if (g.hero) {
+    const double SPEED=5.0;
+    double dx=g.hero->x-sprite->x;
+    double dy=g.hero->y-sprite->y;
+    if (dx<-2.0) sprite->x-=SPEED*elapsed;
+    else if (dx>2.0) sprite->x+=SPEED*elapsed;
+    if (dy<-2.0) sprite->y-=SPEED*elapsed;
+    else if (dy>2.0) sprite->y+=SPEED*elapsed;
+  }
 }
 
 /* Render.

@@ -37,6 +37,8 @@ void sprite_del(struct sprite *sprite) {
   if (!sprite) return;
   if (sprite->type->del) sprite->type->del(sprite);
   free(sprite);
+  if (g.hero==sprite) g.hero=0;
+  if (g.princess==sprite) g.princess=0;
 }
 
 /* New.
@@ -93,6 +95,7 @@ struct sprite *sprite_spawn(double x,double y,uint16_t rid,const struct sprite_t
     sprite_del(sprite);
     return 0;
   }
+  
   if (g.spritec>=g.spritea) {
     int na=g.spritea+128;
     if (na>INT_MAX/sizeof(void*)) { sprite_del(sprite); return 0; }
@@ -103,6 +106,11 @@ struct sprite *sprite_spawn(double x,double y,uint16_t rid,const struct sprite_t
   }
   // TODO Insert by approximate rendering order.
   g.spritev[g.spritec++]=sprite;
+  
+  // The hero and princess sprites are special; they get tracked globally.
+  if (type==&sprite_type_hero) g.hero=sprite;
+  else if (type==&sprite_type_princess) g.princess=sprite;
+  
   return sprite;
 }
 
@@ -114,6 +122,21 @@ void sprites_kill_all() {
   while (i-->0) {
     struct sprite *sprite=g.spritev[i];
     sprite->defunct=1;
+  }
+}
+
+/* Delete all except the globally-tracked hero and princess.
+ */
+ 
+void sprites_delete_volatile() {
+  int i=g.spritec;
+  while (i-->0) {
+    struct sprite *sprite=g.spritev[i];
+    if (sprite==g.hero) continue;
+    if (sprite==g.princess) continue;
+    g.spritec--;
+    memmove(g.spritev+i,g.spritev+i+1,sizeof(void*)*(g.spritec-i));
+    sprite_del(sprite);
   }
 }
 

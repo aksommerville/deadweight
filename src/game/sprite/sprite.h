@@ -47,6 +47,7 @@ struct sprite *sprite_new(const struct sprite_type *type);
 struct sprite *sprite_spawn(double x,double y,uint16_t rid,const struct sprite_type *type,uint32_t arg);
 
 void sprites_kill_all();
+void sprites_delete_volatile(); // Immediately delete all except (g.hero,g.princess). DO NOT CALL DURING ITERATION.
 
 void sprites_update(double elapsed);
 void sprites_render(int offx,int offy);

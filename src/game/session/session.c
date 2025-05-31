@@ -119,8 +119,7 @@ int enter_map(int rid,int transition) {
   if (!map) return -1;
   g.map=map;
   
-  sprites_kill_all();
-  //TODO How are we managing the hero and princess sprites? They either persist across maps or get recreated.
+  sprites_delete_volatile();
   
   struct rom_command_reader reader={.v=g.map->cmdv,.c=g.map->cmdc};
   struct rom_command cmd;
@@ -131,6 +130,8 @@ int enter_map(int rid,int transition) {
           uint8_t y=cmd.argv[1];
           uint16_t rid=(cmd.argv[2]<<8)|cmd.argv[3];
           uint32_t arg=(cmd.argv[4]<<24)|(cmd.argv[5]<<16)|(cmd.argv[6]<<8)|cmd.argv[7];
+          if ((rid==RID_sprite_hero)&&g.hero) break; // already got it
+          if ((rid==RID_sprite_princess)&&g.princess) break; // already got it
           sprite_spawn(x+0.5,y+0.5,rid,0,arg);
         } break;
       case CMD_map_field: {
@@ -139,6 +140,26 @@ int enter_map(int rid,int transition) {
           store_set(k,v);
         } break;
     }
+  }
+  
+  // Apply transition to the persistent sprites.
+  switch (transition) {
+    case TRANSITION_LEFT: {
+        if (g.hero) g.hero->x+=NS_sys_mapw;
+        if (g.princess) g.princess->x+=NS_sys_mapw;
+      } break;
+    case TRANSITION_RIGHT: {
+        if (g.hero) g.hero->x-=NS_sys_mapw;
+        if (g.princess) g.princess->x-=NS_sys_mapw;
+      } break;
+    case TRANSITION_UP: {
+        if (g.hero) g.hero->y+=NS_sys_maph;
+        if (g.princess) g.princess->y+=NS_sys_maph;
+      } break;
+    case TRANSITION_DOWN: {
+        if (g.hero) g.hero->y-=NS_sys_maph;
+        if (g.princess) g.princess->y-=NS_sys_maph;
+      } break;
   }
   
   //TODO Prepare transition.
