@@ -9,6 +9,10 @@
 #define STORE_SIZE 64 /* bytes */
 #define LISTENER_LIMIT 32
 
+// World size in maps. We index maps by ID and also by absolute position; they're in a single plane.
+#define WORLDW 12
+#define WORLDH 12
+
 #define TRANSITION_NONE 0
 #define TRANSITION_LEFT 1
 #define TRANSITION_RIGHT 2
@@ -16,6 +20,11 @@
 #define TRANSITION_DOWN 4
 #define TRANSITION_RESET 5
 #define TRANSITION_TELEPORT 6
+
+#define DIR_N 0x40
+#define DIR_W 0x10
+#define DIR_E 0x08
+#define DIR_S 0x02
 
 #include "egg/egg.h"
 #include "opt/stdlib/egg-stdlib.h"
@@ -44,6 +53,7 @@ extern struct g {
   int modalc;
   struct map mapv[MAP_LIMIT]; // Some mutable content.
   int mapc;
+  struct map *maps_by_position[WORLDW*WORLDH]; // Sparse, points into (mapv). Index is (latitute*WORLDW+longitude).
   struct sprdef sprdefv[SPRDEF_LIMIT];
   int sprdefc;
   int input;

@@ -34,65 +34,16 @@ static int store_defv_init() {
 /* Receive tilesheet, there should only be one.
  */
  
-static void load_tilesheet(const void *src,int srcc) {
+static int load_tilesheet(const void *src,int srcc) {
   struct rom_tilesheet_reader reader;
   struct rom_tilesheet_entry entry;
-  if (rom_tilesheet_reader_init(&reader,src,srcc)<0) return;
+  if (rom_tilesheet_reader_init(&reader,src,srcc)<0) return -1;
   while (rom_tilesheet_reader_next(&entry,&reader)>0) {
     if (entry.tableid==NS_tilesheet_physics) {
       memcpy(g.physics+entry.tileid,entry.v,entry.c);
     }
   }
-}
-
-/* Receive map resource.
- */
- 
-static void load_map(int rid,const void *src,int srcc) {
-  struct rom_map rmap;
-  if (rom_map_decode(&rmap,src,srcc)<0) return;
-  if (g.mapc>=MAP_LIMIT) {
-    fprintf(stderr,"Too many maps.\n");
-    return;
-  }
-  if ((rmap.w!=NS_sys_mapw)||(rmap.h!=NS_sys_maph)) {
-    fprintf(stderr,"map:%d incorrect size %dx%d, expected %dx%d\n",rid,rmap.w,rmap.h,NS_sys_mapw,NS_sys_maph);
-    return;
-  }
-  struct map *map=g.mapv+g.mapc++;
-  map->rid=rid;
-  map->rocellv=rmap.v;
-  map->cmdv=rmap.cmdv;
-  map->cmdc=rmap.cmdc;
-}
-
-/* Receive sprite resource.
- */
- 
-static void load_sprite(int rid,const void *src,int srcc) {
-  struct rom_sprite rspr;
-  if (rom_sprite_decode(&rspr,src,srcc)<0) return;
-  if (g.sprdefc>=SPRDEF_LIMIT) {
-    fprintf(stderr,"Too many sprite resources.\n");
-    return;
-  }
-  const struct sprite_type *type=0;
-  struct rom_command_reader reader={.v=rspr.cmdv,.c=rspr.cmdc};
-  struct rom_command cmd;
-  while (rom_command_reader_next(&cmd,&reader)>0) {
-    switch (cmd.opcode) {
-      case CMD_sprite_sprtype: type=sprite_type_by_id((cmd.argv[0]<<8)|cmd.argv[1]); break;
-    }
-  }
-  if (!type) {
-    fprintf(stderr,"sprite:%d: Type unknown.\n",rid);
-    return;
-  }
-  struct sprdef *sprdef=g.sprdefv+g.sprdefc++;
-  sprdef->rid=rid;
-  sprdef->cmdv=rspr.cmdv;
-  sprdef->cmdc=rspr.cmdc;
-  sprdef->type=type;
+  return 0;
 }
 
 /* Init.
@@ -109,10 +60,29 @@ int session_init() {
   struct rom_res *res;
   while (res=rom_reader_next(&reader)) {
     switch (res->tid) {
-      case EGG_TID_tilesheet: if (res->rid==RID_tilesheet_tiles) load_tilesheet(res->v,res->c); break;
-      case EGG_TID_map: load_map(res->rid,res->v,res->c); break;
-      case EGG_TID_sprite: load_sprite(res->rid,res->v,res->c); break;
+      case EGG_TID_tilesheet: if (res->rid==RID_tilesheet_tiles) if (load_tilesheet(res->v,res->c)<0) return -1; break;
+      case EGG_TID_map: if (load_map(res->rid,res->v,res->c)<0) return -1; break;
+      case EGG_TID_sprite: if (load_sprite(res->rid,res->v,res->c)<0) return -1; break;
     }
+  }
+  
+  if (0) { // XXX TEMP Dump the world map.
+    fprintf(stderr,"----- world map -----\n");
+    struct map **p=g.maps_by_position;
+    int y=0; for (;y<WORLDH;y++) {
+      char dst[256];
+      int dstc=0;
+      int x=0; for (;x<WORLDW;x++,p++) {
+        if (*p) {
+          dstc+=snprintf(dst+dstc,sizeof(dst)-dstc," %3d",(*p)->rid);
+        } else {
+          memset(dst+dstc,' ',4);
+          dstc+=4;
+        }
+      }
+      fprintf(stderr,"%.*s\n",dstc,dst);
+    }
+    fprintf(stderr,"----- end of world map -----\n");
   }
   
   return 0;

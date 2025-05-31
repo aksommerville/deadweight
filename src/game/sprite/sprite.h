@@ -35,6 +35,9 @@ struct sprite_type {
   void (*render)(struct sprite *sprite,int x,int y);
 };
 
+// Session calls this once per resource at startup.
+int load_sprite(int rid,const void *src,int srcc);
+
 /* Let the framework call these; outside users should not.
  * sprite_new does not call init.
  */

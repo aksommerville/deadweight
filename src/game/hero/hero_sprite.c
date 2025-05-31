@@ -11,6 +11,7 @@ static void _hero_del(struct sprite *sprite) {
  
 static int _hero_init(struct sprite *sprite) {
   fprintf(stderr,"%s %f,%f\n",__func__,sprite->x,sprite->y);
+  SPRITE->facedir=DIR_S;
   return 0;
 }
 
@@ -32,6 +33,10 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) { hero_choose(sprite); return; }
     if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) hero_item_begin(sprite);
     else if (!(g.input&EGG_BTN_SOUTH)&&(g.pvinput&EGG_BTN_SOUTH)) hero_item_end(sprite);
+    if ((g.input&EGG_BTN_LEFT)&&!(g.pvinput&EGG_BTN_LEFT)) SPRITE->facedir=DIR_W;
+    if ((g.input&EGG_BTN_RIGHT)&&!(g.pvinput&EGG_BTN_RIGHT)) SPRITE->facedir=DIR_E;
+    if ((g.input&EGG_BTN_UP)&&!(g.pvinput&EGG_BTN_UP)) SPRITE->facedir=DIR_N;
+    if ((g.input&EGG_BTN_DOWN)&&!(g.pvinput&EGG_BTN_DOWN)) SPRITE->facedir=DIR_S;
   }
   if (g.input&EGG_BTN_SOUTH) hero_item_update(sprite,elapsed);
   
@@ -39,10 +44,22 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
     case EGG_BTN_LEFT: sprite->x-=6.0*elapsed; break;
     case EGG_BTN_RIGHT: sprite->x+=6.0*elapsed; break;
+    default: if ((SPRITE->facedir==DIR_W)||(SPRITE->facedir==DIR_E)) {
+        switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
+          case EGG_BTN_UP: SPRITE->facedir=DIR_N; break;
+          case EGG_BTN_DOWN: SPRITE->facedir=DIR_S; break;
+        }
+      }
   }
   switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
     case EGG_BTN_UP: sprite->y-=6.0*elapsed; break;
     case EGG_BTN_DOWN: sprite->y+=6.0*elapsed; break;
+    default: if ((SPRITE->facedir==DIR_N)||(SPRITE->facedir==DIR_S)) {
+        switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
+          case EGG_BTN_LEFT: SPRITE->facedir=DIR_W; break;
+          case EGG_BTN_RIGHT: SPRITE->facedir=DIR_E; break;
+        }
+      } break;
   }
   int talking_now=0;
   int i=g.spritec;
@@ -75,7 +92,14 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
  */
  
 static void _hero_render(struct sprite *sprite,int x,int y) {
-  graf_draw_tile(&g.graf,g.texid_sprites,x,y,sprite->tileid,sprite->xform);
+  uint8_t tileid=sprite->tileid;
+  uint8_t xform=0;
+  switch (SPRITE->facedir) {
+    case DIR_N: tileid+=1; break;
+    case DIR_W: tileid+=2; break;
+    case DIR_E: tileid+=2; xform=EGG_XFORM_XREV; break;
+  }
+  graf_draw_tile(&g.graf,g.texid_sprites,x,y,tileid,xform);
 }
 
 /* Type definition.

@@ -6,6 +6,7 @@
 struct sprite_hero {
   struct sprite hdr;
   int talking;//XXX
+  int facedir;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)

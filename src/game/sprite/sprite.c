@@ -1,5 +1,35 @@
 #include "game/game.h"
 
+/* Receive sprite resource.
+ */
+ 
+int load_sprite(int rid,const void *src,int srcc) {
+  struct rom_sprite rspr;
+  if (rom_sprite_decode(&rspr,src,srcc)<0) return -1;
+  if (g.sprdefc>=SPRDEF_LIMIT) {
+    fprintf(stderr,"Too many sprite resources.\n");
+    return -1;
+  }
+  const struct sprite_type *type=0;
+  struct rom_command_reader reader={.v=rspr.cmdv,.c=rspr.cmdc};
+  struct rom_command cmd;
+  while (rom_command_reader_next(&cmd,&reader)>0) {
+    switch (cmd.opcode) {
+      case CMD_sprite_sprtype: type=sprite_type_by_id((cmd.argv[0]<<8)|cmd.argv[1]); break;
+    }
+  }
+  if (!type) {
+    fprintf(stderr,"sprite:%d: Type unknown.\n",rid);
+    return -1;
+  }
+  struct sprdef *sprdef=g.sprdefv+g.sprdefc++;
+  sprdef->rid=rid;
+  sprdef->cmdv=rspr.cmdv;
+  sprdef->cmdc=rspr.cmdc;
+  sprdef->type=type;
+  return 0;
+}
+
 /* Delete.
  */
  
