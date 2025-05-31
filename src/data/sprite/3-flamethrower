@@ -1,0 +1,4 @@
+sprtype (u16:sprtype)flamethrower
+image image:sprites
+tile 0x81 0
+solid

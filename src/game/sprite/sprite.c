@@ -274,3 +274,18 @@ const struct sprdef *sprdef_by_id(int rid) {
   }
   return 0;
 }
+
+/* Preferred monster target.
+ */
+ 
+struct sprite *get_preferred_monster_target() {
+  if (g.princess) {
+    if (
+      (g.princess->x>=0.0)&&
+      (g.princess->y>=0.0)&&
+      (g.princess->x<NS_sys_mapw)&&
+      (g.princess->y<NS_sys_maph)
+    ) return g.princess;
+  }
+  return g.hero;
+}

@@ -31,16 +31,17 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Sprites.
 - - [x] Hero.
 - - [x] Princess.
-- - [ ] Switchable flamethrowers.
+- - [x] Switchable flamethrowers.
 - - [ ] Pushable blocks.
 - - [x] Switchable doors.
 - - [ ] Oscillating traps.
-- - [ ] Responsive traps.
+- - [x] Responsive traps.
 - - [ ] Roaming monsters. (multiple skins)
-- - [ ] Targetted fireballs. Target the Hero or the Princess?
+- - [x] Targetted fireballs. Target the Hero or the Princess? ...prefer targetting the princess
 - - [ ] Straight-shooting monsters.
 - - [ ] Target-shooting monsters.
 - - [ ] Sentinel monsters. Stands in one place, attacks when you draw near.
+- [ ] Hero and princess take damage.
 - [ ] Boss fight, immediately before rescue, once per session.
 - [x] Dialogue.
 - [ ] Items.

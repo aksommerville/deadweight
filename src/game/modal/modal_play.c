@@ -101,6 +101,9 @@ static int _play_init(struct modal *modal) {
   modal->render=_play_render;
   modal->opaque=1;
   modal->passive=0;
+  
+  egg_play_song(RID_song_we_need_norris,0,1);
+  
   return 0;
 }
 

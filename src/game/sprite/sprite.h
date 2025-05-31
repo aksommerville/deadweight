@@ -64,6 +64,11 @@ SPRTYPE_FOR_EACH
 
 const struct sprdef *sprdef_by_id(int rid);
 
+/* If the princess exists and is on screen, monsters like to attack her.
+ * Otherwise the hero.
+ */
+struct sprite *get_preferred_monster_target();
+
 /* Impulse physics: When a solid sprite moves, we immediately resolve all collisions.
  * These both work for non-solid sprites, but are trivial, you might as well update (x,y) yourself.
  * "move" takes a delta and assumes that the current position is valid.

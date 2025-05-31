@@ -1,0 +1,3 @@
+sprtype (u16:sprtype)bubblesaur
+image image:sprites
+tile 0x88 0

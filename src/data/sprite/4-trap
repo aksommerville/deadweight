@@ -1,0 +1,3 @@
+sprtype (u16:sprtype)trap
+image image:sprites
+tile 0x87 0

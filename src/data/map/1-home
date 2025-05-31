@@ -21,3 +21,4 @@ treadle @4,10 (u16:fld)homelock1
 switchable @7,12 (u16:fld)homelock1
 stompbox @11,4 (u16:fld)homelock2
 switchable @8,4 (u16:fld)homelock2
+sprite @5,4 sprite:flamethrower 0x02 4 (u16:fld)homelock1

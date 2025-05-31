@@ -15,3 +15,7 @@
 
 image image:tiles
 location 5 4
+sprite @2,11 sprite:trap 0x00000000
+sprite @2,4 sprite:trap 0x00000000
+sprite @13,4 sprite:trap 0x00000000
+sprite @13,11 sprite:trap 0x00000000
