@@ -9,11 +9,14 @@
 #define NS_sys_mapw 16
 #define NS_sys_maph 14
 
-#define CMD_map_image     0x20 /* u16:imageid */
-#define CMD_map_location  0x21 /* u8:longitude u8:latitude */
-#define CMD_map_field     0x40 /* u16:k u16:v ; Set a store field at load. */
-#define CMD_map_sprite    0x61 /* u16:pos u16:spriteid u32:reserved */
-#define CMD_map_door      0x62 /* u16:pos u16:mapid u16:dstpos u16:reserved */
+#define CMD_map_image      0x20 /* u16:imageid */
+#define CMD_map_location   0x21 /* u8:longitude u8:latitude */
+#define CMD_map_field      0x40 /* u16:k u16:v ; Set a store field at load. */
+#define CMD_map_treadle    0x41 /* u8:x u8:y u16:fld */
+#define CMD_map_stompbox   0x42 /* u8:x u8:y u16:fld */
+#define CMD_map_switchable 0x43 /* u8:x u8:y u16:fld */
+#define CMD_map_sprite     0x61 /* u16:pos u16:spriteid u32:reserved */
+#define CMD_map_door       0x62 /* u16:pos u16:mapid u16:dstpos u16:reserved */
 
 #define CMD_sprite_solid    0x01
 #define CMD_sprite_airborne 0x02
@@ -57,6 +60,8 @@
 #define NS_fld_escort           15 /* Princess is saved and following me. Clears if she dies. */
 #define NS_fld_boss_visited     16
 #define NS_fld_boss_dead        17
-#define FLD_COUNT               18
+#define NS_fld_homelock1        18
+#define NS_fld_homelock2        19
+#define FLD_COUNT               20
 
 #endif

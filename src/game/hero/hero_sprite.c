@@ -28,6 +28,49 @@ static void hero_choose(struct sprite *sprite) {
   g.input_blackout|=EGG_BTN_WEST;
 }
 
+/* Moved to a new cell. Look for switches etc.
+ */
+ 
+static void hero_change_quantized_position(struct sprite *sprite,int mapid,int x,int y) {
+  const struct poi *poi=g.poiv;
+  int i=g.poic;
+  for (;i-->0;poi++) {
+    if ((poi->x==x)&&(poi->y==y)) {
+      switch (poi->opcode) {
+        case CMD_map_treadle: {
+            int cellp=poi->y*NS_sys_mapw+poi->x;
+            g.map->cellv[cellp]=g.map->rocellv[cellp]+1;
+            store_set((poi->argv[2]<<8)|poi->argv[3],1);
+          } break;
+        case CMD_map_stompbox: {
+            int cellp=poi->y*NS_sys_mapw+poi->x;
+            g.map->cellv[cellp]=g.map->rocellv[cellp]+1;
+            int k=(poi->argv[2]<<8)|poi->argv[3];
+            if (store_get(k)) store_set(k,0);
+            else store_set(k,1);
+          } break;
+      }
+    } else if ((SPRITE->mapid==mapid)&&(poi->x==SPRITE->cellx)&&(poi->y==SPRITE->celly)) {
+      switch (poi->opcode) {
+        case CMD_map_treadle: {
+            int cellp=poi->y*NS_sys_mapw+poi->x;
+            g.map->cellv[cellp]=g.map->rocellv[cellp];
+            store_set((poi->argv[2]<<8)|poi->argv[3],0);
+          } break;
+        case CMD_map_stompbox: {
+            int cellp=poi->y*NS_sys_mapw+poi->x;
+            int k=(poi->argv[2]<<8)|poi->argv[3];
+            if (store_get(k)) g.map->cellv[cellp]=g.map->rocellv[cellp]+2;
+            else g.map->cellv[cellp]=g.map->rocellv[cellp];
+          } break;
+      }
+    }
+  }
+  SPRITE->mapid=mapid;
+  SPRITE->cellx=x;
+  SPRITE->celly=y;
+}
+
 /* Walking.
  */
  
@@ -47,6 +90,14 @@ static void hero_walk_end(struct sprite *sprite) {
 static void hero_walk_update(struct sprite *sprite,double elapsed) {
   if (!SPRITE->walking) return;
   sprite_move(sprite,HERO_WALK_SPEED*SPRITE->indx*elapsed,HERO_WALK_SPEED*SPRITE->indy*elapsed);
+  
+  // Check for changes to quantized position.
+  int mapid=g.map?g.map->rid:0;
+  int cellx=(int)sprite->x;
+  int celly=(int)sprite->y;
+  if ((mapid!=SPRITE->mapid)||(cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
+    hero_change_quantized_position(sprite,mapid,cellx,celly);
+  }
 }
 
 /* Update (indx,indy), motion state, and (faced) in response to an input change.

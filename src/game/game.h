@@ -8,6 +8,7 @@
 #define SPRDEF_LIMIT 40 /* '' sprite */
 #define STORE_SIZE 64 /* bytes */
 #define LISTENER_LIMIT 32
+#define POI_LIMIT 32
 
 // World size in maps. We index maps by ID and also by absolute position; they're in a single plane.
 #define WORLDW 12
@@ -72,6 +73,8 @@ extern struct g {
   struct listener listenerv[LISTENER_LIMIT];
   int listenerc;
   int listenerid_next;
+  struct poi poiv[POI_LIMIT];
+  int poic;
 
 // Room state:
   int transition;

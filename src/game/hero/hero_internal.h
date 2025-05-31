@@ -12,6 +12,7 @@ struct sprite_hero {
   int walking;
   double animclock;
   int animframe;
+  int mapid,cellx,celly;
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)

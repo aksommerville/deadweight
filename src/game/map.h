@@ -13,6 +13,13 @@ struct map {
   int cmdc;
 };
 
+struct poi {
+  uint8_t x,y;
+  uint8_t opcode;
+  const uint8_t *argv; // [0,1] are always (x,y)
+  int argc;
+};
+
 // Session calls this once per resource at startup:
 int load_map(int rid,const void *src,int srcc);
 

@@ -111,6 +111,63 @@ int session_reset() {
   return 0;
 }
 
+/* Check all POI for any that react to a given flag change.
+ */
+ 
+static void check_changed_poi(int k,int v) {
+  struct poi *poi=g.poiv;
+  int i=g.poic;
+  for (;i-->0;poi++) {
+    switch (poi->opcode) {
+      case CMD_map_switchable: {
+          int qk=(poi->argv[2]<<8)|poi->argv[3];
+          if (qk==k) {
+            int cellp=poi->y*NS_sys_mapw+poi->x;
+            g.map->cellv[cellp]=g.map->rocellv[cellp]+(v?1:0);
+          }
+        } break;
+    }
+  }
+}
+
+/* For all the POI we've gathered at entering a new map, do whatever they need.
+ */
+ 
+static void prerun_poi() {
+  struct poi *poi=g.poiv;
+  int i=g.poic;
+  for (;i-->0;poi++) {
+    switch (poi->opcode) {
+      case CMD_map_treadle: {
+          int cellp=poi->y*NS_sys_mapw+poi->x;
+          g.map->cellv[cellp]=g.map->rocellv[cellp];
+          uint16_t k=(poi->argv[2]<<8)|poi->argv[3];
+          store_set(k,0);
+        } break;
+      case CMD_map_stompbox: {
+          int cellp=poi->y*NS_sys_mapw+poi->x;
+          g.map->cellv[cellp]=g.map->rocellv[cellp];
+          uint16_t k=(poi->argv[2]<<8)|poi->argv[3];
+          if (store_get(k)) {
+            g.map->cellv[cellp]=g.map->rocellv[cellp]+2;
+          } else {
+            g.map->cellv[cellp]=g.map->rocellv[cellp];
+          }
+        } break;
+      case CMD_map_switchable: {
+          int cellp=poi->y*NS_sys_mapw+poi->x;
+          g.map->cellv[cellp]=g.map->rocellv[cellp];
+          uint16_t k=(poi->argv[2]<<8)|poi->argv[3];
+          if (store_get(k)) {
+            g.map->cellv[cellp]=g.map->rocellv[cellp]+1;
+          } else {
+            g.map->cellv[cellp]=g.map->rocellv[cellp];
+          }
+        } break;
+    }
+  }
+}
+
 /* Enter map.
  */
  
@@ -118,6 +175,7 @@ int enter_map(int rid,int transition) {
   struct map *map=map_by_id(rid);
   if (!map) return -1;
   g.map=map;
+  g.poic=0;
   
   sprites_delete_volatile();
   
@@ -125,6 +183,22 @@ int enter_map(int rid,int transition) {
   struct rom_command cmd;
   while (rom_command_reader_next(&cmd,&reader)>0) {
     switch (cmd.opcode) {
+      case CMD_map_treadle:
+      case CMD_map_stompbox:
+      case CMD_map_switchable: {
+          if (g.poic<POI_LIMIT) {
+            struct poi *poi=g.poiv+g.poic++;
+            poi->x=cmd.argv[0];
+            poi->y=cmd.argv[1];
+            if ((poi->x>=NS_sys_mapw)||(poi->y>=NS_sys_maph)) {
+              g.poic--;
+              break;
+            }
+            poi->opcode=cmd.opcode;
+            poi->argv=cmd.argv;
+            poi->argc=cmd.argc;
+          }
+        } break;
       case CMD_map_sprite: {
           uint8_t x=cmd.argv[0];
           uint8_t y=cmd.argv[1];
@@ -141,6 +215,8 @@ int enter_map(int rid,int transition) {
         } break;
     }
   }
+  
+  prerun_poi();
   
   // Apply transition to the persistent sprites.
   switch (transition) {
@@ -226,7 +302,7 @@ static void store_write(uint8_t *dst,int p,int c,int v) {
   uint8_t mask=1<<(p&7);
   int i=0;
   for (;i<c;i++) {
-    if (v&(i<<1)) (*dst)|=mask; else (*dst)&=~mask;
+    if (v&(1<<i)) (*dst)|=mask; else (*dst)&=~mask;
     if (!(mask<<=1)) { mask=1; dst++; }
   }
 }
@@ -252,6 +328,7 @@ int store_set(int k,int v) {
   int pv=store_read(g.store,def->p,def->c);
   if (pv==v) return v;
   store_write(g.store,def->p,def->c,v);
+  check_changed_poi(k,v);
   struct listener *listener=g.listenerv;
   int i=g.listenerc;
   for (;i-->0;listener++) {

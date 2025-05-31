@@ -33,7 +33,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [x] Princess.
 - - [ ] Switchable flamethrowers.
 - - [ ] Pushable blocks.
-- - [ ] Switchable doors.
+- - [x] Switchable doors.
 - - [ ] Oscillating traps.
 - - [ ] Responsive traps.
 - - [ ] Roaming monsters. (multiple skins)
@@ -71,7 +71,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 - [x] 2025-05-30T07:00 F Jam begins.
 - [x] 2025-05-30 EOD   F Have global framework ready: Modals, map loader, state engine, sprite loader.
-- [ ] 2025-05-31 EOD   S Hero, Princess, transitions, dialogue.
+- [x] 2025-05-31 EOD   S Hero, Princess, transitions, dialogue.
 - [ ] 2025-06-01 EOD   U Sprites and items.
 - [ ] 2025-06-06 EOD   F Rough world layout.
 - [ ] 2025-06-07 EOD   S Sound effects.
