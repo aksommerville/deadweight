@@ -61,6 +61,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Proper graphics.
 - [ ] Sound effects.
 - [ ] Music.
+- [ ] Script to validate images: No more than 4 colors per tile, counting transparency, and all opaque colors must be in palette.
 - [ ] Interrupted transitions snap complete before proceeding (eg enter a neighbor map and quickly change your mind). Is it feasible to start partway thru in those cases?
 - [ ] Errata.
 - - [ ] Itch page.

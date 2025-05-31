@@ -6,6 +6,9 @@
 struct sprite_hero {
   struct sprite hdr;
   int talking;//XXX
+  int walking;
+  double animclock;
+  int animframe;
   int facedir;
 };
 
