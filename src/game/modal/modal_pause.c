@@ -8,12 +8,13 @@
 #define PAUSE_END_TIME   0.200
 
 #define PAUSE_MARGIN 4
-#define PAUSE_TOTAL_W (PAUSE_MARGIN*5+NS_sys_tilesize*3+9*8)
+#define PAUSE_LONGEST_TEXT_LABEL 9
+#define PAUSE_TOTAL_W (PAUSE_MARGIN*5+NS_sys_tilesize*3+PAUSE_LONGEST_TEXT_LABEL*8)
 #define PAUSE_TOTAL_H  (PAUSE_MARGIN*4+NS_sys_tilesize*3)
 #define PAUSE_TOTAL_X ((FBW>>1)-(PAUSE_TOTAL_W>>1))
 #define PAUSE_TOTAL_Y ((FBH>>1)-(PAUSE_TOTAL_H>>1))
 
-#define PAUSE_LABEL_LIMIT 12 /* 9 items + resume + quit + new game */
+#define PAUSE_LABEL_LIMIT 13 /* 9 items + resume + quit + new game + tattle */
 
 struct modal_pause {
   struct modal hdr;
@@ -26,6 +27,7 @@ struct modal_pause {
     const char *text;
     int textc;
     int qty; // <0 to suppress
+    int selectable;
   } labelv[PAUSE_LABEL_LIMIT];
   int labelc;
   int labelp;
@@ -39,6 +41,21 @@ struct modal_pause {
  */
  
 static void _pause_del(struct modal *modal) {
+}
+
+/* Replace text of the item name tattle.
+ */
+ 
+static void pause_update_item_label(struct modal *modal) {
+  if (MODAL->labelc<13) return;
+  struct label *label=MODAL->labelv+12;
+  if (label->tileid||label->selectable) return; // oops we got the wrong one somehow
+  int itemid=MODAL->labelp; // First 9 labels are the items, in canonical order.
+  if ((itemid<0)||(itemid>=9)) {
+    label->textc=0;
+  } else {
+    label->textc=strings_get(&label->text,1,8+itemid);
+  }
 }
 
 /* Digested input events.
@@ -55,6 +72,7 @@ static void pause_move(struct modal *modal,int dx,int dy) {
     else if (dx>0) MODAL->labelp=3;
     else if (dy<0) MODAL->labelp=7;
     else MODAL->labelp=1;
+    pause_update_item_label(modal);
     return;
   }
   
@@ -68,6 +86,7 @@ static void pause_move(struct modal *modal,int dx,int dy) {
   while (i-->0) {
     struct label *q=MODAL->labelv+i;
     if (q==prev) continue;
+    if (!q->selectable) continue;
     int d;
     if (dx) {
       if (q->y+q->h<=prev->y) continue;
@@ -89,6 +108,8 @@ static void pause_move(struct modal *modal,int dx,int dy) {
   }
   if (!next) return;
   MODAL->labelp=next-MODAL->labelv;
+  
+  pause_update_item_label(modal);
 }
 
 static void pause_dismiss(struct modal *modal) {
@@ -151,7 +172,11 @@ static void _pause_input(struct modal *modal) {
   }
   if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
     g.input_blackout|=EGG_BTN_WEST;
-    pause_activate(modal);
+    if ((MODAL->labelp>=0)&&(MODAL->labelp<9)) { // WEST with an item focussed, accept it.
+      pause_activate(modal);
+    } else { // WEST anywhere else is a straight "cancel"
+      pause_dismiss(modal);
+    }
   }
 }
 
@@ -247,11 +272,12 @@ static void _pause_render(struct modal *modal) {
 /* Add label.
  */
  
-static void pause_add_item_label(struct modal *modal,int col,int row,int kgot,int kqty) {
+static struct label *pause_add_item_label(struct modal *modal,int col,int row,int kgot,int kqty) {
   int colw=PAUSE_MARGIN+NS_sys_tilesize;
-  if (MODAL->labelc>=PAUSE_LABEL_LIMIT) return;
+  if (MODAL->labelc>=PAUSE_LABEL_LIMIT) return 0;
   struct label *label=MODAL->labelv+MODAL->labelc++;
   memset(label,0,sizeof(struct label));
+  label->selectable=1;
   label->x=PAUSE_TOTAL_X+PAUSE_MARGIN+col*colw;
   label->y=PAUSE_TOTAL_Y+PAUSE_MARGIN+row*colw;
   label->w=NS_sys_tilesize;
@@ -263,18 +289,21 @@ static void pause_add_item_label(struct modal *modal,int col,int row,int kgot,in
       label->qty=store_get(kqty);
     }
   }
+  return label;
 }
 
-static void pause_add_string_label(struct modal *modal,int row,int rid,int ix) {
-  if (MODAL->labelc>=PAUSE_LABEL_LIMIT) return;
+static struct label *pause_add_string_label(struct modal *modal,int row,int rid,int ix) {
+  if (MODAL->labelc>=PAUSE_LABEL_LIMIT) return 0;
   struct label *label=MODAL->labelv+MODAL->labelc++;
   memset(label,0,sizeof(struct label));
+  label->selectable=1;
   label->textc=strings_get(&label->text,rid,ix);
   label->x=PAUSE_TOTAL_X+PAUSE_MARGIN*4+NS_sys_tilesize*3;
   label->y=PAUSE_TOTAL_Y+PAUSE_MARGIN+row*8;
   label->w=label->textc*8+1;
   label->h=8;
   label->qty=-1;
+  return label;
 }
 
 /* Init.
@@ -308,9 +337,13 @@ static int _pause_init(struct modal *modal,int x,int y) {
   pause_add_string_label(modal,0,1,5); // Resume
   pause_add_string_label(modal,1,1,6); // Main Menu
   pause_add_string_label(modal,2,1,7); // New Game
+  struct label *label=pause_add_string_label(modal,6,1,0); // Placeholder for item name.
+  if (!label) return -1;
+  label->selectable=0;
   
   int equipped=store_get(NS_fld_equipped);
   MODAL->labelp=equipped-NS_fld_got_broom;
+  pause_update_item_label(modal);
   
   return 0;
 }

@@ -45,6 +45,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Boss fight, immediately before rescue, once per session.
 - [x] Dialogue.
 - [ ] Items.
+- - [ ] Show Dot carrying whatever's equipped.
 - - [ ] Broom. Like Full Moon.
 - - [ ] Pepper. Burn everything within some radius. Light candles. Kill Princess.
 - - [ ] Compass. Points toward the Princess.
@@ -59,6 +60,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Game over. Success only. Game will not be loseable.
 - - [x] Pause. Inventory and options, like Full Moon.
 - [ ] Maps.
+- [ ] The hello splash has got to go, alas. Needs to look silly and whimsical. More Kirby, less Ninja Gaiden.
+- [ ] Princess should trigger treadles.
 - [ ] Proper graphics.
 - [ ] Sound effects.
 - [ ] Music.
