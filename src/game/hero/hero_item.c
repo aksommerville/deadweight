@@ -41,9 +41,12 @@ static void hero_bomb_begin(struct sprite *sprite) {
     egg_play_sound(RID_sound_reject);
     return;
   }
+  double x=sprite->x+SPRITE->facedx;
+  double y=sprite->y+SPRITE->facedy;
+  struct sprite *bomb=sprite_spawn(x,y,0,&sprite_type_bomb,0);
+  if (!bomb) return;
   store_set(NS_fld_qty_bomb,qty-1);
-  fprintf(stderr,"%s\n",__func__);
-  //TODO create bomb sprite
+  egg_play_sound(RID_sound_bomb);
 }
  
 static void hero_candy_begin(struct sprite *sprite) {
@@ -52,9 +55,13 @@ static void hero_candy_begin(struct sprite *sprite) {
     egg_play_sound(RID_sound_reject);
     return;
   }
+  double x=sprite->x+SPRITE->facedx;
+  double y=sprite->y+SPRITE->facedy;
+  struct sprite *candy=sprite_spawn(x,y,0,&sprite_type_candy,0);
+  if (!candy) return;
   store_set(NS_fld_qty_candy,qty-1);
-  fprintf(stderr,"%s\n",__func__);
-  //TODO create candy sprite
+  egg_play_sound(RID_sound_candy);
+  store_set(NS_fld_qty_candy,qty-1);
 }
 
 /* Broom.

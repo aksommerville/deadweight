@@ -44,7 +44,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Hero and princess take damage.
 - [ ] Boss fight, immediately before rescue, once per session.
 - [x] Dialogue.
-- [ ] Items.
+- [x] Items.
 - - [x] Show Dot carrying whatever's equipped.
 - - [x] Broom. Like Full Moon.
 - - [x] Pepper. Burn everything within some radius. Light candles. Kill Princess.
@@ -53,13 +53,15 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [x] Camera. Like Too Heavy. Maybe prompt when actuated "warp or replace?"
 - - [x] Snowglobe. Like Full Moon.
 - - [x] Wand. Summon moveable objects. (not for general spell casting, that won't be a thing).
-- - [ ] Bomb. Destroy things, esp Princesses.
-- - [ ] Candy. Distact monsters.
+- - [x] Bomb. Destroy things, esp Princesses.
+- - [x] Candy. Distact monsters.
 - [ ] Modals.
 - - [x] Hello.
 - - [ ] Game over. Success only. Game will not be loseable.
 - - [x] Pause. Inventory and options, like Full Moon.
 - [ ] Maps.
+- [ ] Bomb explosion.
+- [ ] Candy attraction.
 - [ ] Compass pre-rescue. (ie no Princess sprite)
 - [ ] Broom: prevent disengaging over a hole. Important!
 - [ ] Broom is allowing me to sneak offscreen around walls. I thought physics was preventing that! It must.
