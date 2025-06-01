@@ -22,6 +22,7 @@ static int _ssflame_init(struct sprite *sprite) {
 }
 
 static void _ssflame_update(struct sprite *sprite,double elapsed) {
+  if (g.time_stopped) return;
   if (SPRITE->delay>0.0) { // We're just "not here yet" until (delay) runs down.
     SPRITE->delay-=elapsed;
     return;

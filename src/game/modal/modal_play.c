@@ -1,7 +1,16 @@
 #include "game/game.h"
 
+// There's a fixed set of chronflakes, initially random.
+// When one expires, we create a new one in its place.
+#define PLAY_CHRONFLAKE_COUNT 40
+#define PLAY_CHRONFLAKE_TTL 60 /* video frames */
+
 struct modal_play {
   struct modal hdr;
+  struct chronflake {
+    int x,y; // fb coords
+    int ttl; // Video frames, so we can update and render at the same time. Counts down.
+  } chronflakev[PLAY_CHRONFLAKE_COUNT];
 };
 
 #define MODAL ((struct modal_play*)modal)
@@ -66,6 +75,31 @@ static void _play_update(struct modal *modal,double elapsed) {
   }
 }
 
+/* Chronflakes: Some crystally kind of effect above the scene, when stopwatch in use.
+ * Not sure how possible this would have been for a real NES, but Mega Man 2 does something similarish.
+ */
+ 
+static void play_render_chronflakes(struct modal *modal) {
+  struct chronflake *chronflake=MODAL->chronflakev;
+  int i=PLAY_CHRONFLAKE_COUNT;
+  for (;i-->0;chronflake++) {
+    if (--(chronflake->ttl)<=0) {
+      chronflake->x=rand()%FBW;
+      chronflake->y=rand()%FBH;
+      chronflake->ttl=PLAY_CHRONFLAKE_TTL;
+    }
+    uint8_t tileid;
+    switch ((chronflake->ttl*5)/PLAY_CHRONFLAKE_TTL) {
+      case 0: tileid=0x2f; break;
+      case 1: tileid=0x2e; break;
+      case 2: tileid=0x2d; break;
+      case 3: tileid=0x2e; break;
+      default: tileid=0x2f;
+    }
+    graf_draw_tile(&g.graf,g.texid_sprites,chronflake->x,chronflake->y,tileid,0);
+  }
+}
+
 /* Render.
  */
  
@@ -88,6 +122,10 @@ static void _play_render(struct modal *modal) {
   // Draw the new scene.
   graf_draw_tile_buffer(&g.graf,g.texid_tiles,dstx+(NS_sys_tilesize>>1),dsty+(NS_sys_tilesize>>1),g.map->cellv,NS_sys_mapw,NS_sys_maph,NS_sys_mapw);
   sprites_render(dstx,dsty);
+  
+  /* Weather and such, above the scene.
+   */
+  if (g.time_stopped) play_render_chronflakes(modal);
 }
 
 /* Init.
@@ -104,6 +142,16 @@ static int _play_init(struct modal *modal) {
   modal->passive=0;
   
   egg_play_song(RID_song_we_need_norris,0,1);
+  
+  // Chronflakes are initially randomized, so we can start displaying whenever.
+  // They don't update when not in use.
+  struct chronflake *chronflake=MODAL->chronflakev;
+  int i=PLAY_CHRONFLAKE_COUNT;
+  for (;i-->0;chronflake++) {
+    chronflake->x=rand()%FBW;
+    chronflake->y=rand()%FBH;
+    chronflake->ttl=rand()%PLAY_CHRONFLAKE_TTL+1;
+  }
   
   return 0;
 }

@@ -81,11 +81,13 @@ static void hero_broom_end(struct sprite *sprite) {
  */
  
 static void hero_stopwatch_begin(struct sprite *sprite) {
-  fprintf(stderr,"%s\n",__func__);//TODO
+  SPRITE->using_item=NS_fld_got_stopwatch;
+  g.time_stopped=1;
 }
 
 static void hero_stopwatch_end(struct sprite *sprite) {
-  fprintf(stderr,"%s\n",__func__);//TODO
+  SPRITE->using_item=0;
+  g.time_stopped=0;
 }
 
 /* Camera.

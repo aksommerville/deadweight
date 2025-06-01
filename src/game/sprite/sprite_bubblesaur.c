@@ -21,6 +21,7 @@ static int _bubblesaur_init(struct sprite *sprite) {
 }
 
 static void _bubblesaur_update(struct sprite *sprite,double elapsed) {
+  if (g.time_stopped) return;
   SPRITE->clock+=elapsed;
   if (SPRITE->clock<BUBBLESAUR_BLOW_TIME) {
     sprite->tileid=SPRITE->tileid0;

@@ -49,7 +49,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [x] Broom. Like Full Moon.
 - - [x] Pepper. Burn everything within some radius. Light candles. Kill Princess.
 - - [x] Compass. Points toward the Princess.
-- - [ ] Stopwatch. Like Too Heavy.
+- - [x] Stopwatch. Like Too Heavy.
 - - [ ] Camera. Like Too Heavy. Maybe prompt when actuated "warp or replace?"
 - - [ ] Snowglobe. Like Full Moon.
 - - [ ] Wand. Summon moveable objects. (not for general spell casting, that won't be a thing).
@@ -61,6 +61,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [x] Pause. Inventory and options, like Full Moon.
 - [ ] Maps.
 - [ ] Compass pre-rescue. (ie no Princess sprite)
+- [ ] Broom: prevent disengaging over a hole. Important!
 - [ ] Broom is allowing me to sneak offscreen around walls. I thought physics was preventing that! It must.
 - [ ] The hello splash has got to go, alas. Needs to look silly and whimsical. More Kirby, less Ninja Gaiden.
 - [ ] Princess should trigger treadles.

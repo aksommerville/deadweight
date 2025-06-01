@@ -92,6 +92,7 @@ static int trap_closed(struct sprite *sprite) {
 }
 
 static void _trap_update(struct sprite *sprite,double elapsed) {
+  if (g.time_stopped) return;
   switch (SPRITE->phase) {
     case TRAP_PHASE_IDLE: trap_check_targets(sprite); break;
     case TRAP_PHASE_ATTACK: {

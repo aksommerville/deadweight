@@ -80,6 +80,7 @@ extern struct g {
   int transition;
   double transition_clock;
   int transition_texid;
+  int time_stopped; // The stopwatch. Sprite controllers are expected to respect this on their own.
 } g;
 
 extern const uint32_t nes_colors[55];

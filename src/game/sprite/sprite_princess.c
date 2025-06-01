@@ -223,6 +223,12 @@ static void princess_rebuild_path_if_needed(struct sprite *sprite) {
  
 static void _princess_update(struct sprite *sprite,double elapsed) {
 
+  if (g.time_stopped) {
+    // Very important that the princess respect the stopwatch.
+    // "Oh this hazard will be easy, we just stop it and walk thru.... god damn it, princess."
+    return;
+  }
+
   if ((SPRITE->animclock-=elapsed)<0.0) {
     SPRITE->animclock+=0.200;
     if (++(SPRITE->animframe)>=4) SPRITE->animframe=0;

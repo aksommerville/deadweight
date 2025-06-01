@@ -46,7 +46,15 @@ static int _bubble_init(struct sprite *sprite) {
   return 0;
 }
 
+static void bubble_check_damage(struct sprite *sprite) {
+  //TODO bubble damage
+}
+
 static void _bubble_update(struct sprite *sprite,double elapsed) {
+  if (g.time_stopped) { // When stopped, we're still deadly.
+    bubble_check_damage(sprite);
+    return;
+  }
   if ((SPRITE->animclock-=elapsed)<0.0) {
     SPRITE->animclock+=0.250;
     if (++(SPRITE->animframe)>=2) SPRITE->animframe=0;
@@ -57,7 +65,7 @@ static void _bubble_update(struct sprite *sprite,double elapsed) {
   } else {
     sprite->x+=SPRITE->dx*elapsed;
     sprite->y+=SPRITE->dy*elapsed;
-    //TODO Collide with hero or princess, deal damage and pop
+    bubble_check_damage(sprite);
     if ((sprite->x<-1.0)||(sprite->y<-1.0)||(sprite->x>NS_sys_mapw+1.0)||(sprite->y>NS_sys_maph+1.0)) {
       sprite->defunct=1;
     }

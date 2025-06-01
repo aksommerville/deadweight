@@ -51,9 +51,11 @@ static int _flamethrower_init(struct sprite *sprite) {
 }
 
 static void _flamethrower_update(struct sprite *sprite,double elapsed) {
-  if ((SPRITE->animclock-=elapsed)<=0.0) {
-    SPRITE->animclock+=0.125;
-    if (++(SPRITE->animframe)>=2) SPRITE->animframe=0;
+  if (!g.time_stopped) { // Stop animating during a stopwatch action (but continue working)
+    if ((SPRITE->animclock-=elapsed)<=0.0) {
+      SPRITE->animclock+=0.125;
+      if (++(SPRITE->animframe)>=2) SPRITE->animframe=0;
+    }
   }
   if (SPRITE->burning) {
     //TODO Hurt hero and princess
