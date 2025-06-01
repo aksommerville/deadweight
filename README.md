@@ -47,7 +47,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Items.
 - - [x] Show Dot carrying whatever's equipped.
 - - [x] Broom. Like Full Moon.
-- - [ ] Pepper. Burn everything within some radius. Light candles. Kill Princess.
+- - [x] Pepper. Burn everything within some radius. Light candles. Kill Princess.
 - - [ ] Compass. Points toward the Princess.
 - - [ ] Stopwatch. Like Too Heavy.
 - - [ ] Camera. Like Too Heavy. Maybe prompt when actuated "warp or replace?"
