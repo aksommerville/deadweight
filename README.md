@@ -65,7 +65,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Compass pre-rescue. (ie no Princess sprite)
 - [ ] Broom: prevent disengaging over a hole. Important!
 - [ ] Broom is allowing me to sneak offscreen around walls. I thought physics was preventing that! It must.
-- [ ] The hello splash has got to go, alas. Needs to look silly and whimsical. More Kirby, less Ninja Gaiden.
+- [x] The hello splash has got to go, alas. Needs to look silly and whimsical. More Kirby, less Ninja Gaiden.
 - [ ] Princess should trigger treadles.
 - [ ] Proper graphics.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.

@@ -65,11 +65,11 @@ static void _hello_update(struct modal *modal,double elapsed) {
  */
  
 static void _hello_render(struct modal *modal) {
-  graf_draw_rect(&g.graf,0,0,FBW,FBH,nes_colors[0]);
+  graf_draw_rect(&g.graf,0,0,FBW,FBH,nes_colors[48]);
   graf_draw_decal(&g.graf,MODAL->title_texid,(FBW>>1)-(MODAL->title_w>>1),20,0,0,MODAL->title_w,MODAL->title_h,0);
-  dw_draw_string((FBW>>1)-(4*MODAL->msg_copyrightc),184,MODAL->msg_copyright,MODAL->msg_copyrightc,4);
+  dw_draw_string((FBW>>1)-(4*MODAL->msg_copyrightc),184,MODAL->msg_copyright,MODAL->msg_copyrightc,3);
   if (MODAL->blinkclock<0.750) {
-    dw_draw_string((FBW>>1)-(4*MODAL->msg_press_startc),145,MODAL->msg_press_start,MODAL->msg_press_startc,23);
+    dw_draw_string((FBW>>1)-(4*MODAL->msg_press_startc),145,MODAL->msg_press_start,MODAL->msg_press_startc,1);
   }
 }
 
