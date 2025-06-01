@@ -80,6 +80,7 @@ static void hero_walk_begin(struct sprite *sprite) {
   // Some items inhibit walking.
   switch (SPRITE->using_item) {
     case NS_fld_got_snowglobe:
+    case NS_fld_got_wand:
       return;
   }
   
@@ -119,13 +120,17 @@ static void hero_walk_update(struct sprite *sprite,double elapsed) {
  
 static void hero_update_ind(struct sprite *sprite) {
   int nindx=0,nindy=0;
-  switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
-    case EGG_BTN_LEFT: nindx=-1; break;
-    case EGG_BTN_RIGHT: nindx=1; break;
-  }
-  switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
-    case EGG_BTN_UP: nindy=-1; break;
-    case EGG_BTN_DOWN: nindy=1; break;
+  if (SPRITE->using_item==NS_fld_got_wand) {
+    // Ignore all dpad input while summoning.
+  } else {
+    switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
+      case EGG_BTN_LEFT: nindx=-1; break;
+      case EGG_BTN_RIGHT: nindx=1; break;
+    }
+    switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
+      case EGG_BTN_UP: nindy=-1; break;
+      case EGG_BTN_DOWN: nindy=1; break;
+    }
   }
   if ((nindx==SPRITE->indx)&&(nindy==SPRITE->indy)) return; // No change.
   
@@ -182,6 +187,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
   if ((g.input!=g.pvinput)||(g.input!=SPRITE->pvinput)) {
     SPRITE->pvinput=g.input;
     if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
+      hero_item_end(sprite);
       hero_choose(sprite);
       SPRITE->indx=SPRITE->indy=0;
       SPRITE->walking=0;

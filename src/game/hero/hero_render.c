@@ -43,6 +43,34 @@ static void hero_render_snowglobe(struct sprite *sprite,int x,int y) {
   }
 }
 
+/* Using wand.
+ */
+ 
+static void hero_render_wand(struct sprite *sprite,int x,int y) {
+  uint8_t tileid=0x23,xform=0;
+  int armx=x,army=y+1;
+  uint8_t armxform=0;
+  if (SPRITE->facedx<0) {
+    tileid+=2;
+    armx-=6;
+    armxform=EGG_XFORM_XREV;
+  } else if (SPRITE->facedx>0) {
+    tileid+=2;
+    xform=EGG_XFORM_XREV;
+    armx+=6;
+  } else if (SPRITE->facedy<0) {
+    tileid+=1;
+    armx=1000;
+  } else {
+    armxform=EGG_XFORM_SWAP;
+    army+=7;
+  }
+  graf_draw_tile(&g.graf,g.texid_sprites,x,y,tileid,xform);
+  if (armx<1000) {
+    graf_draw_tile(&g.graf,g.texid_sprites,armx,army,0x26,armxform);
+  }
+}
+
 /* If an item is equipped and its quantity at least one, render Dot's arm carrying the item.
  * Arm is 0x03 and items are 0x04..0x0c (in canonical order).
  */
@@ -120,6 +148,7 @@ void hero_render(struct sprite *sprite,int x,int y) {
   switch (SPRITE->using_item) {
     case NS_fld_got_broom: hero_render_broom(sprite,x,y); return;
     case NS_fld_got_snowglobe: hero_render_snowglobe(sprite,x,y); return;
+    case NS_fld_got_wand: hero_render_wand(sprite,x,y); return;
   }
 
   // If facing north, the arm renders before the body.

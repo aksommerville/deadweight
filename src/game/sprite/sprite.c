@@ -227,6 +227,9 @@ void sprites_render(int offx,int offy) {
     } else {
       graf_draw_tile(&g.graf,g.texid_sprites,x,y,sprite->tileid,sprite->xform);
     }
+    if (sprite->summoning) {
+      graf_draw_tile(&g.graf,g.texid_sprites,x,y,(g.framec&8)?0x27:0x28,0);
+    }
   }
 }
 

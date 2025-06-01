@@ -64,6 +64,7 @@ static void play_update_earthquake(struct modal *modal,double dx,double dy) {
     if (sprite->defunct) continue;
     if (sprite->airborne) continue;
     if ((sprite->x<0.0)||(sprite->y<0.0)||(sprite->x>NS_sys_mapw)||(sprite->y>NS_sys_maph)) continue; // eg offscreen princess
+    if (sprite->type==&sprite_type_selfie) continue;
     //TODO there surely are other things that need to be earthquake-proof
     int pvsolid=sprite->solid;
     sprite->solid=1;

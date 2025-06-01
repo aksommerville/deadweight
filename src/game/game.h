@@ -62,6 +62,7 @@ extern struct g {
   int input;
   int pvinput;
   int input_blackout; // These bits must go false before core will report them true again.
+  int framec;
   
 // Session state:
   struct map *map; // WEAK, owned by (g.mapv).

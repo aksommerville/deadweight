@@ -52,7 +52,9 @@ static void bubble_check_damage(struct sprite *sprite) {
 }
 
 static void _bubble_update(struct sprite *sprite,double elapsed) {
-  if (g.time_stopped) { // When stopped, we're still deadly.
+  if (g.time_stopped||sprite->summoning) {
+    // When stopped, we're still deadly.
+    // Also stop moving when summoned. Don't imagine it will come up often, but it's pretty cool to catch bubbles midair.
     bubble_check_damage(sprite);
     return;
   }

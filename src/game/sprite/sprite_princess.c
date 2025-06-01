@@ -223,9 +223,12 @@ static void princess_rebuild_path_if_needed(struct sprite *sprite) {
  
 static void _princess_update(struct sprite *sprite,double elapsed) {
 
-  if (g.time_stopped) {
+  if (g.time_stopped||sprite->summoning) {
     // Very important that the princess respect the stopwatch.
     // "Oh this hazard will be easy, we just stop it and walk thru.... god damn it, princess."
+    // Also: Drop the current path, the situation will likely have changed once this pause ends.
+    // Being summoned: Do the same thing. Wait docilely until the spell is released.
+    SPRITE->pathp=SPRITE->pathc;
     return;
   }
 

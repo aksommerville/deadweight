@@ -27,6 +27,7 @@ struct sprite {
   int solid; // Participates in physics.
   int airborne; // "hole" cell physics are passable.
   double phl,phr,pht,phb; // Physical bounds relative to (x,y). (phl,pht) are typically negative and (phr,phb) positive.
+  int summoning; // Hero sets for the one sprite being summoned with the wand.
 };
 
 struct sprite_type {

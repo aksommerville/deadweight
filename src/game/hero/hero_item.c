@@ -128,11 +128,67 @@ static void hero_snowglobe_update(struct sprite *sprite,double elapsed) {
  */
  
 static void hero_wand_begin(struct sprite *sprite) {
-  fprintf(stderr,"%s\n",__func__);//TODO
+  SPRITE->using_item=NS_fld_got_wand;
+  SPRITE->walking=0;
 }
 
 static void hero_wand_end(struct sprite *sprite) {
-  fprintf(stderr,"%s\n",__func__);//TODO
+  SPRITE->using_item=0;
+  int i=g.spritec;
+  while (i-->0) g.spritev[i]->summoning=0;
+}
+
+static void hero_wand_update(struct sprite *sprite,double elapsed) {
+  const double radius=0.500;
+  double l=sprite->x-radius,r=sprite->x+radius,t=sprite->y-radius,b=sprite->y+radius;
+  if (SPRITE->facedx<0) l=0.0;
+  else if (SPRITE->facedx>0) r=NS_sys_mapw;
+  else if (SPRITE->facedy<0) t=0.0;
+  else b=NS_sys_maph;
+  
+  struct sprite *pumpkin=0; // ideal target
+  struct sprite *pvpumpkin=0; // the one previously summoned
+  int i=g.spritec;
+  while (i-->0) {
+    struct sprite *q=g.spritev[i];
+    if (q->defunct) continue;
+    if (q==sprite) continue;
+    if (q->summoning) {
+      pvpumpkin=q;
+      if (pumpkin==pvpumpkin) break;
+    }
+    
+    if (sprite->type==&sprite_type_selfie) continue;
+    //TODO Which sprites are summonable? Surely not all of them.
+    
+    if (q->x<l) continue;
+    if (q->y<t) continue;
+    if (q->x>r) continue;
+    if (q->y>b) continue;
+    pumpkin=q;
+    if (pumpkin==pvpumpkin) break;
+  }
+  if (pvpumpkin) pvpumpkin->summoning=0;
+  if (pumpkin) {
+    pumpkin->summoning=1;
+    double dx=pumpkin->x-sprite->x;
+    double dy=pumpkin->y-sprite->y;
+    const double min=1.0;
+    const double speed=1.500;
+    int pvsolid=pumpkin->solid; pumpkin->solid=1;
+    int pvairborne=pumpkin->airborne; pumpkin->airborne=1;
+    if (SPRITE->facedx<0) {
+      if (dx<-min) sprite_move(pumpkin,speed*elapsed,0.0);
+    } else if (SPRITE->facedx>0) {
+      if (dx>min) sprite_move(pumpkin,-speed*elapsed,0.0);
+    } else if (SPRITE->facedy<0) {
+      if (dy<-min) sprite_move(pumpkin,0.0,speed*elapsed);
+    } else {
+      if (dy>min) sprite_move(pumpkin,0.0,-speed*elapsed);
+    }
+    pumpkin->airborne=pvairborne;
+    pumpkin->solid=pvsolid;
+  }
 }
 
 /* Begin item.
@@ -189,5 +245,6 @@ void hero_item_end(struct sprite *sprite) {
 void hero_item_update(struct sprite *sprite,double elapsed) {
   switch (SPRITE->using_item) {
     case NS_fld_got_snowglobe: hero_snowglobe_update(sprite,elapsed); break;
+    case NS_fld_got_wand: hero_wand_update(sprite,elapsed); break;
   }
 }

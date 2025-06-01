@@ -52,7 +52,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [x] Stopwatch. Like Too Heavy.
 - - [x] Camera. Like Too Heavy. Maybe prompt when actuated "warp or replace?"
 - - [x] Snowglobe. Like Full Moon.
-- - [ ] Wand. Summon moveable objects. (not for general spell casting, that won't be a thing).
+- - [x] Wand. Summon moveable objects. (not for general spell casting, that won't be a thing).
 - - [ ] Bomb. Destroy things, esp Princesses.
 - - [ ] Candy. Distact monsters.
 - [ ] Modals.
