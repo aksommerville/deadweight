@@ -46,7 +46,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Dialogue.
 - [ ] Items.
 - - [x] Show Dot carrying whatever's equipped.
-- - [ ] Broom. Like Full Moon.
+- - [x] Broom. Like Full Moon.
 - - [ ] Pepper. Burn everything within some radius. Light candles. Kill Princess.
 - - [ ] Compass. Points toward the Princess.
 - - [ ] Stopwatch. Like Too Heavy.

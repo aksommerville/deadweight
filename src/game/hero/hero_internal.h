@@ -4,6 +4,7 @@
 #include "game/game.h"
 
 #define HERO_WALK_SPEED 6.0
+#define HERO_BROOM_SPEED 12.0
 
 struct sprite_hero {
   struct sprite hdr;
@@ -13,6 +14,8 @@ struct sprite_hero {
   double animclock;
   int animframe;
   int mapid,cellx,celly;
+  uint8_t using_item; // 0 if none, or NS_fld_got_broom..NS_fld_got_candy, when actively used.
+  int renderclock; // Counts render frames, for high-frequency flicker.
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)

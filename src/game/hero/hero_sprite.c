@@ -88,13 +88,21 @@ static void hero_walk_end(struct sprite *sprite) {
 }
 
 static void hero_walk_update(struct sprite *sprite,double elapsed) {
-  if (!SPRITE->walking) return;
-  sprite_move(sprite,HERO_WALK_SPEED*SPRITE->indx*elapsed,HERO_WALK_SPEED*SPRITE->indy*elapsed);
+  if (SPRITE->walking) {
+    double speed=HERO_WALK_SPEED;
+    if (SPRITE->using_item==NS_fld_got_broom) speed=HERO_BROOM_SPEED;
+    sprite_move(sprite,speed*SPRITE->indx*elapsed,speed*SPRITE->indy*elapsed);
+  }
   
-  // Check for changes to quantized position.
+  /* Check for changes to quantized position.
+   * Do this every frame, in case the broom state changed.
+   * Quantized position is invalid while airborne. That might be too heavy-handed?
+   * But my assumption is that quantized state is only for landborne things like treadles.
+   */
   int mapid=g.map?g.map->rid:0;
   int cellx=(int)sprite->x;
   int celly=(int)sprite->y;
+  if (sprite->airborne) cellx=celly=0xff;
   if ((mapid!=SPRITE->mapid)||(cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
     hero_change_quantized_position(sprite,mapid,cellx,celly);
   }
@@ -119,17 +127,18 @@ static void hero_update_ind(struct sprite *sprite) {
    * Otherwise if one existing axis is nonzero, face that way.
    * Otherwise don't turn.
    * Ties break toward horizontal, but ties should be rare.
+   * When the broom is engaged, do not change to a vertical face.
    */
   if (nindx&&(nindx!=SPRITE->indx)) {
     SPRITE->facedx=nindx;
     SPRITE->facedy=0;
-  } else if (nindy&&(nindy!=SPRITE->indy)) {
+  } else if (nindy&&(nindy!=SPRITE->indy)&&(SPRITE->using_item!=NS_fld_got_broom)) {
     SPRITE->facedx=0;
     SPRITE->facedy=nindy;
   } else if (nindx) {
     SPRITE->facedx=nindx;
     SPRITE->facedy=0;
-  } else if (nindy) {
+  } else if (nindy&&(SPRITE->using_item!=NS_fld_got_broom)) {
     SPRITE->facedx=0;
     SPRITE->facedy=nindy;
   }
@@ -175,7 +184,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
     hero_update_ind(sprite);
   }
   if (g.input&EGG_BTN_SOUTH) hero_item_update(sprite,elapsed);
-  if (SPRITE->walking) hero_walk_update(sprite,elapsed);
+  hero_walk_update(sprite,elapsed);
   hero_update_animation(sprite,elapsed);
 }
 
