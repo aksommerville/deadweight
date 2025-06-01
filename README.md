@@ -45,7 +45,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Boss fight, immediately before rescue, once per session.
 - [x] Dialogue.
 - [ ] Items.
-- - [ ] Show Dot carrying whatever's equipped.
+- - [x] Show Dot carrying whatever's equipped.
 - - [ ] Broom. Like Full Moon.
 - - [ ] Pepper. Burn everything within some radius. Light candles. Kill Princess.
 - - [ ] Compass. Points toward the Princess.
