@@ -76,7 +76,13 @@ static void hero_change_quantized_position(struct sprite *sprite,int mapid,int x
  
 static void hero_walk_begin(struct sprite *sprite) {
   if (SPRITE->walking) return;
-  //TODO Some items should inhibit walking.
+  
+  // Some items inhibit walking.
+  switch (SPRITE->using_item) {
+    case NS_fld_got_snowglobe:
+      return;
+  }
+  
   SPRITE->walking=1;
   SPRITE->animclock=0.0;
   SPRITE->animframe=0;

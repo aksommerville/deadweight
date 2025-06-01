@@ -18,6 +18,31 @@ static void hero_render_broom(struct sprite *sprite,int x,int y) {
   graf_draw_tile(&g.graf,g.texid_sprites,x,y,dot_tileid,xform);
 }
 
+/* Using snowglobe.
+ */
+ 
+static void hero_render_snowglobe(struct sprite *sprite,int x,int y) {
+  graf_draw_tile(&g.graf,g.texid_sprites,x,y,0x00,0); // Always the South orientation.
+  // If one and only one input direction is indicated, globe in that direction.
+  if ((SPRITE->indx<0)&&!SPRITE->indy) {
+    graf_draw_tile(&g.graf,g.texid_sprites,x-NS_sys_tilesize,y+4,0x35,EGG_XFORM_SWAP);
+    graf_draw_tile(&g.graf,g.texid_sprites,x-8,y+2,0x03,EGG_XFORM_XREV);
+  } else if ((SPRITE->indx>0)&&!SPRITE->indy) {
+    graf_draw_tile(&g.graf,g.texid_sprites,x+NS_sys_tilesize,y+4,0x35,EGG_XFORM_SWAP|EGG_XFORM_YREV);
+    graf_draw_tile(&g.graf,g.texid_sprites,x+8,y+2,0x03,0);
+  } else if (!SPRITE->indx&&(SPRITE->indy<0)) {
+    graf_draw_tile(&g.graf,g.texid_sprites,x,y-9,0x35,0);
+    graf_draw_tile(&g.graf,g.texid_sprites,x-6,y-1,0x03,EGG_XFORM_SWAP|EGG_XFORM_XREV);
+    graf_draw_tile(&g.graf,g.texid_sprites,x+2,y-1,0x03,EGG_XFORM_SWAP|EGG_XFORM_XREV);
+  } else if (!SPRITE->indx&&(SPRITE->indy>0)) {
+    graf_draw_tile(&g.graf,g.texid_sprites,x,y+NS_sys_tilesize,0x35,EGG_XFORM_YREV);
+    graf_draw_tile(&g.graf,g.texid_sprites,x-6,y+7,0x03,EGG_XFORM_SWAP);
+    graf_draw_tile(&g.graf,g.texid_sprites,x+2,y+7,0x03,EGG_XFORM_SWAP);
+  } else {
+    graf_draw_tile(&g.graf,g.texid_sprites,x,y,0x35,0);
+  }
+}
+
 /* If an item is equipped and its quantity at least one, render Dot's arm carrying the item.
  * Arm is 0x03 and items are 0x04..0x0c (in canonical order).
  */
@@ -91,10 +116,10 @@ static void hero_render_compass(struct sprite *sprite,int x,int y) {
 void hero_render(struct sprite *sprite,int x,int y) {
   SPRITE->renderclock++;
 
-  // Flying on the broom is its own thing entirely.
-  if (SPRITE->using_item==NS_fld_got_broom) {
-    hero_render_broom(sprite,x,y);
-    return;
+  // A few in-use items are special enough to get their own whole thing.
+  switch (SPRITE->using_item) {
+    case NS_fld_got_broom: hero_render_broom(sprite,x,y); return;
+    case NS_fld_got_snowglobe: hero_render_snowglobe(sprite,x,y); return;
   }
 
   // If facing north, the arm renders before the body.

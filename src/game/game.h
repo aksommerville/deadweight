@@ -83,10 +83,17 @@ extern struct g {
   double transition_clock;
   int transition_texid;
   int time_stopped; // The stopwatch. Sprite controllers are expected to respect this on their own.
+  double earthquake_cooldown;
+  int eqdx,eqdy;
 } g;
 
 extern const uint32_t nes_colors[55];
 void dw_draw_string(int x,int y,const char *src,int srcc,int colorp);
 void dw_draw_string_res(int x,int y,int xalign,int yalign,int rid,int ix,int colorp);
+
+/* Begin an earthquake that shuffles content around.
+ * (dx,dy) are the direction of shuffle. Opposite the direction you swung the snowglobe.
+ */
+void dw_earthquake(int dx,int dy);
 
 #endif

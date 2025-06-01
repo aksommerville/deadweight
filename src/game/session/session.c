@@ -377,3 +377,14 @@ int store_set(int k,int v) {
   }
   return v;
 }
+
+/* Begin earthquake.
+ */
+ 
+void dw_earthquake(int dx,int dy) {
+  if (g.earthquake_cooldown>0.0) return;
+  g.earthquake_cooldown=0.500;
+  g.eqdx=dx;
+  g.eqdy=dy;
+  egg_play_sound(RID_sound_earthquake);
+}

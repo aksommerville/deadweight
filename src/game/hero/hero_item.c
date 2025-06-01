@@ -103,11 +103,25 @@ static void hero_camera_begin(struct sprite *sprite) {
  */
  
 static void hero_snowglobe_begin(struct sprite *sprite) {
-  fprintf(stderr,"%s\n",__func__);//TODO
+  SPRITE->using_item=NS_fld_got_snowglobe;
+  SPRITE->walking=0;
 }
 
 static void hero_snowglobe_end(struct sprite *sprite) {
-  fprintf(stderr,"%s\n",__func__);//TODO
+  SPRITE->using_item=0;
+}
+
+static void hero_snowglobe_update(struct sprite *sprite,double elapsed) {
+  // Might make more sense to do this at hero_sprite.c:hero_update_ind(), but I'm doing here to keep snowglobe stuff together.
+  uint8_t nv=0;
+  if (SPRITE->indx&&SPRITE->indy) ; // single direction only
+  else if (SPRITE->indy<0) nv=0x40;
+  else if (SPRITE->indx<0) nv=0x10;
+  else if (SPRITE->indx>0) nv=0x08;
+  else if (SPRITE->indy>0) nv=0x02;
+  if (SPRITE->snowglobe!=nv) {
+    if (SPRITE->snowglobe=nv) dw_earthquake(-SPRITE->indx,-SPRITE->indy);
+  }
 }
 
 /* Wand.
@@ -173,4 +187,7 @@ void hero_item_end(struct sprite *sprite) {
  */
  
 void hero_item_update(struct sprite *sprite,double elapsed) {
+  switch (SPRITE->using_item) {
+    case NS_fld_got_snowglobe: hero_snowglobe_update(sprite,elapsed); break;
+  }
 }

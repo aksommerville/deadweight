@@ -54,10 +54,37 @@ static int play_navigate(struct modal *modal,int dx,int dy) {
   return enter_map(nmap->rid,transition);
 }
 
+/* Move things around due to earthquake.
+ */
+ 
+static void play_update_earthquake(struct modal *modal,double dx,double dy) {
+  int i=g.spritec;
+  while (i-->0) {
+    struct sprite *sprite=g.spritev[i];
+    if (sprite->defunct) continue;
+    if (sprite->airborne) continue;
+    if ((sprite->x<0.0)||(sprite->y<0.0)||(sprite->x>NS_sys_mapw)||(sprite->y>NS_sys_maph)) continue; // eg offscreen princess
+    //TODO there surely are other things that need to be earthquake-proof
+    int pvsolid=sprite->solid;
+    sprite->solid=1;
+    sprite_move(sprite,dx,dy);
+    sprite->solid=pvsolid;
+  }
+}
+
 /* Update.
  */
  
 static void _play_update(struct modal *modal,double elapsed) {
+
+  // Apply earthquake if that's going on.
+  if (g.earthquake_cooldown>0.0) {
+    g.earthquake_cooldown-=elapsed;
+    const double speed=2.0;
+    play_update_earthquake(modal,g.eqdx*speed*elapsed,g.eqdy*speed*elapsed);
+  }
+
+  // Most of the action is driven by sprite controllers:
   sprites_update(elapsed);
   
   // Check for navigation.
@@ -117,6 +144,12 @@ static void _play_render(struct modal *modal) {
       case TRANSITION_DOWN: dsty+=FBH; dsty-=(int)(FBH*t); pvy=dsty-FBH; break;
     }
     graf_draw_decal(&g.graf,g.transition_texid,pvx,pvy,0,0,FBW,FBH,0);
+  }
+  
+  // Jostle a bit during earthquakes.
+  if (g.earthquake_cooldown>0.0) {
+    int t=(int)(g.earthquake_cooldown*20.0);
+    dsty+=t%3-1;
   }
 
   // Draw the new scene.

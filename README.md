@@ -51,7 +51,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [x] Compass. Points toward the Princess.
 - - [x] Stopwatch. Like Too Heavy.
 - - [x] Camera. Like Too Heavy. Maybe prompt when actuated "warp or replace?"
-- - [ ] Snowglobe. Like Full Moon.
+- - [x] Snowglobe. Like Full Moon.
 - - [ ] Wand. Summon moveable objects. (not for general spell casting, that won't be a thing).
 - - [ ] Bomb. Destroy things, esp Princesses.
 - - [ ] Candy. Distact monsters.
@@ -66,6 +66,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] The hello splash has got to go, alas. Needs to look silly and whimsical. More Kirby, less Ninja Gaiden.
 - [ ] Princess should trigger treadles.
 - [ ] Proper graphics.
+- [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
 - [ ] Sound effects.
 - [ ] Music.
 - [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.

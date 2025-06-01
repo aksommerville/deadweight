@@ -14,6 +14,7 @@ static void _bubble_del(struct sprite *sprite) {
 }
 
 static int _bubble_init(struct sprite *sprite) {
+  sprite->airborne=1;
   sprite->tileid=0x8a;
   SPRITE->warmup=0.500;
   
