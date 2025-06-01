@@ -196,6 +196,7 @@ static void prerun_poi() {
 int enter_map(int rid,int transition) {
   struct map *map=map_by_id(rid);
   if (!map) return -1;
+  struct map *frommap=g.map;
   g.map=map;
   g.poic=0;
   
@@ -240,6 +241,11 @@ int enter_map(int rid,int transition) {
   
   prerun_poi();
   
+  // If we've entered the map where Dot's selfie lives, make a sprite for it.
+  if (g.map->rid==g.camera_mapid) {
+    sprite_spawn(g.camerax+0.5,g.cameray+0.5,0,&sprite_type_selfie,0);
+  }
+  
   // Apply transition to the persistent sprites.
   switch (transition) {
     case TRANSITION_LEFT: {
@@ -257,6 +263,18 @@ int enter_map(int rid,int transition) {
     case TRANSITION_DOWN: {
         if (g.hero) g.hero->y-=NS_sys_maph;
         if (g.princess) g.princess->y-=NS_sys_maph;
+      } break;
+    case TRANSITION_TELEPORT: {
+        // Setting hero's new position is the caller's problem; we can't possibly know where.
+        // Repositioning the princess is our problem, and it's an interesting one!
+        if (g.princess) {
+          if (!frommap) { // oh huh... welp better kill her then.
+            g.princess->defunct=1;
+          } else {
+            g.princess->x-=(g.map->longitude-frommap->longitude)*NS_sys_mapw;
+            g.princess->y-=(g.map->latitude-frommap->latitude)*NS_sys_maph;
+          }
+        }
       } break;
   }
   

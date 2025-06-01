@@ -90,11 +90,13 @@ static void hero_stopwatch_end(struct sprite *sprite) {
   g.time_stopped=0;
 }
 
-/* Camera.
+/* Camera: Entirely defer to modal_camera.
  */
  
 static void hero_camera_begin(struct sprite *sprite) {
-  fprintf(stderr,"%s\n",__func__);//TODO
+  modal_new_camera();
+  SPRITE->indx=SPRITE->indy=0;
+  SPRITE->walking=0;
 }
 
 /* Snowglobe.

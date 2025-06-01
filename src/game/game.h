@@ -75,6 +75,8 @@ extern struct g {
   int listenerid_next;
   struct poi poiv[POI_LIMIT];
   int poic;
+  int camera_mapid;
+  uint8_t camerax,cameray; // cell coords in camera_mapid.
 
 // Room state:
   int transition;

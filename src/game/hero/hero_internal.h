@@ -17,6 +17,7 @@ struct sprite_hero {
   uint8_t using_item; // 0 if none, or NS_fld_got_broom..NS_fld_got_candy, when actively used.
   double item_cooldown;
   int renderclock; // Counts render frames, for high-frequency flicker.
+  int pvinput; // We can miss inputs due to modals. If this doesn't match (g.pvinput), force an update.
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)

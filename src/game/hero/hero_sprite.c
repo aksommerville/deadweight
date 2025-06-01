@@ -173,7 +173,8 @@ static void hero_update_animation(struct sprite *sprite,double elapsed) {
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
   if (SPRITE->item_cooldown>0.0) SPRITE->item_cooldown-=elapsed;
-  if (g.input!=g.pvinput) {
+  if ((g.input!=g.pvinput)||(g.input!=SPRITE->pvinput)) {
+    SPRITE->pvinput=g.input;
     if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
       hero_choose(sprite);
       SPRITE->indx=SPRITE->indy=0;

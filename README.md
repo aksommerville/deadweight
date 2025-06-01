@@ -50,7 +50,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [x] Pepper. Burn everything within some radius. Light candles. Kill Princess.
 - - [x] Compass. Points toward the Princess.
 - - [x] Stopwatch. Like Too Heavy.
-- - [ ] Camera. Like Too Heavy. Maybe prompt when actuated "warp or replace?"
+- - [x] Camera. Like Too Heavy. Maybe prompt when actuated "warp or replace?"
 - - [ ] Snowglobe. Like Full Moon.
 - - [ ] Wand. Summon moveable objects. (not for general spell casting, that won't be a thing).
 - - [ ] Bomb. Destroy things, esp Princesses.
