@@ -22,8 +22,7 @@ static void hero_render_broom(struct sprite *sprite,int x,int y) {
  * Arm is 0x03 and items are 0x04..0x0c (in canonical order).
  */
  
-static void hero_render_item(struct sprite *sprite,int x,int y) {
-  int itemid=store_get(NS_fld_equipped);
+static void hero_render_item(struct sprite *sprite,int x,int y,int itemid) {
   if ((itemid<NS_fld_got_broom)||(itemid>NS_fld_got_candy)) return; // No item equipped.
   if (!store_get(itemid)) return; // Item not possessed.
   switch (itemid) { // Check items with quantity; if zero, don't render the arm.
@@ -51,6 +50,40 @@ static void hero_render_item(struct sprite *sprite,int x,int y) {
   graf_draw_tile(&g.graf,g.texid_sprites,x,y,0x03,xform);
 }
 
+/* Compass overlay.
+ * It's an indicator in two parts that rotates around the hero, orienting to the direction of the target.
+ * Doing this instead of the more obvious rotating arrow, since rotating sprites was definitely not a thing on the NES.
+ */
+ 
+static void hero_render_compass(struct sprite *sprite,int x,int y) {
+  if ((SPRITE->renderclock&0x1f)>22) return; // blink a little, but bias duty cycle toward visible
+  
+  double targetx,targety;
+  if (g.princess) { // Princess sprite exists, awesome. Once rescued, this is usually the case, even when she's offscreen.
+    targetx=g.princess->x;
+    targety=g.princess->y;
+  } else {
+    return; // TODO Important! Determine the relative world position of the dungeon where we rescue the Princess.
+  }
+  
+  double dx=targetx-sprite->x;
+  double dy=targety-sprite->y;
+  if ((dx>=-1.0)&&(dx<=1.0)&&(dy>=-1.0)&&(dy<=1.0)) {
+    // This close, I hope you don't need further help from the compass.
+    // And mostly, aborting to dodge divide-by-zero or rounding errors at very short distances.
+    return;
+  }
+  double distance=sqrt(dx*dx+dy*dy);
+  dx/=distance; // Normalize (dx,dy).
+  dy/=distance;
+  int ax=x+(int)(1.000*dx*NS_sys_tilesize);
+  int ay=y+(int)(1.000*dy*NS_sys_tilesize);
+  int bx=x+(int)(1.500*dx*NS_sys_tilesize);
+  int by=y+(int)(1.500*dy*NS_sys_tilesize);
+  graf_draw_tile(&g.graf,g.texid_sprites,ax,ay,0x1e,0);
+  graf_draw_tile(&g.graf,g.texid_sprites,bx,by,0x1f,0);
+}
+
 /* Render, main entry point.
  * The hero's rendering is complicated enough to deserve its own file.
  */
@@ -65,7 +98,8 @@ void hero_render(struct sprite *sprite,int x,int y) {
   }
 
   // If facing north, the arm renders before the body.
-  if (SPRITE->facedy<0) hero_render_item(sprite,x,y);
+  int equipped=store_get(NS_fld_equipped);
+  if (SPRITE->facedy<0) hero_render_item(sprite,x,y,equipped);
 
   // Main body. TODO This is not going to be adequate, once we add item states.
   uint8_t tileid=sprite->tileid;
@@ -87,5 +121,8 @@ void hero_render(struct sprite *sprite,int x,int y) {
   graf_draw_tile(&g.graf,g.texid_sprites,x,y,tileid,xform);
   
   // Any direction except north, the arm renders after the body.
-  if (SPRITE->facedy>=0) hero_render_item(sprite,x,y);
+  if (SPRITE->facedy>=0) hero_render_item(sprite,x,y,equipped);
+  
+  // If the compass is equipped, it's entirely passive, render its output above the hero always.
+  if (equipped==NS_fld_got_compass) hero_render_compass(sprite,x,y);
 }
