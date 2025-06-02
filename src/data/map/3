@@ -15,4 +15,4 @@
 
 image image:tiles
 location 4 6
-sprite @4,5 sprite:treasure (u8:fld)got_pepper 0x08 0x01 0x00
+sprite @4,5 sprite:treasure (u8:fld)got_compass 0x000000

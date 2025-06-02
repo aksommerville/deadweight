@@ -115,8 +115,15 @@ static void hero_render_compass(struct sprite *sprite,int x,int y) {
   if (g.princess) { // Princess sprite exists, awesome. Once rescued, this is usually the case, even when she's offscreen.
     targetx=g.princess->x;
     targety=g.princess->y;
+  } else if (g.maps_by_position[g.princess_map_index]&&g.map) {
+    int ty=g.princess_map_index/WORLDW;
+    int tx=g.princess_map_index%WORLDW;
+    tx-=g.map->longitude;
+    ty-=g.map->latitude;
+    targetx=tx*NS_sys_mapw+(NS_sys_mapw>>1);
+    targety=ty*NS_sys_maph+(NS_sys_maph>>1);
   } else {
-    return; // TODO Important! Determine the relative world position of the dungeon where we rescue the Princess.
+    return;
   }
   
   double dx=targetx-sprite->x;

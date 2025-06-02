@@ -56,7 +56,8 @@ extern struct g {
   int modalc;
   struct map mapv[MAP_LIMIT]; // Some mutable content.
   int mapc;
-  struct map *maps_by_position[WORLDW*WORLDH]; // Sparse, points into (mapv). Index is (latitute*WORLDW+longitude).
+  struct map *maps_by_position[WORLDW*WORLDH]; // Sparse, points into (mapv). Index is (latitude*WORLDW+longitude).
+  int princess_map_index; // Index in (maps_by_position) where the princess spawns.
   struct sprdef sprdefv[SPRDEF_LIMIT];
   int sprdefc;
   int input;

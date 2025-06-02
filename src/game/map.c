@@ -37,6 +37,7 @@ int load_map(int rid,const void *src,int srcc) {
   
   struct rom_command_reader reader={.v=rmap.cmdv,.c=rmap.cmdc};
   struct rom_command cmd;
+  int princess_here=0;
   while (rom_command_reader_next(&cmd,&reader)>0) {
     switch (cmd.opcode) {
       case CMD_map_location: {
@@ -55,7 +56,15 @@ int load_map(int rid,const void *src,int srcc) {
           map->longitude=longitude;
           map->latitude=latitude;
         } break;
+      case CMD_map_sprite: {
+          int rid=(cmd.argv[2]<<8)|cmd.argv[3];
+          if (rid==RID_sprite_princess) princess_here=1;
+        } break;
     }
+  }
+  
+  if (princess_here&&(map->latitude>=0)&&(map->latitude<WORLDH)&&(map->longitude>=0)&&(map->longitude<WORLDW)) {
+    g.princess_map_index=map->latitude*WORLDW+map->longitude;
   }
   
   return 0;
