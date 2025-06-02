@@ -46,6 +46,7 @@
 #define NS_sprtype_bomb 9
 #define NS_sprtype_candy 10
 #define NS_sprtype_treasure 11
+#define NS_sprtype_flagand 12
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -58,7 +59,8 @@
   _(selfie) \
   _(bomb) \
   _(candy) \
-  _(treasure)
+  _(treasure) \
+  _(flagand)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */
@@ -78,6 +80,12 @@
 #define NS_fld_escort           15 /* Princess is saved and following me. Clears if she dies. */
 #define NS_fld_boss_visited     16
 #define NS_fld_boss_dead        17
-#define FLD_COUNT               18
+#define NS_fld_twin1_a          18
+#define NS_fld_twin1_b          19
+#define NS_fld_twin1_c          20
+#define NS_fld_twin2_a          21
+#define NS_fld_twin2_b          22
+#define NS_fld_twin2_c          23
+#define FLD_COUNT               24
 
 #endif
