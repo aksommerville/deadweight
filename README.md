@@ -70,11 +70,12 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Should we start with something else, instead of Compass? Something non-passive, so the player gets to try out his A button.
 - [ ] Bomb explosion.
 - [ ] Candy attraction.
-- [ ] Compass pre-rescue. (ie no Princess sprite)
 - [ ] Broom: prevent disengaging over a hole. Important!
 - [ ] Broom is allowing me to sneak offscreen around walls. I thought physics was preventing that! It must.
 - [x] The hello splash has got to go, alas. Needs to look silly and whimsical. More Kirby, less Ninja Gaiden.
 - [ ] Princess should trigger treadles.
+- - Make a separate quantized-position-tracking service responsible for both Dot and Princess.
+- - It's important that they consistently trade off holding a treadle, switching places and such.
 - [ ] Proper graphics.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
 - [ ] Sound effects.

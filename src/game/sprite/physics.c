@@ -42,7 +42,7 @@ static double sprite_measure_freedom(const struct sprite *sprite,double dx,doubl
       int row=(int)(sprite->y+sprite->pht);
       int rowc=(int)(sprite->y+sprite->phb-SMALL)-row+1;
       if (map_impassable(sprite,colz,row,cola-colz+1,rowc)) {
-        return sprite->x+sprite->phl-(double)cola;
+        return sprite->x+sprite->phl-(double)cola-SMALL;
       }
     }
   } else if (dx>0.0) {
@@ -52,7 +52,7 @@ static double sprite_measure_freedom(const struct sprite *sprite,double dx,doubl
       int row=(int)(sprite->y+sprite->pht);
       int rowc=(int)(sprite->y+sprite->phb-SMALL)-row+1;
       if (map_impassable(sprite,cola+1,row,colz-cola,rowc)) {
-        return (double)cola+1.0-sprite->phr-sprite->x;
+        return (double)cola+1.0-sprite->phr-sprite->x-SMALL;
       }
     }
   } else if (dy<0.0) {
@@ -62,7 +62,7 @@ static double sprite_measure_freedom(const struct sprite *sprite,double dx,doubl
       int col=(int)(sprite->x+sprite->phl);
       int colc=(int)(sprite->x+sprite->phr-SMALL)-col+1;
       if (map_impassable(sprite,col,rowz,colc,rowa-rowz+1)) {
-        return sprite->y+sprite->pht-(double)rowa;
+        return sprite->y+sprite->pht-(double)rowa-SMALL;
       }
     }
   } else if (dy>0.0) {
@@ -72,7 +72,7 @@ static double sprite_measure_freedom(const struct sprite *sprite,double dx,doubl
       int col=(int)(sprite->x+sprite->phl);
       int colc=(int)(sprite->x+sprite->phr-SMALL)-col+1;
       if (map_impassable(sprite,col,rowa+1,colc,rowz-rowa)) {
-        return (double)rowa+1.0-sprite->phb-sprite->y;
+        return (double)rowa+1.0-sprite->phb-sprite->y-SMALL;
       }
     }
   } else {
@@ -116,7 +116,7 @@ static double sprite_measure_freedom(const struct sprite *sprite,double dx,doubl
       free1=other->y+other->pht-b;
     }
     if (free1<0.0) continue;
-    if (free1<freedom) freedom=free1;
+    if (free1<freedom) freedom=free1-SMALL;
   }
   
   return freedom;
@@ -150,14 +150,15 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
    */
   sprite->x=nx;
   sprite->y=ny;
-  if (sprite_position_valid(sprite)) return 2;
+  if (sprite_position_valid(sprite)) {
+    return 2;
+  }
   sprite->x=ox;
   sprite->y=oy;
   
   /* If we can advance in the target direction at all, take all we can get and nothing else.
    */
   double available=sprite_measure_freedom(sprite,dx,dy);
-  //fprintf(stderr,"%s freedom toward (%+f,%+f): %f\n",sprite->type->name,dx,dy,available);
   if (available>0.0) {
          if (dx<0.0) sprite->x-=available;
     else if (dx>0.0) sprite->x+=available; 
@@ -170,7 +171,9 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
   /* Try warping to the desired position.
    * This enables off-axis corrections.
    */
-  if (sprite_warp(sprite,nx,ny)>0) return 1;
+  if (sprite_warp(sprite,nx,ny)>0) {
+    return 1;
+  }
   
   /* Nope? OK, can't move.
    */
@@ -287,10 +290,10 @@ int sprite_warp(struct sprite *sprite,double x,double y) {
    */
   for (i=rangec;i-->0;) {
     struct range *range=rangev+i;
-    range->l-=sprite->phl;
-    range->r-=sprite->phr;
-    range->t-=sprite->pht;
-    range->b-=sprite->phb;
+    range->l-=sprite->phl-SMALL;
+    range->r-=sprite->phr+SMALL;
+    range->t-=sprite->pht-SMALL;
+    range->b-=sprite->phb+SMALL;
     if ((range->l>=range->r)||(range->t>=range->b)) {
       rangec--;
       if (!rangec) return 0;
@@ -357,6 +360,5 @@ int sprite_position_valid(const struct sprite *sprite) {
     return 0;
   }
   
-  //fprintf(stderr,"%s TRUE %s @ %f,%f\n",__func__,sprite->type->name,sprite->x,sprite->y);
   return 1;
 }

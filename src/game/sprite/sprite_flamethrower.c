@@ -39,6 +39,7 @@ static int _flamethrower_init(struct sprite *sprite) {
   SPRITE->len=sprite->arg>>16;
   SPRITE->k=sprite->arg;
   if (SPRITE->k&&SPRITE->len) {
+    if (store_get(SPRITE->k)) SPRITE->burning=1;
     SPRITE->listenerid=store_listen(SPRITE->k,_flamethrower_cb_fld,sprite);
   }
   switch (SPRITE->dir) {
