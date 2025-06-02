@@ -51,7 +51,7 @@ static void pause_update_item_label(struct modal *modal) {
   struct label *label=MODAL->labelv+12;
   if (label->tileid||label->selectable) return; // oops we got the wrong one somehow
   int itemid=MODAL->labelp; // First 9 labels are the items, in canonical order.
-  if ((itemid<0)||(itemid>=9)) {
+  if ((itemid<0)||(itemid>=9)||!store_get(NS_fld_got_broom+itemid)) {
     label->textc=0;
   } else {
     label->textc=strings_get(&label->text,1,8+itemid);

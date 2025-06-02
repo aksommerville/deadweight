@@ -108,7 +108,7 @@ int session_reset() {
     sprite_del(g.spritev[g.spritec]);
   }
   
-  if (1) {
+  if (0) {
     fprintf(stderr,"*** %s:%d: Enabling treasures. ***\n",__FILE__,__LINE__);
     store_set(NS_fld_got_broom,1);
     store_set(NS_fld_got_pepper,1);
@@ -202,6 +202,7 @@ int enter_map(int rid,int transition) {
   
   sprites_delete_volatile();
   
+  int fresh_hero=0,fresh_princess=0;
   struct rom_command_reader reader={.v=g.map->cmdv,.c=g.map->cmdc};
   struct rom_command cmd;
   while (rom_command_reader_next(&cmd,&reader)>0) {
@@ -227,8 +228,14 @@ int enter_map(int rid,int transition) {
           uint8_t y=cmd.argv[1];
           uint16_t rid=(cmd.argv[2]<<8)|cmd.argv[3];
           uint32_t arg=(cmd.argv[4]<<24)|(cmd.argv[5]<<16)|(cmd.argv[6]<<8)|cmd.argv[7];
-          if ((rid==RID_sprite_hero)&&g.hero) break; // already got it
-          if ((rid==RID_sprite_princess)&&g.princess) break; // already got it
+          if (rid==RID_sprite_hero) {
+            if (g.hero) break;
+            fresh_hero=1;
+          }
+          if (rid==RID_sprite_princess) {
+            if (g.princess) break;
+            fresh_princess=1;
+          }
           sprite_spawn(x+0.5,y+0.5,rid,0,arg);
         } break;
       case CMD_map_field: {
@@ -249,25 +256,25 @@ int enter_map(int rid,int transition) {
   // Apply transition to the persistent sprites.
   switch (transition) {
     case TRANSITION_LEFT: {
-        if (g.hero) g.hero->x+=NS_sys_mapw;
-        if (g.princess) g.princess->x+=NS_sys_mapw;
+        if (g.hero&&!fresh_hero) g.hero->x+=NS_sys_mapw;
+        if (g.princess&&!fresh_princess) g.princess->x+=NS_sys_mapw;
       } break;
     case TRANSITION_RIGHT: {
-        if (g.hero) g.hero->x-=NS_sys_mapw;
-        if (g.princess) g.princess->x-=NS_sys_mapw;
+        if (g.hero&&!fresh_hero) g.hero->x-=NS_sys_mapw;
+        if (g.princess&&!fresh_princess) g.princess->x-=NS_sys_mapw;
       } break;
     case TRANSITION_UP: {
-        if (g.hero) g.hero->y+=NS_sys_maph;
-        if (g.princess) g.princess->y+=NS_sys_maph;
+        if (g.hero&&!fresh_hero) g.hero->y+=NS_sys_maph;
+        if (g.princess&&!fresh_princess) g.princess->y+=NS_sys_maph;
       } break;
     case TRANSITION_DOWN: {
-        if (g.hero) g.hero->y-=NS_sys_maph;
-        if (g.princess) g.princess->y-=NS_sys_maph;
+        if (g.hero&&!fresh_hero) g.hero->y-=NS_sys_maph;
+        if (g.princess&&!fresh_princess) g.princess->y-=NS_sys_maph;
       } break;
     case TRANSITION_TELEPORT: {
         // Setting hero's new position is the caller's problem; we can't possibly know where.
         // Repositioning the princess is our problem, and it's an interesting one!
-        if (g.princess) {
+        if (g.princess&&!fresh_princess) {
           if (!frommap) { // oh huh... welp better kill her then.
             g.princess->defunct=1;
           } else {

@@ -45,6 +45,7 @@
 #define NS_sprtype_selfie 8
 #define NS_sprtype_bomb 9
 #define NS_sprtype_candy 10
+#define NS_sprtype_treasure 11
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -56,7 +57,8 @@
   _(ssflame) \
   _(selfie) \
   _(bomb) \
-  _(candy)
+  _(candy) \
+  _(treasure)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */

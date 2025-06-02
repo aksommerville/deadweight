@@ -60,6 +60,11 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Game over. Success only. Game will not be loseable.
 - - [x] Pause. Inventory and options, like Full Moon.
 - [ ] Maps.
+- - The initial path from Throne to Dungeon should be 11 screens exactly: The endpoints, and 9 challenge screens where you get a new item.
+- - Boss is in the dungeon, same place you get the princess.
+- - First challenge screen should give you the Compass. Don't let them make a wrong turn.
+- - Should have plenty of other space, and there should be required side paths for the return trip.
+- - 9 is kind of a lot. Should we make a few items optional?
 - [ ] Bomb explosion.
 - [ ] Candy attraction.
 - [ ] Compass pre-rescue. (ie no Princess sprite)
@@ -82,7 +87,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] 2025-05-30T07:00 F Jam begins.
 - [x] 2025-05-30 EOD   F Have global framework ready: Modals, map loader, state engine, sprite loader.
 - [x] 2025-05-31 EOD   S Hero, Princess, transitions, dialogue.
-- [ ] 2025-06-01 EOD   U Sprites and items.
+- [x] 2025-06-01 EOD   U Sprites and items.
 - [ ] 2025-06-06 EOD   F Rough world layout.
 - [ ] 2025-06-07 EOD   S Sound effects.
 - [ ] 2025-06-08 EOD   U Music, final graphics.
