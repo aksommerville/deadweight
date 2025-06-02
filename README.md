@@ -65,6 +65,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - First challenge screen should give you the Compass. Don't let them make a wrong turn.
 - - Should have plenty of other space, and there should be required side paths for the return trip.
 - - 9 is kind of a lot. Should we make a few items optional?
+- [ ] Compass: Before princess sprite, identify the dungeon map and point to its center.
+- [ ] Egg editor: World map preview.
 - [ ] Bomb explosion.
 - [ ] Candy attraction.
 - [ ] Compass pre-rescue. (ie no Princess sprite)

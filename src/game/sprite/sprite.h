@@ -83,4 +83,7 @@ int sprite_warp(struct sprite *sprite,double x,double y);
 
 int sprite_position_valid(const struct sprite *sprite);
 
+// Signal from the modal stack that something was pushed. So hero can cancel in-progress actions.
+void sprite_hero_losing_focus(struct sprite *sprite);
+
 #endif

@@ -83,5 +83,8 @@ struct modal *modal_new(int len) {
   struct modal *modal=calloc(1,len);
   if (!modal) return 0;
   g.modalv[g.modalc++]=modal;
+  if ((g.modalc>=2)&&(g.modalv[g.modalc-2]->ctor==modal_new_play)&&g.hero) {
+    sprite_hero_losing_focus(g.hero);
+  }
   return modal;
 }

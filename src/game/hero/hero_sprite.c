@@ -213,3 +213,13 @@ const struct sprite_type sprite_type_hero={
   .update=_hero_update,
   .render=hero_render,
 };
+
+/* Notify of lost focus.
+ */
+
+void sprite_hero_losing_focus(struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_hero)) return;
+  hero_item_end(sprite);
+  SPRITE->indx=SPRITE->indy=0;
+  SPRITE->walking=0;
+}
