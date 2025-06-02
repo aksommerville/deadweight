@@ -78,8 +78,6 @@
 #define NS_fld_escort           15 /* Princess is saved and following me. Clears if she dies. */
 #define NS_fld_boss_visited     16
 #define NS_fld_boss_dead        17
-#define NS_fld_homelock1        18
-#define NS_fld_homelock2        19
-#define FLD_COUNT               20
+#define FLD_COUNT               18
 
 #endif

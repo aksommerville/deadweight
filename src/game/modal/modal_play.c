@@ -5,12 +5,27 @@
 #define PLAY_CHRONFLAKE_COUNT 40
 #define PLAY_CHRONFLAKE_TTL 60 /* video frames */
 
+/* Maximum count of sprites at one time that can actuate quantized triggers (treadle, stompbox, maybe other things...).
+ * That means basically every sprite that conceptually has its feet on the ground.
+ */
+#define PLAY_QSTEP_LIMIT 32
+
 struct modal_play {
   struct modal hdr;
   struct chronflake {
     int x,y; // fb coords
     int ttl; // Video frames, so we can update and render at the same time. Counts down.
   } chronflakev[PLAY_CHRONFLAKE_COUNT];
+  
+  struct qstep {
+    struct sprite *sprite; // WEAK, for indexing.
+    int x,y;
+    int scratch;
+  } qstepv[PLAY_QSTEP_LIMIT];
+  int qstepc;
+  int qstep_mapid;
+  uint8_t qonv[PLAY_QSTEP_LIMIT];
+  int qonc;
 };
 
 #define MODAL ((struct modal_play*)modal)
@@ -73,6 +88,207 @@ static void play_update_earthquake(struct modal *modal,double dx,double dy) {
   }
 }
 
+/* Final answer from qstep+qon: Turn POI features on and off.
+ */
+ 
+static void play_poi_activate(struct modal *modal,int x,int y,int v) {
+  struct poi *poi=g.poiv;
+  int i=g.poic;
+  for (;i-->0;poi++) {
+    if ((poi->x!=x)||(poi->y!=y)) continue;
+    int cellp=poi->y*NS_sys_mapw+poi->x;
+    switch (poi->opcode) {
+      
+      case CMD_map_treadle: {
+          egg_play_sound(RID_sound_treadle);
+          int k=(poi->argv[2]<<8)|poi->argv[3];
+          g.map->cellv[cellp]=g.map->rocellv[cellp]+v;
+          store_set(k,v);
+        } break;
+        
+      case CMD_map_stompbox: {
+          egg_play_sound(RID_sound_treadle);
+          int k=(poi->argv[2]<<8)|poi->argv[3];
+          if (v) {
+            g.map->cellv[cellp]=g.map->rocellv[cellp]+2;
+            if (store_get(k)) {
+              store_set(k,0);
+            } else {
+              store_set(k,1);
+            }
+          } else {
+            g.map->cellv[cellp]=g.map->rocellv[cellp]+store_get(k);
+          }
+        } break;
+        
+    }
+  }
+}
+
+/* qon list primitives.
+ */
+ 
+static int play_qonv_search(const struct modal *modal,uint8_t v) {
+  int lo=0,hi=MODAL->qonc;
+  while (lo<hi) {
+    int ck=(lo+hi)>>1;
+         if (v<MODAL->qonv[ck]) hi=ck;
+    else if (v>MODAL->qonv[ck]) lo=ck+1;
+    else return ck;
+  }
+  return -lo-1;
+}
+
+static int play_qonv_insert(struct modal *modal,int p,uint8_t v) {
+  if ((p<0)||(p>MODAL->qonc)) return -1;
+  if (MODAL->qonc>=PLAY_QSTEP_LIMIT) return -1;
+  memmove(MODAL->qonv+p+1,MODAL->qonv+p,MODAL->qonc-p);
+  MODAL->qonc++;
+  MODAL->qonv[p]=v;
+  return 0;
+}
+
+/* Notify that a sprite has entered or exitted a cell.
+ * This doesn't necessarily change the cell's state, we then have to check whether anybody else is on it.
+ * Cells outside the map are never acknowledged.
+ */
+ 
+static void play_quantized_step(struct modal *modal,int x,int y) {
+  if ((x<0)||(y<0)||(x>=NS_sys_mapw)||(y>=NS_sys_maph)) return;
+  int id=y*NS_sys_mapw+x;
+  int p=play_qonv_search(modal,id);
+  if (p>=0) return; // already on
+  p=-p-1;
+  if (play_qonv_insert(modal,p,id)<0) return; // failed to add
+  play_poi_activate(modal,x,y,1);
+}
+
+// Caller must modify the qstep in question before calling.
+static void play_quantized_unstep(struct modal *modal,int x,int y) {
+  if ((x<0)||(y<0)||(x>=NS_sys_mapw)||(y>=NS_sys_maph)) return;
+  int id=y*NS_sys_mapw+x;
+  int p=play_qonv_search(modal,id);
+  if (p<0) return; // already off
+  // Now we have to iterate all qsteps to confirm that nobody else is standing on it, before removing.
+  int i=MODAL->qstepc;
+  const struct qstep *qstep=MODAL->qstepv;
+  for (;i-->0;qstep++) {
+    if ((qstep->x==x)&&(qstep->y==y)) return; // Somebody else is holding it.
+  }
+  // Release!
+  MODAL->qonc--;
+  memmove(MODAL->qonv+p,MODAL->qonv+p+1,MODAL->qonc-p);
+  play_poi_activate(modal,x,y,0);
+}
+
+/* qstep list primitives.
+ */
+ 
+static int play_qstepv_search(const struct modal *modal,const struct sprite *sprite) {
+  int lo=0,hi=MODAL->qstepc;
+  while (lo<hi) {
+    int ck=(lo+hi)>>1;
+    const struct qstep *q=MODAL->qstepv+ck;
+         if (sprite<q->sprite) hi=ck;
+    else if (sprite>q->sprite) lo=ck+1;
+    else return ck;
+  }
+  return -lo-1;
+}
+
+static struct qstep *play_qstepv_insert(struct modal *modal,int p,struct sprite *sprite) {
+  if ((p<0)||(p>MODAL->qstepc)) return 0;
+  if (MODAL->qstepc>=PLAY_QSTEP_LIMIT) return 0;
+  struct qstep *qstep=MODAL->qstepv+p;
+  memmove(qstep+1,qstep,sizeof(struct qstep)*(MODAL->qstepc-p));
+  MODAL->qstepc++;
+  qstep->sprite=sprite;
+  return qstep;
+}
+
+/* Does this sprite participate in qstep?
+ */
+ 
+static int sprite_qsteppable(const struct sprite *sprite) {
+  if (sprite->defunct) return 0; // obviously
+
+  // eg hero on broom is temporarily non-qsteppable
+  if (sprite->airborne) return 0;
+  
+  // Call out specific types which might not be solid but must be qsteppable.
+  if (sprite->type==&sprite_type_hero) return 1;
+  if (sprite->type==&sprite_type_princess) return 1;
+  if (sprite->type==&sprite_type_treasure) return 1;
+  
+  // Anything else, it's qsteppable if it's solid.
+  return sprite->solid;
+}
+
+/* Track hero, princess, and anything else that is able to trigger treadles and such.
+ * Sprite controllers are not expected to do this manually, let us handle it all together.
+ */
+ 
+static void play_update_quantized_motion(struct modal *modal) {
+  struct qstep *qstep;
+  int i;
+  
+  // If mapid changed, drop all steps. State changes due to the dropped steps are not our problem.
+  if (!g.map) return;
+  if (g.map->rid!=MODAL->qstep_mapid) {
+    MODAL->qonc=0;
+    MODAL->qstepc=0;
+    MODAL->qstep_mapid=g.map->rid;
+  }
+  
+  // It's perfectly reasonable for a map to have no POI. Don't bother tracking quantized motion in those cases.
+  if (!g.poic) return;
+  
+  // Zero all (scratch). If it stays zero, the sprite is no longer relevant and its qstep should be removed.
+  for (i=MODAL->qstepc,qstep=MODAL->qstepv;i-->0;qstep++) qstep->scratch=0;
+  
+  /* Walk the global sprite list, filter to qsteppable sprites, and compare to their qstep record.
+   * Doesn't exist yet? Add it and mark that cell stepped.
+   * Changed? Mark the old cell unstepped, update, mark the new one stepped.
+   */
+  struct sprite **p=g.spritev;
+  for (i=g.spritec;i-->0;p++) {
+    struct sprite *sprite=*p;
+    if (!sprite_qsteppable(sprite)) continue;
+    int qstepp=play_qstepv_search(modal,sprite);
+    if (qstepp<0) {
+      qstepp=-qstepp-1;
+      if (!(qstep=play_qstepv_insert(modal,qstepp,sprite))) continue;
+      qstep->scratch=1;
+      qstep->x=(int)sprite->x; if (sprite->x<0.0) qstep->x--;
+      qstep->y=(int)sprite->y; if (sprite->y<0.0) qstep->y--;
+      play_quantized_step(modal,qstep->x,qstep->y);
+    } else {
+      qstep=MODAL->qstepv+qstepp;
+      qstep->scratch=1;
+      int nx=(int)sprite->x; if (sprite->x<0.0) nx--;
+      int ny=(int)sprite->y; if (sprite->y<0.0) ny--;
+      if ((nx==qstep->x)&&(ny==qstep->y)) continue;
+      int ox=qstep->x;
+      int oy=qstep->y;
+      qstep->x=nx;
+      qstep->y=ny;
+      play_quantized_unstep(modal,ox,oy);
+      play_quantized_step(modal,nx,ny);
+    }
+  }
+  
+  // Any qsteps that still have zero scratch are defunct, remove them.
+  for (i=MODAL->qstepc,qstep=MODAL->qstepv+MODAL->qstepc-1;i-->0;qstep--) {
+    if (qstep->scratch) continue;
+    int ox=qstep->x;
+    int oy=qstep->y;
+    qstep->x=qstep->y=-1;
+    play_quantized_unstep(modal,ox,oy);
+    MODAL->qstepc--;
+    memmove(qstep,qstep+1,sizeof(struct qstep)*(MODAL->qstepc-i));
+  }
+}
+
 /* Update.
  */
  
@@ -87,6 +303,9 @@ static void _play_update(struct modal *modal,double elapsed) {
 
   // Most of the action is driven by sprite controllers:
   sprites_update(elapsed);
+  
+  // Update our tracking of treadles and such.
+  play_update_quantized_motion(modal);
   
   // Check for navigation.
   if (g.hero&&g.map) {

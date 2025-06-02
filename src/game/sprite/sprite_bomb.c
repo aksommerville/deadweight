@@ -14,6 +14,11 @@ struct sprite_bomb {
 #define SPRITE ((struct sprite_bomb*)sprite)
 
 static int _bomb_init(struct sprite *sprite) {
+  sprite->solid=1;
+  sprite->phl=-0.375;
+  sprite->phr=0.375;
+  sprite->pht=-0.375;
+  sprite->phb=0.375;
   SPRITE->animframe=-1; // will advance at the first update
   SPRITE->fuse=-1;
   return 0;

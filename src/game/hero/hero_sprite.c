@@ -29,7 +29,7 @@ static void hero_choose(struct sprite *sprite) {
 }
 
 /* Moved to a new cell. Look for switches etc.
- */
+ *XXX
  
 static void hero_change_quantized_position(struct sprite *sprite,int mapid,int x,int y) {
   const struct poi *poi=g.poiv;
@@ -70,6 +70,7 @@ static void hero_change_quantized_position(struct sprite *sprite,int mapid,int x
   SPRITE->cellx=x;
   SPRITE->celly=y;
 }
+/**/
 
 /* Walking.
  */
@@ -105,7 +106,7 @@ static void hero_walk_update(struct sprite *sprite,double elapsed) {
    * Do this every frame, in case the broom state changed.
    * Quantized position is invalid while airborne. That might be too heavy-handed?
    * But my assumption is that quantized state is only for landborne things like treadles.
-   */
+   *XXX
   int mapid=g.map?g.map->rid:0;
   int cellx=(int)sprite->x;
   int celly=(int)sprite->y;
@@ -113,6 +114,7 @@ static void hero_walk_update(struct sprite *sprite,double elapsed) {
   if ((mapid!=SPRITE->mapid)||(cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
     hero_change_quantized_position(sprite,mapid,cellx,celly);
   }
+  /**/
 }
 
 /* Update (indx,indy), motion state, and (faced) in response to an input change.

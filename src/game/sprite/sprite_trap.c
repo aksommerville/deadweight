@@ -29,6 +29,7 @@ static int _trap_init(struct sprite *sprite) {
 
 static int trap_check_target(struct sprite *sprite,struct sprite *target) {
   if (!target) return 0;
+  if ((target->x<0.0)||(target->y<0.0)||(target->x>NS_sys_mapw)||(target->y>NS_sys_maph)) return 0;
   double dx=target->x-sprite->x;
   double dy=target->y-sprite->y;
   if ((dx>-TRAP_TRIGGER_RADIUS)&&(dx<TRAP_TRIGGER_RADIUS)) {
