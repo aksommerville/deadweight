@@ -68,7 +68,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Compass: Before princess sprite, identify the dungeon map and point to its center.
 - [x] Egg editor: World map preview.
 - [x] Should we start with something else, instead of Compass? Something non-passive, so the player gets to try out his A button.
-- [ ] Bomb explosion.
+- [x] Bomb explosion.
 - [ ] Candy attraction.
 - [x] Drop princess or monsters into water with wand.
 - [x] Broom: prevent disengaging over a hole. Important!

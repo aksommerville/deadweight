@@ -26,9 +26,8 @@ static int _bomb_init(struct sprite *sprite) {
 
 static void bomb_explode(struct sprite *sprite) {
   sprite->defunct=1;
-  egg_play_sound(RID_sound_explode);
-  //TODO hurt sprites
-  //TODO smoke, "babang!", etc
+  // The explode sprite takes care of damage, sound effects, the works.
+  sprite_spawn(sprite->x,sprite->y,0,&sprite_type_explode,0);
 }
 
 static void _bomb_update(struct sprite *sprite,double elapsed) {

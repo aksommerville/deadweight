@@ -49,6 +49,8 @@
 #define NS_sprtype_flagand 12
 #define NS_sprtype_splash 13
 #define NS_sprtype_soulballs 14
+#define NS_sprtype_explode 15
+#define NS_sprtype_smoke 16
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -64,7 +66,9 @@
   _(treasure) \
   _(flagand) \
   _(splash) \
-  _(soulballs)
+  _(soulballs) \
+  _(explode) \
+  _(smoke)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */

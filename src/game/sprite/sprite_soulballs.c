@@ -33,7 +33,7 @@ struct sprite_soulballs {
 #define SPRITE ((struct sprite_soulballs*)sprite)
 
 static int _soulballs_init(struct sprite *sprite) {
-  sprite->layer=120;
+  sprite->layer=200;
   sprite->decorative=1;
   sprite->airborne=1;
   sprite->tileid=0x70; // 3 tiles horizontally

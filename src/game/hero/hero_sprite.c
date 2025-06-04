@@ -156,6 +156,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
 static void _hero_hurt(struct sprite *sprite,struct sprite *assailant) {
   if (assailant->type==&sprite_type_ssflame) return; // Pepper doesn't hurt us, we like it spicy.
   sprite->defunct=1; // Framework manages soulballs and respawn.
+  hero_item_end(sprite);
 }
 
 /* Type definition.

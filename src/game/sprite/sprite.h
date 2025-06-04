@@ -90,4 +90,6 @@ void sprite_hero_losing_focus(struct sprite *sprite);
 
 void sprite_hero_force_broom(struct sprite *sprite);
 
+void sprite_smoke_setup(struct sprite *sprite,double dx,double dy);
+
 #endif

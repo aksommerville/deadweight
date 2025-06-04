@@ -16,3 +16,4 @@
 image image:tiles
 location 3 5
 sprite @6,9 sprite:hero 0x00000000
+sprite @9,7 sprite:treasure (u8:fld)got_bomb 0x08 1 0

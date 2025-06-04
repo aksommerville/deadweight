@@ -57,6 +57,8 @@ static void bubble_check_damage(struct sprite *sprite) {
     if (victim->defunct) continue;
     if (!victim->type->hurt) continue;
     
+    if (victim->type==&sprite_type_bubblesaur) continue;
+    
     double dx=victim->x-sprite->x;
     if ((dx<-BUBBLE_RADIUS)||(dx>BUBBLE_RADIUS)) continue;
     double dy=victim->y-sprite->y;
