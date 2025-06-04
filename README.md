@@ -23,6 +23,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 ## TODO
 
+- [x] Reliable segfault, just drop 8 bombs, segfaults before they explode.
+- - Caused by walking (g.spritev) when it reallocates. Avoid iterating it directly; deref at each step if there's any chance new sprites get allocated.
 - [ ] Sprites.
 - - [ ] Pushable blocks.
 - - [x] Oscillating traps.

@@ -77,10 +77,9 @@ static int trap_closed(struct sprite *sprite) {
     uint8_t physics=g.physics[g.map->cellv[row*NS_sys_mapw+col]];
     if ((physics==NS_physics_solid)||(physics==NS_physics_hole)) return 1;
   }
-  struct sprite **p=g.spritev;
   int i=g.spritec;
-  for (;i-->0;p++) {
-    struct sprite *other=*p;
+  while (i-->0) {
+    struct sprite *other=g.spritev[i];
     if (other==sprite) continue;
     if (other->defunct) continue;
     if (other->type!=&sprite_type_trap) continue;
@@ -97,9 +96,8 @@ static void _trap_update(struct sprite *sprite,double elapsed) {
 
   // Deal damage. All phases, and even when time stopped (standing still doesn't make our edges any less sharp).
   int i=g.spritec;
-  struct sprite **p=g.spritev;
-  for (;i-->0;p++) {
-    struct sprite *victim=*p;
+  while (i-->0) {
+    struct sprite *victim=g.spritev[i];
     if (victim->defunct) continue;
     if (!victim->type->hurt) continue;
     

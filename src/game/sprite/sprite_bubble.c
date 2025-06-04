@@ -59,9 +59,8 @@ static void bubble_set_travel_vector(struct sprite *sprite) {
 
 static void bubble_check_damage(struct sprite *sprite) {
   int i=g.spritec;
-  struct sprite **p=g.spritev;
-  for (;i-->0;p++) {
-    struct sprite *victim=*p;
+  while (i-->0) {
+    struct sprite *victim=g.spritev[i];
     if (victim->defunct) continue;
     if (!victim->type->hurt) continue;
     

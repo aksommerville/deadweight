@@ -37,9 +37,8 @@ static int _explode_init(struct sprite *sprite) {
   }
   
   // Hurt the weak.
-  struct sprite **p=g.spritev;
-  for (i=g.spritec;i-->0;p++) {
-    struct sprite *victim=*p;
+  for (i=g.spritec;i-->0;) {
+    struct sprite *victim=g.spritev[i];
     if (victim->defunct) continue;
     if (!victim->type->hurt) continue;
     double dx=victim->x-sprite->x;

@@ -44,10 +44,9 @@ static void _ssflame_update(struct sprite *sprite,double elapsed) {
   }
   sprite->xform=(((int)(SPRITE->clock*10.0))&1)?0:EGG_XFORM_XREV;
   
-  struct sprite **p=g.spritev;
   int i=g.spritec;
-  for (;i-->0;p++) {
-    struct sprite *victim=*p;
+  while (i-->0) {
+    struct sprite *victim=g.spritev[i];
     if (victim->defunct) continue;
     if (!victim->type->hurt) continue;
     double dx=victim->x-sprite->x;

@@ -71,10 +71,9 @@ static void _flamethrower_update(struct sprite *sprite,double elapsed) {
       case 0x08: r+=SPRITE->len; break;
       case 0x02: b+=SPRITE->len; break;
     }
-    struct sprite **p=g.spritev;
     int i=g.spritec;
-    for (;i-->0;p++) {
-      struct sprite *victim=*p;
+    while (i-->0) {
+      struct sprite *victim=g.spritev[i];
       if (victim->defunct) continue;
       if (!victim->type->hurt) continue;
       if (victim->x<l) continue;

@@ -96,9 +96,8 @@ static void _knife_update(struct sprite *sprite,double elapsed) {
   
   // Deal damage.
   int i=g.spritec;
-  struct sprite **p=g.spritev;
-  for (;i-->0;p++) {
-    struct sprite *victim=*p;
+  while (i-->0) {
+    struct sprite *victim=g.spritev[i];
     if (victim->defunct) continue;
     if (!victim->type->hurt) continue;
     
