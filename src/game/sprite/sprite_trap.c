@@ -8,6 +8,7 @@
 #define TRAP_RETREAT_SPEED 6.0
 #define TRAP_TRIGGER_RADIUS 1.250
 #define TRAP_TOO_CLOSE 1.000 /* If target is so close on the off-axis, don't trigger. */
+#define TRAP_RADIUS 0.750
 
 struct sprite_trap {
   struct sprite hdr;
@@ -93,7 +94,25 @@ static int trap_closed(struct sprite *sprite) {
 }
 
 static void _trap_update(struct sprite *sprite,double elapsed) {
+
+  // Deal damage. All phases, and even when time stopped (standing still doesn't make our edges any less sharp).
+  int i=g.spritec;
+  struct sprite **p=g.spritev;
+  for (;i-->0;p++) {
+    struct sprite *victim=*p;
+    if (victim->defunct) continue;
+    if (!victim->type->hurt) continue;
+    
+    double dx=victim->x-sprite->x;
+    if ((dx<-TRAP_RADIUS)||(dx>TRAP_RADIUS)) continue;
+    double dy=victim->y-sprite->y;
+    if ((dy<-TRAP_RADIUS)||(dy>TRAP_RADIUS)) continue;
+    
+    victim->type->hurt(victim,sprite);
+  }
+
   if (g.time_stopped) return;
+  
   switch (SPRITE->phase) {
     case TRAP_PHASE_IDLE: trap_check_targets(sprite); break;
     case TRAP_PHASE_ATTACK: {

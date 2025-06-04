@@ -108,7 +108,7 @@ int session_reset() {
     sprite_del(g.spritev[g.spritec]);
   }
   
-  if (0) {
+  if (1) {
     fprintf(stderr,"*** %s:%d: Enabling treasures. ***\n",__FILE__,__LINE__);
     store_set(NS_fld_got_broom,1);
     store_set(NS_fld_got_pepper,1);
@@ -122,6 +122,7 @@ int session_reset() {
     store_set(NS_fld_qty_pepper,99);
     store_set(NS_fld_qty_bomb,22);
     store_set(NS_fld_qty_candy,9);
+    store_set(NS_fld_equipped,NS_fld_got_broom);
   }
   
   // Load the home map.

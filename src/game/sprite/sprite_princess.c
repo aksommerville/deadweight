@@ -2,7 +2,7 @@
 
 // The path needn't be very long, it's fine (desirable even) to recalculate often.
 #define PRINCESS_PATH_LIMIT 8
-#define PRINCESS_SPEED 5.0
+#define PRINCESS_SPEED 5.5
 
 struct sprite_princess {
   struct sprite hdr;

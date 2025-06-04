@@ -51,6 +51,7 @@
 #define NS_sprtype_soulballs 14
 #define NS_sprtype_explode 15
 #define NS_sprtype_smoke 16
+#define NS_sprtype_knife 17
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -68,7 +69,8 @@
   _(splash) \
   _(soulballs) \
   _(explode) \
-  _(smoke)
+  _(smoke) \
+  _(knife)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */

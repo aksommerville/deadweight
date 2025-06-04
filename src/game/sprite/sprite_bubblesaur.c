@@ -1,13 +1,15 @@
 #include "game/game.h"
 
-#define BUBBLESAUR_BLOW_TIME 2.500
-#define BUBBLESAUR_RESET_TIME 3.000
+#define BUBBLESAUR_BLOW_TIME 0.500
+#define BUBBLESAUR_PERIOD_MIN 1.500
+#define BUBBLESAUR_PERIOD_MAX 2.500
 #define BUBBLESAUR_WALK_SPEED 2.0
 
 struct sprite_bubblesaur {
   struct sprite hdr;
   uint8_t tileid0;
   double clock; // counts up, resets each blow cycle
+  double period;
   int blown;
   int candyp; // 0..g.candyc-1 if we're distracted; refreshes each update.
   double animclock; // Only when candystracted
@@ -19,10 +21,18 @@ struct sprite_bubblesaur {
 static void _bubblesaur_del(struct sprite *sprite) {
 }
 
+static void bubblesaur_begin_cycle(struct sprite *sprite) {
+  SPRITE->clock=0.0;
+  SPRITE->period=BUBBLESAUR_PERIOD_MIN+((rand()&0xffff)*(BUBBLESAUR_PERIOD_MAX-BUBBLESAUR_PERIOD_MIN))/65535.0;
+  SPRITE->blown=0;
+  sprite->tileid=SPRITE->tileid0;
+}
+
 static int _bubblesaur_init(struct sprite *sprite) {
   sprite->solid=1;
   SPRITE->tileid0=sprite->tileid;
   SPRITE->candyp=-1;
+  bubblesaur_begin_cycle(sprite);
   return 0;
 }
 
@@ -59,13 +69,7 @@ static void _bubblesaur_update(struct sprite *sprite,double elapsed) {
   
   // Normal operation: Blow bubbles.
   SPRITE->clock+=elapsed;
-  if (SPRITE->clock<BUBBLESAUR_BLOW_TIME) {
-    sprite->tileid=SPRITE->tileid0;
-  } else if (SPRITE->clock>BUBBLESAUR_RESET_TIME) {
-    SPRITE->blown=0;
-    SPRITE->clock=0.0;
-    sprite->tileid=SPRITE->tileid0;
-  } else {
+  if (SPRITE->clock>SPRITE->period-BUBBLESAUR_BLOW_TIME) {
     sprite->tileid=SPRITE->tileid0+1;
     if (!SPRITE->blown) {
       SPRITE->blown=1;
@@ -73,6 +77,11 @@ static void _bubblesaur_update(struct sprite *sprite,double elapsed) {
       if (sprite->xform&EGG_XFORM_XREV) x+=1.0; else x-=1.0;
       struct sprite *bubble=sprite_spawn(x,sprite->y,0,&sprite_type_bubble,0);
     }
+  } else {
+    sprite->tileid=SPRITE->tileid0;
+  }
+  if (SPRITE->clock>SPRITE->period) {
+    bubblesaur_begin_cycle(sprite);
   }
 }
 
@@ -80,7 +89,7 @@ static void _bubblesaur_render(struct sprite *sprite,int x,int y) {
   int eyedx=0,eyedy=0;
   struct sprite *target=0;
   if (SPRITE->candyp>=0) target=g.candyv[SPRITE->candyp];
-  else get_preferred_monster_target();
+  else target=get_preferred_monster_target();
   if (target) {
     double dx=target->x-sprite->x;
     double dy=target->y-sprite->y;

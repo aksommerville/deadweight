@@ -21,11 +21,20 @@ static int _bubble_init(struct sprite *sprite) {
   SPRITE->warmup=0.500;
   
   /* Delete self if there's no target.
-   * Set a travel vector initially and never change it.
-   * Player is free to dodge after it takes off.
+   * Otherwise ignore the target; we'll establish the travel vector after the warmup expires.
    */
   struct sprite *target=get_preferred_monster_target();
   if (!target) return -1;
+  return 0;
+}
+
+static void bubble_set_travel_vector(struct sprite *sprite) {
+  struct sprite *target=get_preferred_monster_target();
+  if (!target) {
+    SPRITE->dx=0.0;
+    SPRITE->dy=5.0;
+    return;
+  }
   SPRITE->dx=target->x-sprite->x;
   SPRITE->dy=target->y-sprite->y;
   if ((SPRITE->dx>=-0.010)&&(SPRITE->dx<=0.010)&&(SPRITE->dy>=-0.010)&&(SPRITE->dy<=0.010)) {
@@ -46,7 +55,6 @@ static int _bubble_init(struct sprite *sprite) {
   SPRITE->dy/=distance;
   SPRITE->dx*=5.0; // travel speed, m/s
   SPRITE->dy*=5.0;
-  return 0;
 }
 
 static void bubble_check_damage(struct sprite *sprite) {
@@ -83,7 +91,9 @@ static void _bubble_update(struct sprite *sprite,double elapsed) {
     sprite->tileid=0x8a+SPRITE->animframe;
   }
   if (SPRITE->warmup>0.0) {
-    SPRITE->warmup-=elapsed;
+    if ((SPRITE->warmup-=elapsed)<=0.0) {
+      bubble_set_travel_vector(sprite);
+    }
   } else {
     sprite->x+=SPRITE->dx*elapsed;
     sprite->y+=SPRITE->dy*elapsed;

@@ -92,7 +92,9 @@ static void _soulballs_update(struct sprite *sprite,double elapsed) {
         }
       } break;
       
-    case SOULBALLS_PHASE_TRAVEL: {
+    // Continue travelling during the CONTRACT phase.
+    case SOULBALLS_PHASE_TRAVEL:
+    case SOULBALLS_PHASE_CONTRACT: {
         SPRITE->radius=SOULBALLS_RADIUS;
         double dstx,dsty;
         soulballs_get_destination(&dstx,&dsty,sprite);
@@ -100,8 +102,10 @@ static void _soulballs_update(struct sprite *sprite,double elapsed) {
         double distance=sqrt(dx*dx+dy*dy);
         double speed=SOULBALLS_TRAVEL_SPEED*elapsed;
         if (distance<=speed) {
-          SPRITE->clock=0.0;
-          SPRITE->phase=SOULBALLS_PHASE_CONTRACT;
+          if (SPRITE->phase==SOULBALLS_PHASE_TRAVEL) {
+            SPRITE->clock=0.0;
+            SPRITE->phase=SOULBALLS_PHASE_CONTRACT;
+          }
         } else {
           sprite->x+=(speed*dx)/distance;
           sprite->y+=(speed*dy)/distance;
@@ -109,13 +113,12 @@ static void _soulballs_update(struct sprite *sprite,double elapsed) {
             sprite->defunct=1;
           }
         }
-      } break;
-      
-    case SOULBALLS_PHASE_CONTRACT: {
-        if (SPRITE->clock>=SOULBALLS_CONTRACT_TIME) {
-          sprite->defunct=1;
-        } else {
-          SPRITE->radius=SOULBALLS_RADIUS-(SPRITE->clock*SOULBALLS_RADIUS)/SOULBALLS_EXPAND_TIME;
+        if (SPRITE->phase==SOULBALLS_PHASE_CONTRACT) {
+          if (SPRITE->clock>=SOULBALLS_CONTRACT_TIME) {
+            sprite->defunct=1;
+          } else {
+            SPRITE->radius=SOULBALLS_RADIUS-(SPRITE->clock*SOULBALLS_RADIUS)/SOULBALLS_EXPAND_TIME;
+          }
         }
       } break;
   }
