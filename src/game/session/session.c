@@ -293,6 +293,11 @@ int enter_map(int rid,int transition) {
     g.transition=0;
   }
   
+  if (g.hero) {
+    g.herox0=(int)g.hero->x;
+    g.heroy0=(int)g.hero->y;
+  }
+  
   return 0;
 }
 
@@ -394,4 +399,40 @@ void dw_earthquake(int dx,int dy) {
   g.eqdx=dx;
   g.eqdy=dy;
   egg_play_sound(RID_sound_earthquake);
+}
+
+/* Respawn hero.
+ */
+ 
+void session_respawn_hero() {
+  if (g.hero) return;
+  struct sprite *sprite=sprite_spawn(g.herox0+0.5,g.heroy0+0.5,RID_sprite_hero,0,0);
+  if (!sprite) return;
+  if ((g.herox0>=0)&&(g.heroy0>=0)&&(g.herox0<NS_sys_mapw)&&(g.heroy0<NS_sys_maph)) {
+    uint8_t physics=g.physics[g.map->cellv[g.heroy0*NS_sys_mapw+g.herox0]];
+    if (physics==NS_physics_hole) {
+      // We entered over a hole -- force her onto the broom.
+      sprite_hero_force_broom(sprite);
+    }
+  }
+}
+
+/* Respawn princess.
+ */
+ 
+void session_respawn_princess() {
+  if (!g.map) return;
+  if (g.princess) return;
+  struct rom_command_reader reader={.v=g.map->cmdv,.c=g.map->cmdc};
+  struct rom_command cmd;
+  while (rom_command_reader_next(&cmd,&reader)>0) {
+    if (cmd.opcode!=CMD_map_sprite) continue;
+    uint16_t rid=(cmd.argv[2]<<8)|cmd.argv[3];
+    if (rid!=RID_sprite_princess) continue;
+    uint8_t x=cmd.argv[0];
+    uint8_t y=cmd.argv[1];
+    uint32_t arg=(cmd.argv[4]<<24)|(cmd.argv[5]<<16)|(cmd.argv[6]<<8)|cmd.argv[7];
+    sprite_spawn(x+0.5,y+0.5,rid,0,arg);
+    return;
+  }
 }

@@ -77,6 +77,10 @@ static void hero_broom_begin(struct sprite *sprite) {
     SPRITE->facedy=0;
   }
 }
+ 
+void sprite_hero_force_broom(struct sprite *sprite) {
+  hero_broom_begin(sprite);
+}
 
 static void hero_broom_end(struct sprite *sprite) {
   int x=(int)sprite->x;

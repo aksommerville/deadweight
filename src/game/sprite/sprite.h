@@ -38,6 +38,7 @@ struct sprite_type {
   int (*init)(struct sprite *sprite);
   void (*update)(struct sprite *sprite,double elapsed);
   void (*render)(struct sprite *sprite,int x,int y);
+  void (*hurt)(struct sprite *sprite,struct sprite *assailant); // Sprites that take damage at all must implement.
 };
 
 // Session calls this once per resource at startup.
@@ -86,5 +87,7 @@ int sprite_position_valid(const struct sprite *sprite);
 
 // Signal from the modal stack that something was pushed. So hero can cancel in-progress actions.
 void sprite_hero_losing_focus(struct sprite *sprite);
+
+void sprite_hero_force_broom(struct sprite *sprite);
 
 #endif

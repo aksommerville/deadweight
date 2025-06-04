@@ -161,6 +161,7 @@ void sprites_update(double elapsed) {
     if (sprite->type->update) sprite->type->update(sprite,elapsed);
     if (sprite->defunct) defunct=1;
   }
+  int reprincess=0;
   if (defunct) {
     for (i=g.spritec;i-->0;) {
       struct sprite *sprite=g.spritev[i];
@@ -170,6 +171,7 @@ void sprites_update(double elapsed) {
       
       if (sprite->type==&sprite_type_princess) {
         sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x06020000); // Human souls have six circles.
+        reprincess=1;
       } else if (sprite->type==&sprite_type_hero) {
         sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x07010000); // Witch souls have seven circles.
       }
@@ -177,6 +179,8 @@ void sprites_update(double elapsed) {
       sprite_del(sprite);
     }
   }
+  if (reprincess) session_respawn_princess();
+  if (!g.hero) session_respawn_hero();
 }
 
 /* Render order.

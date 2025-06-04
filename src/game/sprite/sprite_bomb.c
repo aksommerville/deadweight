@@ -61,10 +61,15 @@ static void _bomb_render(struct sprite *sprite,int x,int y) {
   graf_draw_tile(&g.graf,g.texid_sprites,x,fusey,fusetileid,0);
 }
 
+static void _bomb_hurt(struct sprite *sprite,struct sprite *assailant) {
+  bomb_explode(sprite);
+}
+
 const struct sprite_type sprite_type_bomb={
   .name="bomb",
   .objlen=sizeof(struct sprite_bomb),
   .init=_bomb_init,
   .update=_bomb_update,
   .render=_bomb_render,
+  .hurt=_bomb_hurt,
 };

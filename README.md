@@ -41,7 +41,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Straight-shooting monsters.
 - - [ ] Target-shooting monsters.
 - - [ ] Sentinel monsters. Stands in one place, attacks when you draw near.
-- [ ] Hero and princess take damage.
+- [x] Hero and princess take damage.
 - [ ] Boss fight, immediately before rescue, once per session.
 - [x] Dialogue.
 - [x] Items.
@@ -95,7 +95,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] 2025-05-30 EOD   F Have global framework ready: Modals, map loader, state engine, sprite loader.
 - [x] 2025-05-31 EOD   S Hero, Princess, transitions, dialogue.
 - [x] 2025-06-01 EOD   U Sprites and items.
-- [ ] 2025-06-06 EOD   F Rough world layout.
+- [x] 2025-06-06 EOD   F Rough world layout.
 - [ ] 2025-06-07 EOD   S Sound effects.
 - [ ] 2025-06-08 EOD   U Music, final graphics.
 - [ ] 2025-06-13 EOD   F Polished and ready to go.

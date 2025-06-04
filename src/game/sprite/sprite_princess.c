@@ -14,6 +14,7 @@ struct sprite_princess {
   int pathp,pathc;
   int mapid;
   int idle;
+  double invincible;
 };
 
 #define SPRITE ((struct sprite_princess*)sprite)
@@ -33,6 +34,7 @@ static int _princess_init(struct sprite *sprite) {
   sprite->pht=-0.250;
   sprite->phb=0.500;
   SPRITE->tileid0=sprite->tileid;
+  SPRITE->invincible=2.0; // We're initially invincible, in case you lit a fire on our spawn point or something.
   return 0;
 }
 
@@ -223,6 +225,11 @@ static void princess_rebuild_path_if_needed(struct sprite *sprite) {
  
 static void _princess_update(struct sprite *sprite,double elapsed) {
 
+  if (SPRITE->invincible>0.0) {
+    SPRITE->invincible-=elapsed;
+    return;
+  }
+
   if (g.time_stopped||sprite->summoning) {
     // Very important that the princess respect the stopwatch.
     // "Oh this hazard will be easy, we just stop it and walk thru.... god damn it, princess."
@@ -327,6 +334,14 @@ static void _princess_update(struct sprite *sprite,double elapsed) {
   }
 }
 
+/* Hurt.
+ */
+ 
+static void _princess_hurt(struct sprite *sprite,struct sprite *assailant) {
+  if (SPRITE->invincible>0.0) return;
+  sprite->defunct=1; // The global framework creates our soulballs.
+}
+
 /* Type definition.
  */
  
@@ -336,4 +351,5 @@ const struct sprite_type sprite_type_princess={
   .del=_princess_del,
   .init=_princess_init,
   .update=_princess_update,
+  .hurt=_princess_hurt,
 };

@@ -79,6 +79,7 @@ extern struct g {
   int poic;
   int camera_mapid;
   uint8_t camerax,cameray; // cell coords in camera_mapid.
+  uint8_t herox0,heroy0; // Cell where hero entered the current map, for sending her back on death.
 
 // Room state:
   int transition;

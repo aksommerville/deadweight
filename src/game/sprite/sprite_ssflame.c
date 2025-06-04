@@ -6,6 +6,7 @@
 #include "game/game.h"
 
 #define SSFLAME_TTL 0.750 /* Not counting initial delay. */
+#define SSFLAME_RADIUS 0.500 /* Square. */
 
 struct sprite_ssflame {
   struct sprite hdr;
@@ -42,7 +43,19 @@ static void _ssflame_update(struct sprite *sprite,double elapsed) {
     sprite->tileid=0x0d;
   }
   sprite->xform=(((int)(SPRITE->clock*10.0))&1)?0:EGG_XFORM_XREV;
-  //TODO Damage any nearby fragile sprites.
+  
+  struct sprite **p=g.spritev;
+  int i=g.spritec;
+  for (;i-->0;p++) {
+    struct sprite *victim=*p;
+    if (victim->defunct) continue;
+    if (!victim->type->hurt) continue;
+    double dx=victim->x-sprite->x;
+    if ((dx<-SSFLAME_RADIUS)||(dx>SSFLAME_RADIUS)) continue;
+    double dy=victim->y-sprite->y;
+    if ((dy<-SSFLAME_RADIUS)||(dy>SSFLAME_RADIUS)) continue;
+    victim->type->hurt(victim,sprite);
+  }
 }
 
 const struct sprite_type sprite_type_ssflame={

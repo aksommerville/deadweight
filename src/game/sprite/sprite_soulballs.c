@@ -12,9 +12,9 @@
 #define SOULBALLS_PHASE_TRAVEL 2
 #define SOULBALLS_PHASE_CONTRACT 3
 
-#define SOULBALLS_EXPAND_TIME   1.000 /* s */
-#define SOULBALLS_CONTRACT_TIME 1.000 /* s */
-#define SOULBALLS_TRAVEL_SPEED 16.000 /* m/s */
+#define SOULBALLS_EXPAND_TIME   0.333 /* s */
+#define SOULBALLS_CONTRACT_TIME 0.333 /* s */
+#define SOULBALLS_TRAVEL_SPEED 20.000 /* m/s */
 #define SOULBALLS_ROTATE_SPEED  7.000 /* rad/s */
 #define SOULBALLS_RADIUS        2.000 /* m */
 
@@ -33,6 +33,7 @@ struct sprite_soulballs {
 #define SPRITE ((struct sprite_soulballs*)sprite)
 
 static int _soulballs_init(struct sprite *sprite) {
+  sprite->layer=120;
   sprite->decorative=1;
   sprite->airborne=1;
   sprite->tileid=0x70; // 3 tiles horizontally

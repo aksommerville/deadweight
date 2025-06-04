@@ -59,6 +59,11 @@ static void _bubblesaur_render(struct sprite *sprite,int x,int y) {
   graf_draw_tile(&g.graf,g.texid_sprites,x+eyedx,y+eyedy,0x80,EGG_XFORM_SWAP);
 }
 
+static void _bubblesaur_hurt(struct sprite *sprite,struct sprite *assailant) {
+  sprite->defunct=1;
+  sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x05000000);
+}
+
 const struct sprite_type sprite_type_bubblesaur={
   .name="bubblesaur",
   .objlen=sizeof(struct sprite_bubblesaur),
@@ -66,4 +71,5 @@ const struct sprite_type sprite_type_bubblesaur={
   .init=_bubblesaur_init,
   .update=_bubblesaur_update,
   .render=_bubblesaur_render,
+  .hurt=_bubblesaur_hurt,
 };

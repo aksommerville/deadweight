@@ -1,5 +1,7 @@
 #include "game/game.h"
 
+#define BUBBLE_RADIUS 0.625
+
 struct sprite_bubble {
   struct sprite hdr;
   double dx,dy;
@@ -48,7 +50,22 @@ static int _bubble_init(struct sprite *sprite) {
 }
 
 static void bubble_check_damage(struct sprite *sprite) {
-  //TODO bubble damage
+  int i=g.spritec;
+  struct sprite **p=g.spritev;
+  for (;i-->0;p++) {
+    struct sprite *victim=*p;
+    if (victim->defunct) continue;
+    if (!victim->type->hurt) continue;
+    
+    double dx=victim->x-sprite->x;
+    if ((dx<-BUBBLE_RADIUS)||(dx>BUBBLE_RADIUS)) continue;
+    double dy=victim->y-sprite->y;
+    if ((dy<-BUBBLE_RADIUS)||(dy>BUBBLE_RADIUS)) continue;
+    
+    victim->type->hurt(victim,sprite);
+    sprite->defunct=1;
+    return;
+  }
 }
 
 static void _bubble_update(struct sprite *sprite,double elapsed) {

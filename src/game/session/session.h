@@ -29,4 +29,10 @@ void store_unlisten(int listenerid);
 int store_get(int k);
 int store_set(int k,int v); // => adjusted value
 
+/* sprites_update() calls these when either global sprite gets killed.
+ * Respawning the princess only has an effect if we're on the dungeon map (ie a spawn point exists); otherwise she's allowed to be null.
+ */
+void session_respawn_hero();
+void session_respawn_princess();
+
 #endif
