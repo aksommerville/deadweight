@@ -16,3 +16,6 @@
 image image:tiles
 location 3 6
 sprite @8,12 sprite:treasure (u8:fld)got_pepper 0x08 0x01 0x00
+sprite @8,9 sprite:bug 0x00000000
+sprite @3,5 sprite:bug 0x00000000
+sprite @11,6 sprite:bug 0x00000000

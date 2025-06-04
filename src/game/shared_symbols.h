@@ -53,6 +53,7 @@
 #define NS_sprtype_explode 15
 #define NS_sprtype_smoke 16
 #define NS_sprtype_knife 17
+#define NS_sprtype_bug 18
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -71,7 +72,8 @@
   _(soulballs) \
   _(explode) \
   _(smoke) \
-  _(knife)
+  _(knife) \
+  _(bug)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */
@@ -101,6 +103,8 @@
 #define NS_fld_oneway2          25
 #define NS_fld_bombe            26
 #define NS_fld_bombctr          27
-#define FLD_COUNT               28
+#define NS_fld_flamethrow1      28
+#define NS_fld_bug              29
+#define FLD_COUNT               30
 
 #endif

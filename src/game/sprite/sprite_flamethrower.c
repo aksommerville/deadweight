@@ -4,6 +4,8 @@
 
 #include "game/game.h"
 
+#define FLAMETHROWER_RADIUS 0.500
+
 struct sprite_flamethrower {
   struct sprite hdr;
   uint8_t dir;
@@ -59,7 +61,28 @@ static void _flamethrower_update(struct sprite *sprite,double elapsed) {
     }
   }
   if (SPRITE->burning) {
-    //TODO Hurt hero and princess
+    double l=sprite->x-FLAMETHROWER_RADIUS;
+    double r=sprite->x+FLAMETHROWER_RADIUS;
+    double t=sprite->y-FLAMETHROWER_RADIUS;
+    double b=sprite->y+FLAMETHROWER_RADIUS;
+    switch (SPRITE->dir) {
+      case 0x40: t-=SPRITE->len; break;
+      case 0x10: l-=SPRITE->len; break;
+      case 0x08: r+=SPRITE->len; break;
+      case 0x02: b+=SPRITE->len; break;
+    }
+    struct sprite **p=g.spritev;
+    int i=g.spritec;
+    for (;i-->0;p++) {
+      struct sprite *victim=*p;
+      if (victim->defunct) continue;
+      if (!victim->type->hurt) continue;
+      if (victim->x<l) continue;
+      if (victim->x>r) continue;
+      if (victim->y<t) continue;
+      if (victim->y>b) continue;
+      victim->type->hurt(victim,sprite);
+    }
   }
 }
 

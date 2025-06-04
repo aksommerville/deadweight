@@ -15,6 +15,7 @@ static int _hero_init(struct sprite *sprite) {
   sprite->pht=-0.250; // extra headroom
   sprite->phb=0.500; // bottom of tiles tends to be exact
   SPRITE->facedy=1; // Default facing south.
+  SPRITE->respawn_cooldown=0.500;
   return 0;
 }
 
@@ -132,6 +133,10 @@ static void hero_update_animation(struct sprite *sprite,double elapsed) {
  
 static void _hero_update(struct sprite *sprite,double elapsed) {
   if (SPRITE->item_cooldown>0.0) SPRITE->item_cooldown-=elapsed;
+  if (SPRITE->respawn_cooldown>0.0) {
+    SPRITE->respawn_cooldown-=elapsed;
+    return;
+  }
   if ((g.input!=g.pvinput)||(g.input!=SPRITE->pvinput)) {
     SPRITE->pvinput=g.input;
     if ((g.input&EGG_BTN_WEST)&&!(g.pvinput&EGG_BTN_WEST)) {
@@ -154,6 +159,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
  */
  
 static void _hero_hurt(struct sprite *sprite,struct sprite *assailant) {
+  if (SPRITE->respawn_cooldown>0.0) return;
   if (assailant->type==&sprite_type_ssflame) return; // Pepper doesn't hurt us, we like it spicy.
   sprite->defunct=1; // Framework manages soulballs and respawn.
   hero_item_end(sprite);

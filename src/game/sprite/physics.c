@@ -159,7 +159,7 @@ int sprite_move(struct sprite *sprite,double dx,double dy) {
   /* If we can advance in the target direction at all, take all we can get and nothing else.
    */
   double available=sprite_measure_freedom(sprite,dx,dy);
-  if (available>0.0) {
+  if (available>SMALL) {
          if (dx<0.0) sprite->x-=available;
     else if (dx>0.0) sprite->x+=available; 
     else if (dy<0.0) sprite->y-=available;
