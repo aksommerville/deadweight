@@ -108,7 +108,7 @@ int session_reset() {
     sprite_del(g.spritev[g.spritec]);
   }
   
-  if (1) {
+  if (0) {
     fprintf(stderr,"*** %s:%d: Enabling treasures. ***\n",__FILE__,__LINE__);
     store_set(NS_fld_got_broom,1);
     store_set(NS_fld_got_pepper,1);
@@ -187,6 +187,16 @@ static void prerun_poi() {
             g.map->cellv[cellp]=g.map->rocellv[cellp];
           }
         } break;
+      case CMD_map_bombable: {
+          int cellp=poi->y*NS_sys_mapw+poi->x;
+          g.map->cellv[cellp]=g.map->rocellv[cellp];
+          uint16_t k=(poi->argv[2]<<8)|poi->argv[3];
+          if (store_get(k)) {
+            g.map->cellv[cellp]=g.map->rocellv[cellp]+1;
+          } else {
+            g.map->cellv[cellp]=g.map->rocellv[cellp];
+          }
+        } break;
     }
   }
 }
@@ -211,7 +221,8 @@ int enter_map(int rid,int transition) {
     switch (cmd.opcode) {
       case CMD_map_treadle:
       case CMD_map_stompbox:
-      case CMD_map_switchable: {
+      case CMD_map_switchable:
+      case CMD_map_bombable: {
           if (g.poic<POI_LIMIT) {
             struct poi *poi=g.poiv+g.poic++;
             poi->x=cmd.argv[0];

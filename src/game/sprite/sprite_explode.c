@@ -36,18 +36,32 @@ static int _explode_init(struct sprite *sprite) {
     sprite_smoke_setup(smoke,dx*faster,dy*faster);
   }
   
+  // Hurt the weak.
   struct sprite **p=g.spritev;
   for (i=g.spritec;i-->0;p++) {
     struct sprite *victim=*p;
     if (victim->defunct) continue;
     if (!victim->type->hurt) continue;
-    
     double dx=victim->x-sprite->x;
     double dy=victim->y-sprite->y;
     double d2=dx*dx+dy*dy;
     if (d2>EXPLODE_DAMAGE_RADIUS*EXPLODE_DAMAGE_RADIUS) continue;
-    
     victim->type->hurt(victim,sprite);
+  }
+  
+  // Damage property.
+  int col=(int)sprite->x;
+  int row=(int)sprite->y;
+  const struct poi *poi=g.poiv;
+  for (i=g.poic;i-->0;poi++) {
+    if (poi->opcode!=CMD_map_bombable) continue;
+    if (poi->x<col-1) continue;
+    if (poi->x>col+1) continue;
+    if (poi->y<row-1) continue;
+    if (poi->y>row+1) continue;
+    int cellp=poi->y*NS_sys_mapw+poi->x;
+    g.map->cellv[cellp]=g.map->rocellv[cellp]+1;
+    store_set((poi->argv[2]<<8)|poi->argv[3],1);
   }
   
   return 0;

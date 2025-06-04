@@ -15,6 +15,7 @@
 #define CMD_map_treadle    0x41 /* u8:x u8:y u16:fld */
 #define CMD_map_stompbox   0x42 /* u8:x u8:y u16:fld */
 #define CMD_map_switchable 0x43 /* u8:x u8:y u16:fld */
+#define CMD_map_bombable   0x44 /* u8:x u8:y u16:fld */
 #define CMD_map_sprite     0x61 /* u16:pos u16:spriteid u32:reserved */
 #define CMD_map_door       0x62 /* u16:pos u16:mapid u16:dstpos u16:reserved */
 
@@ -96,6 +97,10 @@
 #define NS_fld_twin2_a          21
 #define NS_fld_twin2_b          22
 #define NS_fld_twin2_c          23
-#define FLD_COUNT               24
+#define NS_fld_oneway1          24
+#define NS_fld_oneway2          25
+#define NS_fld_bombe            26
+#define NS_fld_bombctr          27
+#define FLD_COUNT               28
 
 #endif

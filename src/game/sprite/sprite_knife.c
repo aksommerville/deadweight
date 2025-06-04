@@ -93,6 +93,23 @@ static int _knife_init(struct sprite *sprite) {
 }
 
 static void _knife_update(struct sprite *sprite,double elapsed) {
+  
+  // Deal damage.
+  int i=g.spritec;
+  struct sprite **p=g.spritev;
+  for (;i-->0;p++) {
+    struct sprite *victim=*p;
+    if (victim->defunct) continue;
+    if (!victim->type->hurt) continue;
+    
+    double dx=victim->x-sprite->x;
+    if ((dx<-KNIFE_RADIUS)||(dx>KNIFE_RADIUS)) continue;
+    double dy=victim->y-sprite->y;
+    if ((dy<-KNIFE_RADIUS)||(dy>KNIFE_RADIUS)) continue;
+    
+    victim->type->hurt(victim,sprite);
+  }
+  
   if (g.time_stopped) return;
   
   if (sprite->summoning) SPRITE->reset=1;
@@ -122,22 +139,6 @@ static void _knife_update(struct sprite *sprite,double elapsed) {
     sprite->y-=dy;
     SPRITE->dx*=-1.0;
     SPRITE->dy*=-1.0;
-  }
-  
-  // Deal damage.
-  int i=g.spritec;
-  struct sprite **p=g.spritev;
-  for (;i-->0;p++) {
-    struct sprite *victim=*p;
-    if (victim->defunct) continue;
-    if (!victim->type->hurt) continue;
-    
-    dx=victim->x-sprite->x;
-    if ((dx<-KNIFE_RADIUS)||(dx>KNIFE_RADIUS)) continue;
-    dy=victim->y-sprite->y;
-    if ((dy<-KNIFE_RADIUS)||(dy>KNIFE_RADIUS)) continue;
-    
-    victim->type->hurt(victim,sprite);
   }
 }
 
