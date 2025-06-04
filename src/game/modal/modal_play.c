@@ -79,8 +79,11 @@ static void play_update_earthquake(struct modal *modal,double dx,double dy) {
     if (sprite->defunct) continue;
     if (sprite->airborne) continue;
     if ((sprite->x<0.0)||(sprite->y<0.0)||(sprite->x>NS_sys_mapw)||(sprite->y>NS_sys_maph)) continue; // eg offscreen princess
+    
+    if (sprite->decorative) continue;
     if (sprite->type==&sprite_type_selfie) continue;
     //TODO there surely are other things that need to be earthquake-proof
+    
     int pvsolid=sprite->solid;
     sprite->solid=1;
     sprite_move(sprite,dx,dy);
@@ -211,6 +214,7 @@ static struct qstep *play_qstepv_insert(struct modal *modal,int p,struct sprite 
  
 static int sprite_qsteppable(const struct sprite *sprite) {
   if (sprite->defunct) return 0; // obviously
+  if (sprite->decorative) return 0;
 
   // eg hero on broom is temporarily non-qsteppable
   if (sprite->airborne) return 0;

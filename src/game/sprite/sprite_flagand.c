@@ -36,6 +36,7 @@ static void _flagand_del(struct sprite *sprite) {
 
 static int _flagand_init(struct sprite *sprite) {
   sprite->airborne=1; // prevents earthquakes moving us
+  sprite->decorative=1;
   SPRITE->tileid0=sprite->tileid;
   SPRITE->ka=sprite->arg>>24;
   SPRITE->kb=sprite->arg>>16;

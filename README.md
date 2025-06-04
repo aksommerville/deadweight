@@ -70,8 +70,10 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Should we start with something else, instead of Compass? Something non-passive, so the player gets to try out his A button.
 - [ ] Bomb explosion.
 - [ ] Candy attraction.
-- [ ] Broom: prevent disengaging over a hole. Important!
-- [ ] Broom is allowing me to sneak offscreen around walls. I thought physics was preventing that! It must.
+- [x] Drop princess or monsters into water with wand.
+- [x] Broom: prevent disengaging over a hole. Important!
+- [x] Broom is allowing me to sneak offscreen around walls. I thought physics was preventing that! It must.
+- - ...didn't solve, but it might have been due to something else. And anyway, we will ensure that you can't reach any world edge (on broom or otherwise).
 - [x] The hello splash has got to go, alas. Needs to look silly and whimsical. More Kirby, less Ninja Gaiden.
 - [x] Princess should trigger treadles.
 - - Make a separate quantized-position-tracking service responsible for both Dot and Princess.

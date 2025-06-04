@@ -13,7 +13,6 @@ struct sprite_hero {
   int walking;
   double animclock;
   int animframe;
-  //int mapid,cellx,celly;//XXX Move to external service
   uint8_t using_item; // 0 if none, or NS_fld_got_broom..NS_fld_got_candy, when actively used.
   double item_cooldown;
   int renderclock; // Counts render frames, for high-frequency flicker.
@@ -22,6 +21,8 @@ struct sprite_hero {
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
+
+void hero_update_ind(struct sprite *sprite);
 
 void hero_item_begin(struct sprite *sprite);
 void hero_item_end(struct sprite *sprite);

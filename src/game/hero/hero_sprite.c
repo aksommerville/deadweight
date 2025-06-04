@@ -28,50 +28,6 @@ static void hero_choose(struct sprite *sprite) {
   g.input_blackout|=EGG_BTN_WEST;
 }
 
-/* Moved to a new cell. Look for switches etc.
- *XXX
- 
-static void hero_change_quantized_position(struct sprite *sprite,int mapid,int x,int y) {
-  const struct poi *poi=g.poiv;
-  int i=g.poic;
-  for (;i-->0;poi++) {
-    if ((poi->x==x)&&(poi->y==y)) {
-      switch (poi->opcode) {
-        case CMD_map_treadle: {
-            int cellp=poi->y*NS_sys_mapw+poi->x;
-            g.map->cellv[cellp]=g.map->rocellv[cellp]+1;
-            store_set((poi->argv[2]<<8)|poi->argv[3],1);
-          } break;
-        case CMD_map_stompbox: {
-            int cellp=poi->y*NS_sys_mapw+poi->x;
-            g.map->cellv[cellp]=g.map->rocellv[cellp]+1;
-            int k=(poi->argv[2]<<8)|poi->argv[3];
-            if (store_get(k)) store_set(k,0);
-            else store_set(k,1);
-          } break;
-      }
-    } else if ((SPRITE->mapid==mapid)&&(poi->x==SPRITE->cellx)&&(poi->y==SPRITE->celly)) {
-      switch (poi->opcode) {
-        case CMD_map_treadle: {
-            int cellp=poi->y*NS_sys_mapw+poi->x;
-            g.map->cellv[cellp]=g.map->rocellv[cellp];
-            store_set((poi->argv[2]<<8)|poi->argv[3],0);
-          } break;
-        case CMD_map_stompbox: {
-            int cellp=poi->y*NS_sys_mapw+poi->x;
-            int k=(poi->argv[2]<<8)|poi->argv[3];
-            if (store_get(k)) g.map->cellv[cellp]=g.map->rocellv[cellp]+2;
-            else g.map->cellv[cellp]=g.map->rocellv[cellp];
-          } break;
-      }
-    }
-  }
-  SPRITE->mapid=mapid;
-  SPRITE->cellx=x;
-  SPRITE->celly=y;
-}
-/**/
-
 /* Walking.
  */
  
@@ -101,38 +57,28 @@ static void hero_walk_update(struct sprite *sprite,double elapsed) {
     if (SPRITE->using_item==NS_fld_got_broom) speed=HERO_BROOM_SPEED;
     sprite_move(sprite,speed*SPRITE->indx*elapsed,speed*SPRITE->indy*elapsed);
   }
-  
-  /* Check for changes to quantized position.
-   * Do this every frame, in case the broom state changed.
-   * Quantized position is invalid while airborne. That might be too heavy-handed?
-   * But my assumption is that quantized state is only for landborne things like treadles.
-   *XXX
-  int mapid=g.map?g.map->rid:0;
-  int cellx=(int)sprite->x;
-  int celly=(int)sprite->y;
-  if (sprite->airborne) cellx=celly=0xff;
-  if ((mapid!=SPRITE->mapid)||(cellx!=SPRITE->cellx)||(celly!=SPRITE->celly)) {
-    hero_change_quantized_position(sprite,mapid,cellx,celly);
-  }
-  /**/
 }
 
 /* Update (indx,indy), motion state, and (faced) in response to an input change.
  */
  
-static void hero_update_ind(struct sprite *sprite) {
+void hero_update_ind(struct sprite *sprite) {
+  
+  // Some items inhibit movement, and should not update (ind).
+  // These should call us again after unsetting (using_item), when the action ends.
+  switch (SPRITE->using_item) {
+    case NS_fld_got_wand:
+        return;
+  }
+  
   int nindx=0,nindy=0;
-  if (SPRITE->using_item==NS_fld_got_wand) {
-    // Ignore all dpad input while summoning.
-  } else {
-    switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
-      case EGG_BTN_LEFT: nindx=-1; break;
-      case EGG_BTN_RIGHT: nindx=1; break;
-    }
-    switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
-      case EGG_BTN_UP: nindy=-1; break;
-      case EGG_BTN_DOWN: nindy=1; break;
-    }
+  switch (g.input&(EGG_BTN_LEFT|EGG_BTN_RIGHT)) {
+    case EGG_BTN_LEFT: nindx=-1; break;
+    case EGG_BTN_RIGHT: nindx=1; break;
+  }
+  switch (g.input&(EGG_BTN_UP|EGG_BTN_DOWN)) {
+    case EGG_BTN_UP: nindy=-1; break;
+    case EGG_BTN_DOWN: nindy=1; break;
   }
   if ((nindx==SPRITE->indx)&&(nindy==SPRITE->indy)) return; // No change.
   
@@ -196,10 +142,10 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
       return;
     }
     if ((g.input&EGG_BTN_SOUTH)&&!(g.pvinput&EGG_BTN_SOUTH)) hero_item_begin(sprite);
-    else if (!(g.input&EGG_BTN_SOUTH)&&(g.pvinput&EGG_BTN_SOUTH)) hero_item_end(sprite);
     hero_update_ind(sprite);
   }
   if (g.input&EGG_BTN_SOUTH) hero_item_update(sprite,elapsed);
+  else if (!(g.input&EGG_BTN_SOUTH)&&SPRITE->using_item) hero_item_end(sprite);
   hero_walk_update(sprite,elapsed);
   hero_update_animation(sprite,elapsed);
 }

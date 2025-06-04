@@ -79,7 +79,15 @@ static void hero_broom_begin(struct sprite *sprite) {
 }
 
 static void hero_broom_end(struct sprite *sprite) {
-  //TODO If we're over a hole, quietly noop.
+  int x=(int)sprite->x;
+  int y=(int)sprite->y;
+  if ((x>=0)&&(y>=0)&&(x<NS_sys_mapw)&&(y<NS_sys_maph)) {
+    uint8_t physics=g.physics[g.map->cellv[y*NS_sys_mapw+x]];
+    if (physics==NS_physics_hole) {
+      // Stay on the broom. We'll be repeatedly polled until it works.
+      return;
+    }
+  }
   sprite->airborne=0;
   SPRITE->using_item=0;
 }
@@ -134,15 +142,37 @@ static void hero_snowglobe_update(struct sprite *sprite,double elapsed) {
 /* Wand.
  */
  
+static void hero_unsummon(struct sprite *sprite,struct sprite *pumpkin) {
+  pumpkin->summoning=0;
+  
+  // If the pumpkin landed in a hole, kill it and create a splash. Doesn't apply to airbone pumpkins like bubble.
+  if (!pumpkin->airborne&&(pumpkin->x>0.0)&&(pumpkin->y>0.0)) {
+    int col=(int)pumpkin->x,row=(int)pumpkin->y;
+    if ((col<NS_sys_mapw)&&(row<NS_sys_maph)) {
+      uint8_t physics=g.physics[g.map->cellv[row*NS_sys_mapw+col]];
+      if (physics==NS_physics_hole) {
+        pumpkin->defunct=1;
+        sprite_spawn(pumpkin->x,pumpkin->y,0,&sprite_type_splash,0);
+        egg_play_sound(RID_sound_splash);
+        return;
+      }
+    }
+  }
+}
+ 
 static void hero_wand_begin(struct sprite *sprite) {
   SPRITE->using_item=NS_fld_got_wand;
   SPRITE->walking=0;
+  SPRITE->indx=SPRITE->indy=0;
 }
 
 static void hero_wand_end(struct sprite *sprite) {
   SPRITE->using_item=0;
   int i=g.spritec;
-  while (i-->0) g.spritev[i]->summoning=0;
+  while (i-->0) {
+    if (g.spritev[i]->summoning) hero_unsummon(sprite,g.spritev[i]);
+  }
+  hero_update_ind(sprite);
 }
 
 static void hero_wand_update(struct sprite *sprite,double elapsed) {
@@ -153,29 +183,58 @@ static void hero_wand_update(struct sprite *sprite,double elapsed) {
   else if (SPRITE->facedy<0) t=0.0;
   else b=NS_sys_maph;
   
-  struct sprite *pumpkin=0; // ideal target
-  struct sprite *pvpumpkin=0; // the one previously summoned
+  // First determine what we are already summoning; we bias toward keeping it.
+  struct sprite *pvpumpkin=0;
   int i=g.spritec;
   while (i-->0) {
     struct sprite *q=g.spritev[i];
     if (q->defunct) continue;
-    if (q==sprite) continue;
     if (q->summoning) {
       pvpumpkin=q;
-      if (pumpkin==pvpumpkin) break;
+      break; // There can't be more than one (and if there is, there's no guidance on which to prefer so whatever).
     }
+  }
+  
+  // Determine which pumpkin we ought to be summoning.
+  struct sprite *pumpkin=0;
+  double bestdistance=999.0;
+  for (i=g.spritec;i-->0;) {
+    struct sprite *q=g.spritev[i];
+    if (q->defunct) continue;
+    if (q==sprite) continue;
     
+    if (sprite->decorative) continue;
     if (sprite->type==&sprite_type_selfie) continue;
     //TODO Which sprites are summonable? Surely not all of them.
     
+    // It must be in the box to be eligible, even if we were already holding it. (determined pumpkins can escape our grasp).
     if (q->x<l) continue;
     if (q->y<t) continue;
     if (q->x>r) continue;
     if (q->y>b) continue;
-    pumpkin=q;
-    if (pumpkin==pvpumpkin) break;
+    
+    // If this is the one we're already carrying, it's eligible so that's the answer.
+    if (pvpumpkin==q) {
+      pumpkin=q;
+      break;
+    }
+    
+    // Prefer the one nearest me. If something else steps in the way, it won't interrupt.
+    double distance=999.0;
+         if (SPRITE->facedx<0) distance=sprite->x-q->x;
+    else if (SPRITE->facedx>0) distance=q->x-sprite->x;
+    else if (SPRITE->facedy<0) distance=sprite->y-q->y;
+    else if (SPRITE->facedy>0) distance=q->y-sprite->y;
+    if (distance<bestdistance) {
+      bestdistance=distance;
+      pumpkin=q;
+    }
   }
-  if (pvpumpkin) pvpumpkin->summoning=0;
+  
+  /* Set (summoning) and if there's a current pumpkin, draw it near.
+   * Temporarily make it solid and airborne, to let physics work sensibly.
+   */
+  if (pvpumpkin&&(pvpumpkin!=pumpkin)) hero_unsummon(sprite,pvpumpkin);
   if (pumpkin) {
     pumpkin->summoning=1;
     double dx=pumpkin->x-sprite->x;
