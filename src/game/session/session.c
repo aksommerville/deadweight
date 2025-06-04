@@ -199,6 +199,7 @@ int enter_map(int rid,int transition) {
   struct map *frommap=g.map;
   g.map=map;
   g.poic=0;
+  g.candyc=0;
   
   sprites_delete_volatile();
   

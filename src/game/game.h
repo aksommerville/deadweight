@@ -9,6 +9,7 @@
 #define STORE_SIZE 64 /* bytes */
 #define LISTENER_LIMIT 32
 #define POI_LIMIT 32
+#define CANDY_LIMIT 4 /* You can drop as many as you have, but only so many will actually work. */
 
 // World size in maps. We index maps by ID and also by absolute position; they're in a single plane.
 #define WORLDW 12
@@ -88,6 +89,8 @@ extern struct g {
   int time_stopped; // The stopwatch. Sprite controllers are expected to respect this on their own.
   double earthquake_cooldown;
   int eqdx,eqdy;
+  struct sprite *candyv[CANDY_LIMIT]; // WEAK
+  int candyc;
 } g;
 
 extern const uint32_t nes_colors[55];

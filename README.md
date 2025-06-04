@@ -69,7 +69,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Egg editor: World map preview.
 - [x] Should we start with something else, instead of Compass? Something non-passive, so the player gets to try out his A button.
 - [x] Bomb explosion.
-- [ ] Candy attraction.
+- [x] Candy attraction.
 - [x] Drop princess or monsters into water with wand.
 - [x] Broom: prevent disengaging over a hole. Important!
 - [x] Broom is allowing me to sneak offscreen around walls. I thought physics was preventing that! It must.

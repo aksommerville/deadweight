@@ -35,8 +35,20 @@ int load_sprite(int rid,const void *src,int srcc) {
  
 void sprite_del(struct sprite *sprite) {
   if (!sprite) return;
+  
+  if (sprite->type==&sprite_type_candy) {
+    int i=g.candyc;
+    while (i-->0) {
+      if (g.candyv[i]==sprite) {
+        g.candyc--;
+        memmove(g.candyv+i,g.candyv+i+1,sizeof(void*)*(g.candyc-i));
+      }
+    }
+  }
+  
   if (sprite->type->del) sprite->type->del(sprite);
   free(sprite);
+  
   if (g.hero==sprite) g.hero=0;
   if (g.princess==sprite) g.princess=0;
 }
@@ -120,6 +132,9 @@ struct sprite *sprite_spawn(double x,double y,uint16_t rid,const struct sprite_t
   // The hero and princess sprites are special; they get tracked globally.
   if (type==&sprite_type_hero) g.hero=sprite;
   else if (type==&sprite_type_princess) g.princess=sprite;
+  else if (type==&sprite_type_candy) {
+    if (g.candyc<CANDY_LIMIT) g.candyv[g.candyc++]=sprite;
+  }
   
   return sprite;
 }
@@ -302,4 +317,27 @@ struct sprite *get_preferred_monster_target() {
     ) return g.princess;
   }
   return g.hero;
+}
+
+/* Preferred candy.
+ */
+ 
+int find_candy(const struct sprite *sprite) {
+  // I reckon the overwhelming majority of the time there are zero or one candies, and that's an easy answer:
+  if (g.candyc<1) return -1;
+  if (g.candyc==1) return 0;
+  // Otherwise consider the square distance to each candy, and approach the nearest:
+  int bestp=0;
+  double bestd=999.0;
+  int i=g.candyc; while (i-->0) {
+    struct sprite *candy=g.candyv[i];
+    double dx=candy->x-sprite->x;
+    double dy=candy->y-sprite->y;
+    double d=dx*dx+dy*dy;
+    if (d<bestd) {
+      bestd=d;
+      bestp=i;
+    }
+  }
+  return bestp;
 }
