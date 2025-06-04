@@ -26,8 +26,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Sprites.
 - - [ ] Pushable blocks.
 - - [x] Oscillating traps.
-- - [ ] Roaming monsters. (multiple skins)
-- - [ ] Straight-shooting monsters.
+- - [x] Roaming monsters. (multiple skins)
+- - [x] Straight-shooting monsters.
 - - [ ] Target-shooting monsters.
 - - [ ] Sentinel monsters. Stands in one place, attacks when you draw near.
 - [x] Monsters drop prizes when killed.
@@ -37,6 +37,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Game over. Success only. Game will not be loseable.
 - [ ] Maps.
 - [ ] Proper graphics.
+- [ ] Visual fanfare on picking up prizes.
+- [ ] '' opening treadle (etc) locks.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
 - [ ] Sound effects.
 - [ ] Music.

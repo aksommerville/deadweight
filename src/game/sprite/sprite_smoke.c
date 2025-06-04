@@ -1,5 +1,5 @@
 /* sprite_smoke.c
- * Decorative, created by sprite_explode.
+ * Decorative, created by sprite_explode and sprite_tank.
  */
  
 #include "game/game.h"
@@ -19,6 +19,7 @@ static int _smoke_init(struct sprite *sprite) {
   sprite->airborne=1;
   sprite->decorative=1;
   SPRITE->ttl=SMOKE_TTL;
+  sprite->tileid=0x63;
   return 0;
 }
 
@@ -49,4 +50,9 @@ void sprite_smoke_setup(struct sprite *sprite,double dx,double dy) {
   if (!sprite||(sprite->type!=&sprite_type_smoke)) return;
   SPRITE->dx=dx;
   SPRITE->dy=dy;
+}
+
+void sprite_smoke_quickie(struct sprite *sprite) {
+  if (!sprite||(sprite->type!=&sprite_type_smoke)) return;
+  SPRITE->ttl=1.000;
 }

@@ -158,11 +158,12 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
 /* Hurt.
  */
  
-static void _hero_hurt(struct sprite *sprite,struct sprite *assailant) {
-  if (SPRITE->respawn_cooldown>0.0) return;
-  if (assailant->type==&sprite_type_ssflame) return; // Pepper doesn't hurt us, we like it spicy.
+static int _hero_hurt(struct sprite *sprite,struct sprite *assailant) {
+  if (SPRITE->respawn_cooldown>0.0) return 0;
+  if (assailant->type==&sprite_type_ssflame) return 0; // Pepper doesn't hurt us, we like it spicy.
   sprite->defunct=1; // Framework manages soulballs and respawn.
   hero_item_end(sprite);
+  return 1;
 }
 
 /* Type definition.

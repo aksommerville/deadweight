@@ -72,9 +72,10 @@ static void bubble_check_damage(struct sprite *sprite) {
     double dy=victim->y-sprite->y;
     if ((dy<-BUBBLE_RADIUS)||(dy>BUBBLE_RADIUS)) continue;
     
-    victim->type->hurt(victim,sprite);
-    sprite->defunct=1;
-    return;
+    if (victim->type->hurt(victim,sprite)) {
+      sprite->defunct=1;
+      return;
+    }
   }
 }
 

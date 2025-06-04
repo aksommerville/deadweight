@@ -38,7 +38,7 @@ struct sprite_type {
   int (*init)(struct sprite *sprite);
   void (*update)(struct sprite *sprite,double elapsed);
   void (*render)(struct sprite *sprite,int x,int y);
-  void (*hurt)(struct sprite *sprite,struct sprite *assailant); // Sprites that take damage at all must implement.
+  int (*hurt)(struct sprite *sprite,struct sprite *assailant); // Sprites that take damage at all must implement. Nonzero to acknowledge.
 };
 
 // Session calls this once per resource at startup.
@@ -99,5 +99,8 @@ void sprite_hero_losing_focus(struct sprite *sprite);
 void sprite_hero_force_broom(struct sprite *sprite);
 
 void sprite_smoke_setup(struct sprite *sprite,double dx,double dy);
+void sprite_smoke_quickie(struct sprite *sprite);
+
+void sprite_missile_setup(struct sprite *sprite,double dx,double dy);
 
 #endif

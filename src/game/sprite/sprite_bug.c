@@ -8,6 +8,8 @@
 #define BUG_SPEED 5.0
 #define BUG_WAIT_TIME_MIN 0.250
 #define BUG_WAIT_TIME_MAX 1.000
+#define BUG_WALK_TIME_MIN 0.500
+#define BUG_WALK_TIME_MAX 1.000
 
 struct sprite_bug {
   struct sprite hdr;
@@ -16,6 +18,7 @@ struct sprite_bug {
   double dx,dy; // direction and speed
   double waitclock;
   uint8_t tileid0;
+  double walkclock;
 };
 
 #define SPRITE ((struct sprite_bug*)sprite)
@@ -29,6 +32,7 @@ static void bug_start_cycle(struct sprite *sprite) {
     case 3: SPRITE->dx=0.0; SPRITE->dy=BUG_SPEED; break;
   }
   SPRITE->waitclock=BUG_WAIT_TIME_MIN+((rand()&0xffff)*(BUG_WAIT_TIME_MAX-BUG_WAIT_TIME_MIN))/65535.0;
+  SPRITE->walkclock=BUG_WALK_TIME_MIN+((rand()&0xffff)*(BUG_WALK_TIME_MAX-BUG_WALK_TIME_MIN))/65535.0;
 }
 
 static int _bug_init(struct sprite *sprite) {
@@ -91,7 +95,8 @@ static void _bug_update(struct sprite *sprite,double elapsed) {
       ((sprite->x>NS_sys_mapw-1.5)&&(SPRITE->dx>0.0))||
       ((sprite->y<1.5)&&(SPRITE->dy<0.0))||
       ((sprite->y>NS_sys_maph-1.5)&&(SPRITE->dy>0.0))||
-      (sprite_move(sprite,SPRITE->dx*elapsed,SPRITE->dy*elapsed)<2)
+      (sprite_move(sprite,SPRITE->dx*elapsed,SPRITE->dy*elapsed)<2)||
+      ((SPRITE->walkclock-=elapsed)<0.0)
     ) {
       bug_start_cycle(sprite);
     }
@@ -109,10 +114,11 @@ static void _bug_update(struct sprite *sprite,double elapsed) {
   if (bug_damagable(sprite,g.princess)) g.princess->type->hurt(g.princess,sprite);
 }
 
-static void _bug_hurt(struct sprite *sprite,struct sprite *assailant) {
+static int _bug_hurt(struct sprite *sprite,struct sprite *assailant) {
   sprite->defunct=1;
   sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x05000000);
   spawn_prize(sprite->x,sprite->y);
+  return 1;
 }
 
 const struct sprite_type sprite_type_bug={

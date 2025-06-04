@@ -337,9 +337,10 @@ static void _princess_update(struct sprite *sprite,double elapsed) {
 /* Hurt.
  */
  
-static void _princess_hurt(struct sprite *sprite,struct sprite *assailant) {
-  if (SPRITE->invincible>0.0) return;
+static int _princess_hurt(struct sprite *sprite,struct sprite *assailant) {
+  if (SPRITE->invincible>0.0) return 0;
   sprite->defunct=1; // The global framework creates our soulballs.
+  return 1;
 }
 
 /* Type definition.

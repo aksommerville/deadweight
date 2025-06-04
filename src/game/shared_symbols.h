@@ -55,6 +55,9 @@
 #define NS_sprtype_knife 17
 #define NS_sprtype_bug 18
 #define NS_sprtype_prize 19
+#define NS_sprtype_caterpillar 20
+#define NS_sprtype_tank 21
+#define NS_sprtype_missile 22
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -75,7 +78,10 @@
   _(smoke) \
   _(knife) \
   _(bug) \
-  _(prize)
+  _(prize) \
+  _(caterpillar) \
+  _(tank) \
+  _(missile)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */
@@ -107,6 +113,7 @@
 #define NS_fld_bombctr          27
 #define NS_fld_flamethrow1      28
 #define NS_fld_bug              29
-#define FLD_COUNT               30
+#define NS_fld_shortcut1        30
+#define FLD_COUNT               31
 
 #endif

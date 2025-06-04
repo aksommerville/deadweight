@@ -20,6 +20,19 @@ static void hero_spawn_pepper_ring(struct sprite *sprite,double radius,int count
  * Play "reject" if quantity zero, just as if nothing were equipped.
  */
  
+static int hero_too_many_items_placed(struct sprite *sprite) {
+  // Bomb and candy need to regulate their population somewhat, or the player could drop dozens of things at once.
+  // That would be no problem for us, but it does kind of break the NES illusion.
+  int c=0,i=g.spritec;
+  struct sprite **p=g.spritev;
+  for (;i-->0;p++) {
+    struct sprite *other=*p;
+    if (other->defunct) continue;
+    if ((other->type==&sprite_type_bomb)||(other->type==&sprite_type_candy)) c++;
+  }
+  return (c>=8);
+}
+ 
 static void hero_pepper_begin(struct sprite *sprite) {
   int qty=store_get(NS_fld_qty_pepper);
   if (qty<1) {
@@ -37,7 +50,7 @@ static void hero_pepper_begin(struct sprite *sprite) {
  
 static void hero_bomb_begin(struct sprite *sprite) {
   int qty=store_get(NS_fld_qty_bomb);
-  if (qty<1) {
+  if ((qty<1)||hero_too_many_items_placed(sprite)) {
     egg_play_sound(RID_sound_reject);
     return;
   }
@@ -51,7 +64,7 @@ static void hero_bomb_begin(struct sprite *sprite) {
  
 static void hero_candy_begin(struct sprite *sprite) {
   int qty=store_get(NS_fld_qty_candy);
-  if (qty<1) {
+  if ((qty<1)||hero_too_many_items_placed(sprite)) {
     egg_play_sound(RID_sound_reject);
     return;
   }
