@@ -30,8 +30,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Straight-shooting monsters.
 - - [ ] Target-shooting monsters.
 - - [ ] Sentinel monsters. Stands in one place, attacks when you draw near.
-- [ ] Monsters drop prizes when killed.
-- [ ] Overlay status bar with candy, pepper, and bomb quantities.
+- [x] Monsters drop prizes when killed.
+- [x] Overlay status bar with candy, pepper, and bomb quantities.
 - [ ] Boss fight, immediately before rescue, once per session.
 - [ ] Modals.
 - - [ ] Game over. Success only. Game will not be loseable.

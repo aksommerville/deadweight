@@ -383,6 +383,23 @@ static void _play_render(struct modal *modal) {
   /* Weather and such, above the scene.
    */
   if (g.time_stopped) play_render_chronflakes(modal);
+  
+  /* Item quantities, even abover.
+   */
+  dstx=FBW-3;
+  dsty=4;
+  #define SHOWQUANTITY(thingname,tileid) { \
+    if (store_get(NS_fld_got_##thingname)) { \
+      int qty=store_get(NS_fld_qty_##thingname); \
+      graf_draw_tile(&g.graf,g.texid_sprites,dstx,dsty,0x90+qty%10,0); dstx-=4; \
+      graf_draw_tile(&g.graf,g.texid_sprites,dstx,dsty,0x90+qty/10,0); dstx-=6; \
+      graf_draw_tile(&g.graf,g.texid_sprites,dstx,dsty,tileid,0); dstx-=8; \
+    } \
+  }
+  SHOWQUANTITY(pepper,0x49)
+  SHOWQUANTITY(candy,0x48)
+  SHOWQUANTITY(bomb,0x47)
+  #undef SHOWQUANTITY
 }
 
 /* Init.

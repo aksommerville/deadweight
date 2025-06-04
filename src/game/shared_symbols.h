@@ -54,6 +54,7 @@
 #define NS_sprtype_smoke 16
 #define NS_sprtype_knife 17
 #define NS_sprtype_bug 18
+#define NS_sprtype_prize 19
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -73,7 +74,8 @@
   _(explode) \
   _(smoke) \
   _(knife) \
-  _(bug)
+  _(bug) \
+  _(prize)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */

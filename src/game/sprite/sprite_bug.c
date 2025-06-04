@@ -112,6 +112,7 @@ static void _bug_update(struct sprite *sprite,double elapsed) {
 static void _bug_hurt(struct sprite *sprite,struct sprite *assailant) {
   sprite->defunct=1;
   sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x05000000);
+  spawn_prize(sprite->x,sprite->y);
 }
 
 const struct sprite_type sprite_type_bug={

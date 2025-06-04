@@ -341,3 +341,27 @@ int find_candy(const struct sprite *sprite) {
   }
   return bestp;
 }
+
+/* Prizes.
+ */
+
+struct sprite *spawn_prize(double x,double y) {
+  int got_bomb=store_get(NS_fld_got_bomb);
+  int got_pepper=store_get(NS_fld_got_pepper);
+  int got_candy=store_get(NS_fld_got_candy);
+  if (!got_bomb&&!got_pepper&&!got_candy) return 0; // Nothing eligible. How did you kill the monster?
+  int qty_bomb=got_bomb?store_get(NS_fld_qty_bomb):0;
+  int qty_pepper=got_pepper?store_get(NS_fld_qty_pepper):0;
+  int qty_candy=got_candy?store_get(NS_fld_qty_candy):0;
+  // If we have >=99 already, don't make more.
+  if (qty_bomb>=99) got_bomb=0;
+  if (qty_pepper>=99) got_pepper=0;
+  if (qty_candy>=99) got_candy=0;
+  if (!got_bomb&&!got_pepper&&!got_candy) return 0;
+  // Pick randomly among the eligible items.
+  int choice=rand()%(got_bomb+got_pepper+got_candy);
+  if (got_bomb&&!choice--) choice=NS_fld_got_bomb;
+  else if (got_pepper&&!choice--) choice=NS_fld_got_pepper;
+  else choice=NS_fld_got_candy;
+  return sprite_spawn(x,y,0,&sprite_type_prize,(choice<<24));
+}
