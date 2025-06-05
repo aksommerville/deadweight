@@ -91,7 +91,7 @@ static int _hello_init(struct modal *modal) {
   MODAL->msg_copyrightc=strings_get(&MODAL->msg_copyright,1,3);
   MODAL->msg_press_startc=strings_get(&MODAL->msg_press_start,1,4);
   
-  egg_play_song(RID_song_dead_weight,0,1);
+  egg_play_song(RID_song_tickled_pink,0,1);
   
   return 0;
 }

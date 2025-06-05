@@ -46,7 +46,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Music.
 - [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.
-- [ ] Script to validate images: No more than 4 colors per tile, counting transparency, and all opaque colors must be in palette.
+- [x] Script to validate images: No more than 4 colors per tile, counting transparency, and all opaque colors must be in palette.
 - [ ] Interrupted transitions snap complete before proceeding (eg enter a neighbor map and quickly change your mind). Is it feasible to start partway thru in those cases?
 - [ ] Errata.
 - - [ ] Itch page.
