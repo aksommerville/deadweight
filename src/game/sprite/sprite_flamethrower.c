@@ -66,10 +66,10 @@ static void _flamethrower_update(struct sprite *sprite,double elapsed) {
     double t=sprite->y-FLAMETHROWER_RADIUS;
     double b=sprite->y+FLAMETHROWER_RADIUS;
     switch (SPRITE->dir) {
-      case 0x40: t-=SPRITE->len; break;
-      case 0x10: l-=SPRITE->len; break;
-      case 0x08: r+=SPRITE->len; break;
-      case 0x02: b+=SPRITE->len; break;
+      case 0x40: t-=SPRITE->len; b-=FLAMETHROWER_RADIUS*2.0; break;
+      case 0x10: l-=SPRITE->len; r-=FLAMETHROWER_RADIUS*2.0; break;
+      case 0x08: r+=SPRITE->len; l+=FLAMETHROWER_RADIUS*2.0; break;
+      case 0x02: b+=SPRITE->len; t+=FLAMETHROWER_RADIUS*2.0; break;
     }
     int i=g.spritec;
     while (i-->0) {

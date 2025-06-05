@@ -34,7 +34,7 @@ static int _princess_init(struct sprite *sprite) {
   sprite->pht=-0.250;
   sprite->phb=0.500;
   SPRITE->tileid0=sprite->tileid;
-  SPRITE->invincible=2.0; // We're initially invincible, in case you lit a fire on our spawn point or something.
+  SPRITE->invincible=1.0; // We're initially invincible, in case you lit a fire on our spawn point or something.
   return 0;
 }
 
