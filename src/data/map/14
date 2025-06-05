@@ -18,3 +18,5 @@ location 4 7
 stompbox @8,4 (u16:fld)oneway2
 switchable @5,8 (u16:fld)oneway2
 switchable @5,7 (u16:fld)oneway2
+sprite @8,11 sprite:bug 0x00000000
+sprite @10,11 sprite:caterpillar 0x00000000

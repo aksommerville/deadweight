@@ -37,13 +37,15 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Boss fight, immediately before rescue, once per session.
 - [ ] Modals.
 - - [ ] Game over. Success only. Game will not be loseable.
-- [ ] Maps.
+- [x] Maps.
+- [ ] 3 side quests.
 - [ ] Proper graphics.
 - [ ] Visual fanfare on picking up prizes.
 - [ ] '' opening treadle (etc) locks.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
 - [ ] Sound effects.
 - [ ] Music.
+- [ ] Prevent monsters from triggering treadles by accident. Keep it possible when deliberate, eg with wand.
 - [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.
 - [x] Script to validate images: No more than 4 colors per tile, counting transparency, and all opaque colors must be in palette.
