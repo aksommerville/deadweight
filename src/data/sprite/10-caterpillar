@@ -2,3 +2,4 @@ image image:sprites
 tile 0xa0 0
 sprtype (u16:sprtype)caterpillar
 solid
+monster

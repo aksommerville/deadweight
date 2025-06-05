@@ -10,6 +10,7 @@
 #define LISTENER_LIMIT 32
 #define POI_LIMIT 32
 #define CANDY_LIMIT 4 /* You can drop as many as you have, but only so many will actually work. */
+#define STAYDEAD_LIMIT 2 /* Maps for which monsters have all been killed. I think 2 is correct, the limit is highly significant. */
 
 // World size in maps. We index maps by ID and also by absolute position; they're in a single plane.
 #define WORLDW 12
@@ -81,6 +82,8 @@ extern struct g {
   int camera_mapid;
   uint8_t camerax,cameray; // cell coords in camera_mapid.
   uint8_t herox0,heroy0; // Cell where hero entered the current map, for sending her back on death.
+  int staydeadv[STAYDEAD_LIMIT]; // mapid that have been cleared of monsters, padded with zero.
+  int monsters_present;
 
 // Room state:
   int transition;

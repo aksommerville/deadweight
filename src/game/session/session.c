@@ -93,6 +93,8 @@ int session_init() {
 
 int session_reset() {
 
+  memset(g.staydeadv,0,sizeof(g.staydeadv));
+
   // Restore all map content to their defaults.
   struct map *map=g.mapv;
   int i=g.mapc;
@@ -201,10 +203,40 @@ static void prerun_poi() {
   }
 }
 
+/* Leaving map, check whether any monsters were present.
+ * If there were some and they've all been killed, add this map to (g.staydeadv).
+ * If it's already listed, shuffle it to the back.
+ */
+ 
+static void staydead_record_if_applicable() {
+  if (!g.map) return;
+  if (!g.monsters_present) return;
+  int i=g.spritec;
+  while (i-->0) {
+    struct sprite *sprite=g.spritev[i];
+    if (sprite->defunct) continue;
+    if (sprite->monster) return;
+  }
+  for (i=STAYDEAD_LIMIT;i-->0;) {
+    if (g.staydeadv[i]==g.map->rid) {
+      if (i!=STAYDEAD_LIMIT-1) {
+        memmove(g.staydeadv+i,g.staydeadv+i+1,sizeof(int)*(STAYDEAD_LIMIT-i-1));
+        g.staydeadv[STAYDEAD_LIMIT-1]=g.map->rid;
+      }
+      return;
+    }
+  }
+  memmove(g.staydeadv,g.staydeadv+1,sizeof(int)*(STAYDEAD_LIMIT-1));
+  g.staydeadv[STAYDEAD_LIMIT-1]=g.map->rid;
+}
+
 /* Enter map.
  */
  
 int enter_map(int rid,int transition) {
+
+  staydead_record_if_applicable();
+
   struct map *map=map_by_id(rid);
   if (!map) return -1;
   struct map *frommap=g.map;
@@ -213,6 +245,16 @@ int enter_map(int rid,int transition) {
   g.candyc=0;
   
   sprites_delete_volatile();
+  
+  g.monsters_present=0;
+  int staydead=0;
+  int i=STAYDEAD_LIMIT;
+  while (i-->0) {
+    if (g.staydeadv[i]==rid) {
+      staydead=1;
+      break;
+    }
+  }
   
   int fresh_hero=0,fresh_princess=0;
   struct rom_command_reader reader={.v=g.map->cmdv,.c=g.map->cmdc};
@@ -249,7 +291,11 @@ int enter_map(int rid,int transition) {
             if (g.princess) break;
             fresh_princess=1;
           }
-          sprite_spawn(x+0.5,y+0.5,rid,0,arg);
+          struct sprite *sprite=sprite_spawn(x+0.5,y+0.5,rid,0,arg);
+          if (sprite&&sprite->monster) {
+            g.monsters_present=1; // Setting this, and causing it to record again, even if it's already cleared.
+            if (staydead) sprite->defunct=1;
+          }
         } break;
       case CMD_map_field: {
           uint16_t k=(cmd.argv[0]<<8)|cmd.argv[1];

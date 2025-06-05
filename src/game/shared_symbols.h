@@ -21,6 +21,7 @@
 
 #define CMD_sprite_solid    0x01
 #define CMD_sprite_airborne 0x02
+#define CMD_sprite_monster  0x03
 #define CMD_sprite_image    0x20 /* u16:imageid */
 #define CMD_sprite_tile     0x21 /* u8:tileid u8:xform */
 #define CMD_sprite_sprtype  0x22 /* u16:sprtype */

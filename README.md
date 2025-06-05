@@ -39,7 +39,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Game over. Success only. Game will not be loseable.
 - [x] Maps.
 - [ ] 3 side quests.
-- [ ] Consider preserving one or two maps' worth of "all monsters dead". So you can go in first, kill the monsters, then come back with the Princess.
+- [x] Consider preserving one or two maps' worth of "all monsters dead". So you can go in first, kill the monsters, then come back with the Princess.
 - [ ] Proper graphics.
 - [ ] Visual fanfare on picking up prizes.
 - [ ] '' opening treadle (etc) locks.
