@@ -138,6 +138,7 @@
 #define NS_fld_sq3a             41
 #define NS_fld_sq3b             42
 #define NS_fld_sq3c             43
-#define FLD_COUNT               44
+#define NS_fld_win              44 /* Goes true when the princess returns to her throne. Game is over, just winding down now. */
+#define FLD_COUNT               45
 
 #endif

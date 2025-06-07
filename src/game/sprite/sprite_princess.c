@@ -68,16 +68,34 @@ static int princess_find_valid_row(int col,int row) {
   return -1;
 }
 
+/* Usually the hero, but if we're in the throne room, it's the throne.
+ * Allow that it could be null.
+ */
+ 
+static struct sprite *princess_get_target(struct sprite *sprite) {
+  if (g.map->rid==RID_map_home) { // little optimization, we know 'endprincess' is only used on that one map.
+    int i=g.spritec;
+    while (i-->0) {
+      struct sprite *target=g.spritev[i];
+      if (target->defunct) continue;
+      if (target->type!=&sprite_type_endprincess) continue;
+      return target;
+    }
+  }
+  return g.hero;
+}
+
 /* Examine the current state of affairs and generate a new path if we need one.
  */
  
 static void princess_rebuild_path_if_needed(struct sprite *sprite) {
   SPRITE->idle=1;
-  if (!g.hero) return;
+  struct sprite *target=princess_get_target(sprite);
+  if (!target) return;
   int sprcol=(int)sprite->x;
   int sprrow=(int)sprite->y;
-  int dotcol=(int)g.hero->x;
-  int dotrow=(int)g.hero->y;
+  int dotcol=(int)target->x;
+  int dotrow=(int)target->y;
   int sprcol0=sprcol;
   int sprrow0=sprrow;
   int dx=dotcol-sprcol;
@@ -300,9 +318,17 @@ static void _princess_update(struct sprite *sprite,double elapsed) {
    * Otherwise we look where we're going, and animate.
    */
   if (SPRITE->idle) {
-    if (g.hero) {
-      double dx=g.hero->x-sprite->x; double adx=(dx<0.0)?-dx:dx;
-      double dy=g.hero->y-sprite->y; double ady=(dy<0.0)?-dy:dy;
+    struct sprite *target=princess_get_target(sprite);
+    if (target) {
+      if (target->type==&sprite_type_endprincess) { // kill me, and start showing her. Chairs are like teleporters: Technically, you die every time you enter one.
+        store_set(NS_fld_win,1);
+        egg_play_song(RID_song_dead_weight,0,1);
+        sprite->defunct=1;
+        target->tileid=0x40;
+        return;
+      }
+      double dx=target->x-sprite->x; double adx=(dx<0.0)?-dx:dx;
+      double dy=target->y-sprite->y; double ady=(dy<0.0)?-dy:dy;
       if (adx>ady) {
         if (dx<0.0) {
           SPRITE->tilecol=2;

@@ -47,7 +47,7 @@ static void _camera_input(struct modal *modal) {
           camera_update_sprites();
         } break;
       case 1: { // Warp to previous picture.
-          if (!g.camera_mapid||!g.hero) {
+          if (!g.camera_mapid||!g.hero||store_get(NS_fld_win)) {
             egg_play_sound(RID_sound_reject);
             return;
           }

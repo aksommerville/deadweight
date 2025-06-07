@@ -41,6 +41,14 @@ static int _soulballs_init(struct sprite *sprite) {
   SPRITE->phase=SOULBALLS_PHASE_EXPAND;
   SPRITE->count=sprite->arg>>24; if (SPRITE->count<1) SPRITE->count=1;
   SPRITE->mode=sprite->arg>>16;
+  
+  // This is hacky, but the best way to count dead princesses and monsters is actually by tracking instantiation of soulballs.
+  // Dead heroes are tracked elsewhere, more respectably.
+  switch (SPRITE->mode) {
+    case SOULBALLS_MODE_GENERIC: g.deadmonsterc++; break;
+    case SOULBALLS_MODE_PRINCESS: g.deadprincessc++; break;
+  }
+  
   return 0;
 }
 

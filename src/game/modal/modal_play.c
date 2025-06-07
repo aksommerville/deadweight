@@ -46,6 +46,7 @@ static void _play_input(struct modal *modal) {
  */
  
 static int play_navigate(struct modal *modal,int dx,int dy) {
+  if (store_get(NS_fld_win)) return 0; // There's a brief interval between 'win' being set, and the game becoming non-interactive. Don't let her leave during it.
   int nlng=g.map->longitude+dx;
   int nlat=g.map->latitude+dy;
   if ((nlng<0)||(nlng>=WORLDW)||(nlat<0)||(nlat>=WORLDH)) return 0;
@@ -308,6 +309,8 @@ static void play_update_quantized_motion(struct modal *modal) {
  */
  
 static void _play_update(struct modal *modal,double elapsed) {
+
+  g.playtime+=elapsed;
 
   // Apply earthquake if that's going on.
   if (g.earthquake_cooldown>0.0) {

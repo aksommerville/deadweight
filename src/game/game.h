@@ -86,6 +86,9 @@ extern struct g {
   uint8_t herox0,heroy0; // Cell where hero entered the current map, for sending her back on death.
   int staydeadv[STAYDEAD_LIMIT]; // mapid that have been cleared of monsters, padded with zero.
   int monsters_present;
+  double playtime;
+  int deadprincessc;
+  int deadmonsterc;
 
 // Room state:
   int transition;

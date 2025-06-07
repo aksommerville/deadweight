@@ -25,22 +25,17 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 - [ ] Pre-boss-fight cutscene?
 - [ ] Post-boss-fight cutscene?
-- [ ] Modals.
-- - [ ] Game over. Success only. Game will not be loseable.
-- [x] 3 side quests.
+- [x] Modals.
+- - [x] Game over. Success only. Game will not be loseable.
 - [ ] NPCs with helpful dialogue.
 - [ ] Proper graphics.
-- [x] Music.
-- - `we_need_norris`: Play, after boss.
-- - `dead_weight`: Finale.
-- - `tickled_pink`: Hello.
-- - [x] `embark_at_sunrise` Play, before boss.
-- - [x] `red_alarm` Boss fight.
-- [ ] Prevent monsters from triggering treadles by accident. Keep it possible when deliberate, eg with wand.
+- [x] Prevent monsters from triggering treadles by accident. Keep it possible when deliberate, eg with wand.
+- - Doesn't matter. There's only one place where it can happen, and that lock is already leaky, no big deal.
 - [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.
 - [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.
-- [ ] Interrupted transitions snap complete before proceeding (eg enter a neighbor map and quickly change your mind). Is it feasible to start partway thru in those cases?
+- [x] Interrupted transitions snap complete before proceeding (eg enter a neighbor map and quickly change your mind). Is it feasible to start partway thru in those cases?
+- - Not worth the effort.
 - [ ] Errata.
 - - [ ] Itch page.
 

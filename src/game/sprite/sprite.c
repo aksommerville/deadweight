@@ -182,8 +182,10 @@ void sprites_update(double elapsed) {
       memmove(g.spritev+i,g.spritev+i+1,sizeof(void*)*(g.spritec-i));
       
       if (sprite->type==&sprite_type_princess) {
-        sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x06020000); // Human souls have six circles.
-        reprincess=1;
+        if (!store_get(NS_fld_win)) {
+          sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x06020000); // Human souls have six circles.
+          reprincess=1;
+        }
       } else if (sprite->type==&sprite_type_hero) {
         sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x07010000); // Witch souls have seven circles.
       }

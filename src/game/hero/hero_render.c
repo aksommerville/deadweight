@@ -110,6 +110,7 @@ static void hero_render_item(struct sprite *sprite,int x,int y,int itemid) {
  
 static void hero_render_compass(struct sprite *sprite,int x,int y) {
   if ((SPRITE->renderclock&0x1f)>22) return; // blink a little, but bias duty cycle toward visible
+  if (store_get(NS_fld_win)) return; // No more need to look for her.
   
   double targetx,targety;
   if (g.princess) { // Princess sprite exists, awesome. Once rescued, this is usually the case, even when she's offscreen.

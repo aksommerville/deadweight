@@ -95,6 +95,10 @@ int session_init() {
 int session_reset() {
 
   memset(g.staydeadv,0,sizeof(g.staydeadv));
+  g.playtime=0.0;
+  g.deadprincessc=0;
+  g.deadmonsterc=0;
+  g.camera_mapid=0;
 
   // Restore all map content to their defaults.
   struct map *map=g.mapv;
@@ -126,6 +130,10 @@ int session_reset() {
     store_set(NS_fld_qty_bomb,22);
     store_set(NS_fld_qty_candy,9);
     store_set(NS_fld_equipped,NS_fld_got_broom);
+    store_set(NS_fld_boss_dead,1);
+    store_set(NS_fld_knivesoff,1);
+    store_set(NS_fld_shortcut1,1);
+    store_set(NS_fld_bombctr,1);
   }
   
   // Load the home map.
@@ -331,6 +339,7 @@ int enter_map(int rid,int transition) {
           if (rid==RID_sprite_princess) {
             if (g.princess) break;
             if (!store_get(NS_fld_boss_dead)) break; // Have to fight the boss first. For this visit, boss will create the princess when appropriate.
+            if (store_get(NS_fld_win)) break; // We're done with princesses.
             fresh_princess=1;
           }
           struct sprite *sprite=sprite_spawn(x+0.5,y+0.5,rid,0,arg);
