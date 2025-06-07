@@ -29,10 +29,10 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Modals.
 - - [ ] Game over. Success only. Game will not be loseable.
 - [ ] 3 side quests.
-- [ ] Switch to turn off the knives, south of frontdoor, so you don't have to do that first loop more than once.
+- [x] Switch to turn off the knives, south of frontdoor, so you don't have to do that first loop more than once.
 - [ ] NPCs with helpful dialogue.
 - [ ] Proper graphics.
-- [ ] Earthquake something off the edge, it stops responding, good. But you should be able to earthquake it back toward the action, at least.
+- [x] Earthquake something off the edge, it stops responding, good. But you should be able to earthquake it back toward the action, at least.
 - [ ] Visual fanfare on picking up prizes.
 - [ ] '' opening treadle (etc) locks.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.

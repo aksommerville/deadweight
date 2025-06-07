@@ -78,7 +78,18 @@ static void play_update_earthquake(struct modal *modal,double dx,double dy) {
     struct sprite *sprite=g.spritev[i];
     if (sprite->defunct) continue;
     if (sprite->airborne) continue;
-    if ((sprite->x<0.0)||(sprite->y<0.0)||(sprite->x>NS_sys_mapw)||(sprite->y>NS_sys_maph)) continue; // eg offscreen princess
+    
+    /* If it's more than one meter offscreen, don't move at all.
+     * This is mostly for the Princess, when you leave her behind.
+     */
+    if ((sprite->x<-1.0)||(sprite->y<-1.0)||(sprite->x>NS_sys_mapw+1.0)||(sprite->y>NS_sys_maph+1.0)) continue;
+    
+    /* If it's just a little bit offscreen, permit motion in the direction that brings it back.
+     */
+    if ((sprite->x<0.0)&&(dx<=0.0)) continue;
+    if ((sprite->y<0.0)&&(dy<=0.0)) continue;
+    if ((sprite->x>NS_sys_mapw)&&(dx>=0.0)) continue;
+    if ((sprite->y>NS_sys_maph)&&(dy>=0.0)) continue;
     
     if (sprite->decorative) continue;
     if (sprite->type==&sprite_type_selfie) continue;

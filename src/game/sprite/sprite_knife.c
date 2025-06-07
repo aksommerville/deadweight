@@ -1,5 +1,6 @@
 /* sprite_knife.c
  * Oscillates back and forth while appearing to rotate.
+ * A global flags "knivesoff" turns off knives everywhere (they're only used in one place).
  */
  
 #include "game/game.h"
@@ -86,6 +87,10 @@ static void knife_reset_path(struct sprite *sprite) {
 }
 
 static int _knife_init(struct sprite *sprite) {
+  if (store_get(NS_fld_knivesoff)) {
+    sprite->defunct=1;
+    return 0;
+  }
   sprite->airborne=1;
   SPRITE->tileid0=sprite->tileid;
   knife_reset_path(sprite);

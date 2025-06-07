@@ -124,6 +124,7 @@
 #define NS_fld_bug              29
 #define NS_fld_shortcut1        30
 #define NS_fld_death_count      31
-#define FLD_COUNT               32
+#define NS_fld_knivesoff        32
+#define FLD_COUNT               33
 
 #endif
