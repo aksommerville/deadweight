@@ -150,7 +150,11 @@ static void check_changed_poi(int k,int v) {
           int qk=(poi->argv[2]<<8)|poi->argv[3];
           if (qk==k) {
             int cellp=poi->y*NS_sys_mapw+poi->x;
-            g.map->cellv[cellp]=g.map->rocellv[cellp]+(v?1:0);
+            uint8_t ntileid=g.map->rocellv[cellp]+(v?1:0);
+            if (g.map->cellv[cellp]!=ntileid) {
+              g.map->cellv[cellp]=ntileid;
+              sprite_spawn(poi->x+0.5,poi->y+0.5,0,&sprite_type_smoke,1);
+            }
           }
         } break;
     }

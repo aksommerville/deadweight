@@ -193,7 +193,7 @@ static void _tank_update(struct sprite *sprite,double elapsed) {
 }
 
 static int _tank_hurt(struct sprite *sprite,struct sprite *assailant) {
-  if ((assailant->type==&sprite_type_explode)||(assailant->type==&sprite_type_ssflame)||(assailant->type==&sprite_type_pepperfire)) {
+  if ((assailant->type==&sprite_type_explode)||(assailant->type==&sprite_type_pepperfire)) {
     egg_play_sound(RID_sound_hurt_monster);
     sprite->defunct=1;
     sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x03000000);

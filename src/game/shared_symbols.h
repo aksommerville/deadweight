@@ -43,7 +43,7 @@
 #define NS_sprtype_trap 4
 #define NS_sprtype_bubblesaur 5
 #define NS_sprtype_bubble 6
-#define NS_sprtype_ssflame 7
+// 7 available
 #define NS_sprtype_selfie 8
 #define NS_sprtype_bomb 9
 #define NS_sprtype_candy 10
@@ -72,7 +72,6 @@
   _(trap) \
   _(bubblesaur) \
   _(bubble) \
-  _(ssflame) \
   _(selfie) \
   _(bomb) \
   _(candy) \

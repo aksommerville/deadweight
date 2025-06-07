@@ -35,8 +35,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Earthquake something off the edge, it stops responding, good. But you should be able to earthquake it back toward the action, at least.
 - [x] Generic soulballs: What if they expanded forever instead of contracting?
 - [x] Visual fanfare on picking up prizes.
-- [ ] '' opening treadle (etc) locks.
-- [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
+- [x] '' opening treadle (etc) locks.
+- [x] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible. ...yeah forget it
 - [x] Consider simplifying explosion and pepper-fire; they are both pretty obviously not possible for NES.
 - - Pepperfire is now simpler, and it tracks the hero instead of locking in position.
 - - I actually like that a lot more: It tempts the player to use it while princess is present, you think you can keep her away but usually you can't. Heh heh heh.

@@ -5,11 +5,13 @@
 #include "game/game.h"
 
 #define SMOKE_TTL 1.500
+#define SMOKE_FAST_TTL 0.400
 
 struct sprite_smoke {
   struct sprite hdr;
   double dx,dy;
   double ttl;
+  int fast;
 };
 
 #define SPRITE ((struct sprite_smoke*)sprite)
@@ -18,7 +20,12 @@ static int _smoke_init(struct sprite *sprite) {
   sprite->layer=189;
   sprite->airborne=1;
   sprite->decorative=1;
-  SPRITE->ttl=SMOKE_TTL;
+  if (sprite->arg==1) { // arg 1 for fast.
+    SPRITE->ttl=SMOKE_FAST_TTL;
+    SPRITE->fast=1;
+  } else {
+    SPRITE->ttl=SMOKE_TTL;
+  }
   sprite->tileid=0x63;
   return 0;
 }
@@ -28,14 +35,16 @@ static void _smoke_update(struct sprite *sprite,double elapsed) {
   sprite->y+=SPRITE->dy*elapsed;
   if ((SPRITE->ttl-=elapsed)<=0.0) {
     sprite->defunct=1;
-  } else if (SPRITE->ttl<0.250) {
-    sprite->tileid=0x66;
-  } else if (SPRITE->ttl<0.500) {
-    sprite->tileid=0x65;
-  } else if (SPRITE->ttl<0.750) {
-    sprite->tileid=0x64;
+  } else if (SPRITE->fast) {
+         if (SPRITE->ttl<0.100) sprite->tileid=0x66;
+    else if (SPRITE->ttl<0.200) sprite->tileid=0x65;
+    else if (SPRITE->ttl<0.300) sprite->tileid=0x64;
+    else                        sprite->tileid=0x63;
   } else {
-    sprite->tileid=0x63;
+         if (SPRITE->ttl<0.250) sprite->tileid=0x66;
+    else if (SPRITE->ttl<0.500) sprite->tileid=0x65;
+    else if (SPRITE->ttl<0.750) sprite->tileid=0x64;
+    else                        sprite->tileid=0x63;
   }
 }
 
