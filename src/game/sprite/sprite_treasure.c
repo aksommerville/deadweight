@@ -30,6 +30,12 @@ static int _treasure_init(struct sprite *sprite) {
   return 0;
 }
 
+static int treasure_strix(uint8_t k) {
+  if ((k>=NS_fld_got_broom)&&(k<=NS_fld_got_candy)) return k-NS_fld_got_broom+8;
+  if ((k>=NS_fld_sq1)&&(k<=NS_fld_sq3)) return k-NS_fld_sq1+21;
+  return 0;
+}
+
 static void _treasure_update(struct sprite *sprite,double elapsed) {
   if (g.hero) {
     const double radius=0.5;
@@ -39,16 +45,21 @@ static void _treasure_update(struct sprite *sprite,double elapsed) {
       sprite->defunct=1;
       store_set(SPRITE->kgot,1);
       if (SPRITE->kqty) store_set(SPRITE->kqty,SPRITE->qty);
-      store_set(NS_fld_equipped,SPRITE->kgot); // Equip it. Is that too presumptuous of us?
+      if ((SPRITE->kgot>=NS_fld_got_broom)&&(SPRITE->kgot<=NS_fld_got_candy)) {
+        store_set(NS_fld_equipped,SPRITE->kgot); // Equip it. Is that too presumptuous of us?
+      }
       egg_play_sound(RID_sound_treasure);
-      struct strings_insertion insv[]={
-        {'r',.r={1,8+SPRITE->kgot-NS_fld_got_broom}},
-      };
-      modal_new_dialogue(
-        (int)(sprite->x*NS_sys_tilesize),
-        (int)(sprite->y*NS_sys_tilesize),
-        1,19,insv,sizeof(insv)/sizeof(insv[0])
-      );
+      int strix=treasure_strix(SPRITE->kgot);
+      if (strix>0) {
+        struct strings_insertion insv[]={
+          {'r',.r={1,strix}},
+        };
+        modal_new_dialogue(
+          (int)(sprite->x*NS_sys_tilesize),
+          (int)(sprite->y*NS_sys_tilesize),
+          1,19,insv,sizeof(insv)/sizeof(insv[0])
+        );
+      }
     }
   }
 }

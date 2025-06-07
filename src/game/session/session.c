@@ -157,6 +157,25 @@ static void check_changed_poi(int k,int v) {
             }
           }
         } break;
+      case CMD_map_switchable6: {
+          int allon=1,changed=0;
+          int i=2; for (;i<8;i++) {
+            int qk=poi->argv[i];
+            if (k==qk) changed=1;
+            if (!store_get(qk)) {
+              allon=0;
+              break;
+            }
+          }
+          if (changed) {
+            int cellp=poi->y*NS_sys_mapw+poi->x;
+            uint8_t ntileid=g.map->rocellv[cellp]+(allon?1:0);
+            if (g.map->cellv[cellp]!=ntileid) {
+              g.map->cellv[cellp]=ntileid;
+              sprite_spawn(poi->x+0.5,poi->y+0.5,0,&sprite_type_smoke,1);
+            }
+          }
+        } break;
     }
   }
 }
@@ -203,6 +222,21 @@ static void prerun_poi() {
             g.map->cellv[cellp]=g.map->rocellv[cellp]+1;
           } else {
             g.map->cellv[cellp]=g.map->rocellv[cellp];
+          }
+        } break;
+      case CMD_map_switchable6: {
+          int allon=1;
+          int i=2; for (;i<8;i++) {
+            int qk=poi->argv[i];
+            if (!store_get(qk)) {
+              allon=0;
+              break;
+            }
+          }
+          int cellp=poi->y*NS_sys_mapw+poi->x;
+          uint8_t ntileid=g.map->rocellv[cellp]+(allon?1:0);
+          if (g.map->cellv[cellp]!=ntileid) {
+            g.map->cellv[cellp]=ntileid;
           }
         } break;
     }
@@ -270,6 +304,7 @@ int enter_map(int rid,int transition) {
       case CMD_map_treadle:
       case CMD_map_stompbox:
       case CMD_map_switchable:
+      case CMD_map_switchable6:
       case CMD_map_bombable: {
           if (g.poic<POI_LIMIT) {
             struct poi *poi=g.poiv+g.poic++;

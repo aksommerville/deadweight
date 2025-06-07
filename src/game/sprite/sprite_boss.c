@@ -75,6 +75,9 @@ static int _boss_init(struct sprite *sprite) {
     sprite->defunct=1;
     return 0;
   }
+  
+  // Seems out of our jurisdiction, but it makes sense: Change song to red_alarm when we instantiate, and let it run until we die.
+  egg_play_song(RID_song_red_alarm,0,1);
 
   SPRITE->tileid0=sprite->tileid;
   SPRITE->form=BOSS_FORM_CENTIPEDE;
@@ -505,6 +508,7 @@ static int _boss_hurt(struct sprite *sprite,struct sprite *assailant) {
   SPRITE->hurtclock=BOSS_HURT_TIME;
   if (--(SPRITE->hp)<=0) {
     if (SPRITE->form==BOSS_FORM_SNAKE) {
+      egg_play_song(RID_song_we_need_norris,0,1);
       sprite->defunct=1;
       sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x05000000);
       store_set(NS_fld_boss_dead,1);

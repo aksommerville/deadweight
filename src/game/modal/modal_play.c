@@ -426,7 +426,8 @@ static int _play_init(struct modal *modal) {
   modal->opaque=1;
   modal->passive=0;
   
-  egg_play_song(RID_song_we_need_norris,0,1);
+  if (store_get(NS_fld_boss_dead)) egg_play_song(RID_song_we_need_norris,0,1);
+  else egg_play_song(RID_song_embark_at_sunrise,0,1);
   
   // Chronflakes are initially randomized, so we can start displaying whenever.
   // They don't update when not in use.

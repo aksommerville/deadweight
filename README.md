@@ -27,15 +27,15 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Post-boss-fight cutscene?
 - [ ] Modals.
 - - [ ] Game over. Success only. Game will not be loseable.
-- [ ] 3 side quests.
+- [x] 3 side quests.
 - [ ] NPCs with helpful dialogue.
 - [ ] Proper graphics.
-- [ ] Music.
+- [x] Music.
 - - `we_need_norris`: Play, after boss.
 - - `dead_weight`: Finale.
 - - `tickled_pink`: Hello.
-- - [ ] Play, before boss.
-- - [ ] Boss fight.
+- - [x] `embark_at_sunrise` Play, before boss.
+- - [x] `red_alarm` Boss fight.
 - [ ] Prevent monsters from triggering treadles by accident. Keep it possible when deliberate, eg with wand.
 - [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.

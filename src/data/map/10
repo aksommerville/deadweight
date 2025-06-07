@@ -19,3 +19,5 @@ stompbox @10,11 (u16:fld)oneway1
 switchable @5,4 (u16:fld)oneway1
 switchable @7,2 (u16:fld)knivesoff
 stompbox @7,3 (u16:fld)knivesoff
+sprite @13,7 sprite:pot 0x00000000
+sprite @11,7 sprite:pot 0x00000000

@@ -33,7 +33,7 @@ static void bomb_explode(struct sprite *sprite) {
 static void _bomb_update(struct sprite *sprite,double elapsed) {
   if (g.time_stopped) return;
   if ((SPRITE->animclock-=elapsed)<0.0) {
-    SPRITE->animclock+=0.200;
+    SPRITE->animclock+=0.170;
     if (++(SPRITE->animframe)>=3) {
       SPRITE->animframe=0;
     }

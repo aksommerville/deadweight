@@ -1,5 +1,6 @@
 /* sprite_flamethrower.c
  * args: u8:dir(0x40,0x10,0x08,0x02) u8:length u16:fld
+ * (length|0x80) to reverse flag.
  */
 
 #include "game/game.h"
@@ -16,13 +17,14 @@ struct sprite_flamethrower {
   int burning;
   double animclock;
   int animframe;
+  int reverse;
 };
 
 #define SPRITE ((struct sprite_flamethrower*)sprite)
 
 static void _flamethrower_cb_fld(int k,int v,void *userdata) {
   struct sprite *sprite=userdata;
-  if (v) {
+  if (v!=SPRITE->reverse) {
     SPRITE->burning=1;
     sprite->tileid=SPRITE->tileid0+1;
   } else {
@@ -40,8 +42,13 @@ static int _flamethrower_init(struct sprite *sprite) {
   SPRITE->dir=sprite->arg>>24;
   SPRITE->len=sprite->arg>>16;
   SPRITE->k=sprite->arg;
+  if (SPRITE->len&0x80) {
+    SPRITE->len&=0x7f;
+    SPRITE->reverse=1;
+  }
   if (SPRITE->k&&SPRITE->len) {
-    if (store_get(SPRITE->k)) SPRITE->burning=1;
+    if (store_get(SPRITE->k)==SPRITE->reverse) SPRITE->burning=0;
+    else SPRITE->burning=1;
     SPRITE->listenerid=store_listen(SPRITE->k,_flamethrower_cb_fld,sprite);
   }
   switch (SPRITE->dir) {

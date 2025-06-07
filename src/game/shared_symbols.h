@@ -9,15 +9,16 @@
 #define NS_sys_mapw 16
 #define NS_sys_maph 14
 
-#define CMD_map_image      0x20 /* u16:imageid */
-#define CMD_map_location   0x21 /* u8:longitude u8:latitude */
-#define CMD_map_field      0x40 /* u16:k u16:v ; Set a store field at load. */
-#define CMD_map_treadle    0x41 /* u8:x u8:y u16:fld */
-#define CMD_map_stompbox   0x42 /* u8:x u8:y u16:fld */
-#define CMD_map_switchable 0x43 /* u8:x u8:y u16:fld */
-#define CMD_map_bombable   0x44 /* u8:x u8:y u16:fld */
-#define CMD_map_sprite     0x61 /* u16:pos u16:spriteid u32:reserved */
-#define CMD_map_door       0x62 /* u16:pos u16:mapid u16:dstpos u16:reserved */
+#define CMD_map_image       0x20 /* u16:imageid */
+#define CMD_map_location    0x21 /* u8:longitude u8:latitude */
+#define CMD_map_field       0x40 /* u16:k u16:v ; Set a store field at load. */
+#define CMD_map_treadle     0x41 /* u8:x u8:y u16:fld */
+#define CMD_map_stompbox    0x42 /* u8:x u8:y u16:fld */
+#define CMD_map_switchable  0x43 /* u8:x u8:y u16:fld */
+#define CMD_map_bombable    0x44 /* u8:x u8:y u16:fld */
+#define CMD_map_sprite      0x61 /* u16:pos u16:spriteid u32:reserved */
+#define CMD_map_door        0x62 /* u16:pos u16:mapid u16:dstpos u16:reserved */
+#define CMD_map_switchable6 0x63 /* u16:pos u8:fld *6 */
 
 #define CMD_sprite_solid    0x01
 #define CMD_sprite_airborne 0x02
@@ -126,6 +127,17 @@
 #define NS_fld_shortcut1        30
 #define NS_fld_death_count      31
 #define NS_fld_knivesoff        32
-#define FLD_COUNT               33
+#define NS_fld_sq1a             33
+#define NS_fld_sq1b             34
+#define NS_fld_sq1c             35
+#define NS_fld_sq1d             36
+#define NS_fld_sq1              37
+#define NS_fld_sq2              38
+#define NS_fld_sq3              39
+#define NS_fld_sq2a             40
+#define NS_fld_sq3a             41
+#define NS_fld_sq3b             42
+#define NS_fld_sq3c             43
+#define FLD_COUNT               44
 
 #endif
