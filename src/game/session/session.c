@@ -13,10 +13,11 @@ static int store_defv_init() {
   for (;i-->0;def++) def->c=1;
   
   // Call out any fields with a size other than 1:
-  store_defv[NS_fld_qty_pepper].c=7;
-  store_defv[NS_fld_qty_bomb  ].c=7;
-  store_defv[NS_fld_qty_candy ].c=7;
-  store_defv[NS_fld_equipped  ].c=4;
+  store_defv[NS_fld_qty_pepper ].c=7;
+  store_defv[NS_fld_qty_bomb   ].c=7;
+  store_defv[NS_fld_qty_candy  ].c=7;
+  store_defv[NS_fld_equipped   ].c=4;
+  store_defv[NS_fld_death_count].c=10;
   
   int p=0;
   for (def=store_defv,i=FLD_COUNT;i-->0;def++) {
@@ -128,6 +129,7 @@ int session_reset() {
   }
   
   // Load the home map.
+  // Should be "home". Use "frontdoor" while testing the dungeon. (beware, you can't win the game starting at frontdoor)
   if (enter_map(RID_map_home,TRANSITION_NONE)<0) {
     fprintf(stderr,"Loading map:%d failed.\n",RID_map_home);
     return -1;
@@ -289,6 +291,7 @@ int enter_map(int rid,int transition) {
           }
           if (rid==RID_sprite_princess) {
             if (g.princess) break;
+            if (!store_get(NS_fld_boss_dead)) break; // Have to fight the boss first. For this visit, boss will create the princess when appropriate.
             fresh_princess=1;
           }
           struct sprite *sprite=sprite_spawn(x+0.5,y+0.5,rid,0,arg);

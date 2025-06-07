@@ -163,6 +163,7 @@ static int _hero_hurt(struct sprite *sprite,struct sprite *assailant) {
   if (assailant->type==&sprite_type_ssflame) return 0; // Pepper doesn't hurt us, we like it spicy.
   sprite->defunct=1; // Framework manages soulballs and respawn.
   hero_item_end(sprite);
+  store_set(NS_fld_death_count,store_get(NS_fld_death_count)+1);
   return 1;
 }
 

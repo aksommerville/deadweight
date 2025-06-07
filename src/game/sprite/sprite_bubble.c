@@ -18,7 +18,8 @@ static void _bubble_del(struct sprite *sprite) {
 static int _bubble_init(struct sprite *sprite) {
   sprite->airborne=1;
   sprite->tileid=0x8a;
-  SPRITE->warmup=0.500;
+  if (sprite->arg==1) SPRITE->warmup=0.001;
+  else SPRITE->warmup=0.500;
   
   /* Delete self if there's no target.
    * Otherwise ignore the target; we'll establish the travel vector after the warmup expires.

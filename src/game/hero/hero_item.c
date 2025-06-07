@@ -220,8 +220,8 @@ static void hero_wand_update(struct sprite *sprite,double elapsed) {
     if (q->defunct) continue;
     if (q==sprite) continue;
     
-    if (sprite->decorative) continue;
-    if (sprite->type==&sprite_type_selfie) continue;
+    if (q->decorative) continue;
+    if (q->type==&sprite_type_selfie) continue;
     //TODO Which sprites are summonable? Surely not all of them.
     
     // It must be in the box to be eligible, even if we were already holding it. (determined pumpkins can escape our grasp).

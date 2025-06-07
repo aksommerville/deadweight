@@ -24,7 +24,7 @@ static int missile_check_damage(struct sprite *sprite,struct sprite *victim) {
   if (!victim->type->hurt) return 0;
   double dx=victim->x-sprite->x;
   double dy=victim->y-sprite->y;
-  const double radius=0.250;
+  const double radius=0.400;
   if ((dx<-radius)||(dx>radius)||(dy<-radius)||(dy>radius)) return 0;
   if (victim->type->hurt(victim,sprite)) {
     sprite->defunct=1;

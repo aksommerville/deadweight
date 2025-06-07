@@ -1,0 +1,5 @@
+sprtype (u16:sprtype)boss
+image image:sprites
+tile 0xb0 0
+monster
+solid

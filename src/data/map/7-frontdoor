@@ -28,3 +28,4 @@ sprite @10,9 sprite:knife 0x00000000
 sprite @12,9 sprite:knife 0x00000000
 sprite @11,12 sprite:knife 0x00000000
 sprite @9,12 sprite:knife 0x00000000
+sprite @13,7 sprite:hero 0x00000000

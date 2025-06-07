@@ -61,6 +61,8 @@
 #define NS_sprtype_missile 22
 #define NS_sprtype_king 23
 #define NS_sprtype_endprincess 24
+#define NS_sprtype_boss 25
+#define NS_sprtype_bossfire 26
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -86,7 +88,9 @@
   _(tank) \
   _(missile) \
   _(king) \
-  _(endprincess)
+  _(endprincess) \
+  _(boss) \
+  _(bossfire)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */
@@ -119,6 +123,7 @@
 #define NS_fld_flamethrow1      28
 #define NS_fld_bug              29
 #define NS_fld_shortcut1        30
-#define FLD_COUNT               31
+#define NS_fld_death_count      31
+#define FLD_COUNT               32
 
 #endif

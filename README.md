@@ -34,13 +34,21 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - [ ] Sentinel monsters. Stands in one place, attacks when you draw near.
 - [x] Monsters drop prizes when killed.
 - [x] Overlay status bar with candy, pepper, and bomb quantities.
-- [ ] Boss fight, immediately before rescue, once per session.
+- [x] Boss fight, immediately before rescue, once per session.
+- - Monster that transforms after two hits. Starts as a 16-legged centipede, then spider, then centaur, then ostrich, finally snake.
+- - Boss stays dead forever.
+- - Should we use a different sprite controller for each form? ...NO pack it all in one.
+- - [x] There has to be some penalty for dying! With the current rules, monster hurts you and it's no big deal, just keep going.
+- - - Revert to the first form any time hero dies. You have to hit him 5 times in a row without taking damage.
+- [ ] Pre-boss-fight cutscene?
+- [ ] Post-boss-fight cutscene?
 - [ ] Modals.
 - - [ ] Game over. Success only. Game will not be loseable.
 - [x] Maps.
 - [ ] 3 side quests.
 - [x] Consider preserving one or two maps' worth of "all monsters dead". So you can go in first, kill the monsters, then come back with the Princess.
 - [ ] Proper graphics.
+- [ ] Earthquake something off the edge, it stops responding, good. But you should be able to earthquake it back toward the action, at least.
 - [ ] Visual fanfare on picking up prizes.
 - [ ] '' opening treadle (etc) locks.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
