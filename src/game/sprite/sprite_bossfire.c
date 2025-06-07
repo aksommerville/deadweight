@@ -42,7 +42,7 @@ static int _bossfire_init(struct sprite *sprite) {
 
 static void bossfire_fire(struct sprite *sprite) {
   if (!g.hero) return;
-  const double speed=9.0;
+  const double speed=5.0;
   double dx=g.hero->x-sprite->x;
   double dy=g.hero->y-sprite->y;
   if ((dx>-1.0)&&(dx<1.0)&&(dy>-1.0)&&(dy<1.0)) return; // dodge errors from small division, and also it's just rude at short distances.

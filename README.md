@@ -11,7 +11,7 @@ If you die, the screen resets, no problemo.
 If she dies, she respawns back at the dungeon.
 
 What happens to the Princess when the Hero dies?
-I guess she resets to initial position like everything else.
+I guess she resets to initial position like everything else. ...better yet, nothing. She just carries on.
 
 Strict single-screen presentation. Most volatile state will reset with screen changes.
 256x224 pixels fb, makes exactly 16x14 cells of 16x16 pixels.
@@ -23,30 +23,13 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 ## TODO
 
-- [x] Reliable segfault, just drop 8 bombs, segfaults before they explode.
-- - Caused by walking (g.spritev) when it reallocates. Avoid iterating it directly; deref at each step if there's any chance new sprites get allocated.
-- [ ] Sprites.
-- - [ ] Pushable blocks.
-- - [x] Oscillating traps.
-- - [x] Roaming monsters. (multiple skins)
-- - [x] Straight-shooting monsters.
-- - [ ] Target-shooting monsters.
-- - [ ] Sentinel monsters. Stands in one place, attacks when you draw near.
-- [x] Monsters drop prizes when killed.
-- [x] Overlay status bar with candy, pepper, and bomb quantities.
-- [x] Boss fight, immediately before rescue, once per session.
-- - Monster that transforms after two hits. Starts as a 16-legged centipede, then spider, then centaur, then ostrich, finally snake.
-- - Boss stays dead forever.
-- - Should we use a different sprite controller for each form? ...NO pack it all in one.
-- - [x] There has to be some penalty for dying! With the current rules, monster hurts you and it's no big deal, just keep going.
-- - - Revert to the first form any time hero dies. You have to hit him 5 times in a row without taking damage.
+- [x] Shortcut switch just south of the broom chest: Require snowglobe to actuate.
 - [ ] Pre-boss-fight cutscene?
 - [ ] Post-boss-fight cutscene?
 - [ ] Modals.
 - - [ ] Game over. Success only. Game will not be loseable.
-- [x] Maps.
 - [ ] 3 side quests.
-- [x] Consider preserving one or two maps' worth of "all monsters dead". So you can go in first, kill the monsters, then come back with the Princess.
+- [ ] NPCs with helpful dialogue.
 - [ ] Proper graphics.
 - [ ] Earthquake something off the edge, it stops responding, good. But you should be able to earthquake it back toward the action, at least.
 - [ ] Visual fanfare on picking up prizes.
@@ -64,7 +47,6 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.
 - [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.
-- [x] Script to validate images: No more than 4 colors per tile, counting transparency, and all opaque colors must be in palette.
 - [ ] Interrupted transitions snap complete before proceeding (eg enter a neighbor map and quickly change your mind). Is it feasible to start partway thru in those cases?
 - [ ] Errata.
 - - [ ] Itch page.
