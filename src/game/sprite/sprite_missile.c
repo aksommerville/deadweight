@@ -34,6 +34,7 @@ static int missile_check_damage(struct sprite *sprite,struct sprite *victim) {
 }
 
 static void _missile_update(struct sprite *sprite,double elapsed) {
+  if (g.time_stopped) return;
   sprite->x+=SPRITE->dx*elapsed;
   sprite->y+=SPRITE->dy*elapsed;
   if ((sprite->x<-1.0)||(sprite->y<-1.0)||(sprite->x>NS_sys_mapw+1.0)||(sprite->y>NS_sys_maph+1.0)) {

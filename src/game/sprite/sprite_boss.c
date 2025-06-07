@@ -328,6 +328,7 @@ static int boss_check_damage(struct sprite *sprite) {
  */
  
 static void _boss_update(struct sprite *sprite,double elapsed) {
+  if (g.time_stopped) return;
   if (SPRITE->hurtclock>0.0) {
     SPRITE->hurtclock-=elapsed;
   }

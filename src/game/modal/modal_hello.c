@@ -3,8 +3,8 @@
 struct modal_hello {
   struct modal hdr;
   int title_texid,title_w,title_h;
-  const char *msg_copyright,*msg_press_start;
-  int msg_copyrightc,msg_press_startc;
+  const char *msg_copyright,*msg_press_start,*msg_nesjam;
+  int msg_copyrightc,msg_press_startc,msg_nesjamc;
   double blinkclock;
 };
 
@@ -68,6 +68,7 @@ static void _hello_render(struct modal *modal) {
   graf_draw_rect(&g.graf,0,0,FBW,FBH,nes_colors[48]);
   graf_draw_decal(&g.graf,MODAL->title_texid,(FBW>>1)-(MODAL->title_w>>1),20,0,0,MODAL->title_w,MODAL->title_h,0);
   dw_draw_string((FBW>>1)-(4*MODAL->msg_copyrightc),184,MODAL->msg_copyright,MODAL->msg_copyrightc,3);
+  dw_draw_string((FBW>>1)-(4*MODAL->msg_nesjamc),192,MODAL->msg_nesjam,MODAL->msg_nesjamc,3);
   if (MODAL->blinkclock<0.750) {
     dw_draw_string((FBW>>1)-(4*MODAL->msg_press_startc),145,MODAL->msg_press_start,MODAL->msg_press_startc,1);
   }
@@ -90,6 +91,7 @@ static int _hello_init(struct modal *modal) {
   egg_texture_get_status(&MODAL->title_w,&MODAL->title_h,MODAL->title_texid);
   MODAL->msg_copyrightc=strings_get(&MODAL->msg_copyright,1,3);
   MODAL->msg_press_startc=strings_get(&MODAL->msg_press_start,1,4);
+  MODAL->msg_nesjamc=strings_get(&MODAL->msg_nesjam,1,20);
   
   egg_play_song(RID_song_tickled_pink,0,1);
   

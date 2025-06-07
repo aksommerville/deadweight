@@ -56,6 +56,7 @@ static void bossfire_fire(struct sprite *sprite) {
 }
 
 static void _bossfire_update(struct sprite *sprite,double elapsed) {
+  if (g.time_stopped) return;
   if ((SPRITE->animclock-=elapsed)<0.0) {
     SPRITE->animclock+=0.125;
     if (++(SPRITE->animframe)>=4) SPRITE->animframe=0;

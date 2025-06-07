@@ -55,6 +55,11 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Consider simplifying explosion and pepper-fire; they are both pretty obviously not possible for NES.
 - [ ] Sound effects.
 - [ ] Music.
+- - `we_need_norris`: Play, after boss.
+- - `dead_weight`: Finale.
+- - `tickled_pink`: Hello.
+- - [ ] Play, before boss.
+- - [ ] Boss fight.
 - [ ] Prevent monsters from triggering treadles by accident. Keep it possible when deliberate, eg with wand.
 - [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.
