@@ -23,37 +23,19 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 ## TODO
 
-- [x] Shortcut switch just south of the broom chest: Require snowglobe to actuate.
 - [ ] Pre-boss-fight cutscene?
 - [ ] Post-boss-fight cutscene?
 - [ ] Modals.
 - - [ ] Game over. Success only. Game will not be loseable.
 - [ ] 3 side quests.
-- [x] Switch to turn off the knives, south of frontdoor, so you don't have to do that first loop more than once.
 - [ ] NPCs with helpful dialogue.
 - [ ] Proper graphics.
-- [x] Earthquake something off the edge, it stops responding, good. But you should be able to earthquake it back toward the action, at least.
-- [x] Generic soulballs: What if they expanded forever instead of contracting?
-- [x] Visual fanfare on picking up prizes.
-- [x] '' opening treadle (etc) locks.
-- [x] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible. ...yeah forget it
-- [x] Consider simplifying explosion and pepper-fire; they are both pretty obviously not possible for NES.
-- - Pepperfire is now simpler, and it tracks the hero instead of locking in position.
-- - I actually like that a lot more: It tempts the player to use it while princess is present, you think you can keep her away but usually you can't. Heh heh heh.
-- - Keep the explosion graphics, NES-plausibility be damned, it looks cool.
-- [x] Sound effects.
-- - [x] Injure hero.
-- - [x] Injure princess.
-- - [x] Injure boss.
-- - [x] Injure monster.
-- - [x] Stopwatch, ongoing.
 - [ ] Music.
 - - `we_need_norris`: Play, after boss.
 - - `dead_weight`: Finale.
 - - `tickled_pink`: Hello.
 - - [ ] Play, before boss.
 - - [ ] Boss fight.
-- [x] Boss: Kill fireballs when he dies.
 - [ ] Prevent monsters from triggering treadles by accident. Keep it possible when deliberate, eg with wand.
 - [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.

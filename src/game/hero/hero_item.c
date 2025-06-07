@@ -191,11 +191,12 @@ static void hero_wand_end(struct sprite *sprite) {
 
 static void hero_wand_update(struct sprite *sprite,double elapsed) {
   const double radius=0.500;
+  const double blackout=radius*3.0; // Don't accio things already super close.
   double l=sprite->x-radius,r=sprite->x+radius,t=sprite->y-radius,b=sprite->y+radius;
-  if (SPRITE->facedx<0) l=0.0;
-  else if (SPRITE->facedx>0) r=NS_sys_mapw;
-  else if (SPRITE->facedy<0) t=0.0;
-  else b=NS_sys_maph;
+  if (SPRITE->facedx<0) { l=0.0; r-=blackout; }
+  else if (SPRITE->facedx>0) { r=NS_sys_mapw; l+=blackout; }
+  else if (SPRITE->facedy<0) { t=0.0; b-=blackout; }
+  else { b=NS_sys_maph; t+=blackout; }
   
   // First determine what we are already summoning; we bias toward keeping it.
   struct sprite *pvpumpkin=0;

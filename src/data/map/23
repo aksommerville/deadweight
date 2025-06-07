@@ -20,4 +20,3 @@ switchable @13,4 (u16:fld)boss_dead
 switchable @13,3 (u16:fld)boss_dead
 sprite @13,5 sprite:princess 0x00000000
 sprite @14,11 sprite:bossfire 0x00000000
-sprite @2,11 sprite:bossfire 0x00000000
