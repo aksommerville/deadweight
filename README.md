@@ -33,7 +33,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] NPCs with helpful dialogue.
 - [ ] Proper graphics.
 - [x] Earthquake something off the edge, it stops responding, good. But you should be able to earthquake it back toward the action, at least.
-- [ ] Visual fanfare on picking up prizes.
+- [x] Generic soulballs: What if they expanded forever instead of contracting?
+- [x] Visual fanfare on picking up prizes.
 - [ ] '' opening treadle (etc) locks.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
 - [x] Consider simplifying explosion and pepper-fire; they are both pretty obviously not possible for NES.

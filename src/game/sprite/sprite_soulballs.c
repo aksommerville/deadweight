@@ -17,6 +17,7 @@
 #define SOULBALLS_TRAVEL_SPEED 20.000 /* m/s */
 #define SOULBALLS_ROTATE_SPEED  7.000 /* rad/s */
 #define SOULBALLS_RADIUS        2.000 /* m */
+#define SOULBALLS_RADIUS_MAX    6.000 /* GENERIC mode terminates here. */
 
 struct sprite_soulballs {
   struct sprite hdr;
@@ -84,7 +85,11 @@ static void _soulballs_update(struct sprite *sprite,double elapsed) {
   switch (SPRITE->phase) {
   
     case SOULBALLS_PHASE_EXPAND: {
-        if (SPRITE->clock>=SOULBALLS_EXPAND_TIME) {
+        // In GENERIC mode, EXPAND is the only phase, just defunct the sprite when it's sufficiently wide.
+        if (SPRITE->mode==SOULBALLS_MODE_GENERIC) {
+          SPRITE->radius=(SPRITE->clock*SOULBALLS_RADIUS)/SOULBALLS_EXPAND_TIME;
+          if (SPRITE->radius>=SOULBALLS_RADIUS_MAX) sprite->defunct=1;
+        } else if (SPRITE->clock>=SOULBALLS_EXPAND_TIME) {
           SPRITE->clock=0.0;
           SPRITE->phase=SOULBALLS_PHASE_TRAVEL;
         } else {

@@ -407,9 +407,9 @@ static void _play_render(struct modal *modal) {
       graf_draw_tile(&g.graf,g.texid_sprites,dstx,dsty,tileid,0); dstx-=8; \
     } \
   }
-  SHOWQUANTITY(pepper,0x49)
-  SHOWQUANTITY(candy,0x48)
-  SHOWQUANTITY(bomb,0x47)
+  SHOWQUANTITY(pepper,0x59)
+  SHOWQUANTITY(candy,0x58)
+  SHOWQUANTITY(bomb,0x57)
   #undef SHOWQUANTITY
 }
 
