@@ -63,6 +63,7 @@
 #define NS_sprtype_endprincess 24
 #define NS_sprtype_boss 25
 #define NS_sprtype_bossfire 26
+#define NS_sprtype_pepperfire 27
 #define SPRTYPE_FOR_EACH \
   _(dummy) \
   _(hero) \
@@ -90,7 +91,8 @@
   _(king) \
   _(endprincess) \
   _(boss) \
-  _(bossfire)
+  _(bossfire) \
+  _(pepperfire)
 
 #define NS_fld_zero              0 /* immutable */
 #define NS_fld_one               1 /* immutable */

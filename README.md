@@ -36,7 +36,10 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Visual fanfare on picking up prizes.
 - [ ] '' opening treadle (etc) locks.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
-- [ ] Consider simplifying explosion and pepper-fire; they are both pretty obviously not possible for NES.
+- [x] Consider simplifying explosion and pepper-fire; they are both pretty obviously not possible for NES.
+- - Pepperfire is now simpler, and it tracks the hero instead of locking in position.
+- - I actually like that a lot more: It tempts the player to use it while princess is present, you think you can keep her away but usually you can't. Heh heh heh.
+- - Keep the explosion graphics, NES-plausibility be damned, it looks cool.
 - [x] Sound effects.
 - - [x] Injure hero.
 - - [x] Injure princess.

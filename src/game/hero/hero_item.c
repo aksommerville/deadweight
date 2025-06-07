@@ -4,7 +4,8 @@
  * This is definitely more sprites than an NES would be comfortable with; not going to worry about it.
  * (also fwiw, I don't think the trigonometric functions would have been available to NES, would be an interesting* problem to solve).
  * [*] Not interesting enough to solve here, of course.
- */
+ *
+//XXX for the old "ssflame" regime
  
 static void hero_spawn_pepper_ring(struct sprite *sprite,double radius,int count,uint8_t delay_u44) {
   double t=0.0;
@@ -15,6 +16,7 @@ static void hero_spawn_pepper_ring(struct sprite *sprite,double radius,int count
     struct sprite *ssflame=sprite_spawn(x,y,0,&sprite_type_ssflame,(delay_u44<<24));
   }
 }
+/**/
 
 /* Pepper, bomb, candy: Check quantity, then create another sprite that does the real work.
  * Play "reject" if quantity zero, just as if nothing were equipped.
@@ -41,10 +43,21 @@ static void hero_pepper_begin(struct sprite *sprite) {
   }
   store_set(NS_fld_qty_pepper,qty-1);
   egg_play_sound(RID_sound_pepper);
+  /*XXX old "ssflame" regime
   hero_spawn_pepper_ring(sprite,1.0, 9,0x00);
   hero_spawn_pepper_ring(sprite,1.5,12,0x03);
   hero_spawn_pepper_ring(sprite,2.0,16,0x06);
   hero_spawn_pepper_ring(sprite,2.5,24,0x09);
+  /**/
+  /* new "pepperfire" regime. */
+  sprite_spawn(sprite->x-0.5,sprite->y-1.0,0,&sprite_type_pepperfire,0);
+  sprite_spawn(sprite->x+0.5,sprite->y-1.0,0,&sprite_type_pepperfire,0);
+  sprite_spawn(sprite->x+1.0,sprite->y-0.5,0,&sprite_type_pepperfire,0);
+  sprite_spawn(sprite->x+1.0,sprite->y+0.5,0,&sprite_type_pepperfire,0);
+  sprite_spawn(sprite->x+0.5,sprite->y+1.0,0,&sprite_type_pepperfire,0);
+  sprite_spawn(sprite->x-0.5,sprite->y+1.0,0,&sprite_type_pepperfire,0);
+  sprite_spawn(sprite->x-1.0,sprite->y+0.5,0,&sprite_type_pepperfire,0);
+  sprite_spawn(sprite->x-1.0,sprite->y-0.5,0,&sprite_type_pepperfire,0);
   SPRITE->item_cooldown=0.500;
 }
  

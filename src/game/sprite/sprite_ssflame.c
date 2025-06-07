@@ -1,6 +1,7 @@
 /* sprite_ssflame.c
  * Single Serving Flame, a component of the Pepper's fire ring.
  * arg: u4.4:delay s
+ * XXX No longer in use; replaced by "pepperfire".
  */
  
 #include "game/game.h"
