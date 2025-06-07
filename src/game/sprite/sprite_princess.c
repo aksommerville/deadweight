@@ -339,6 +339,7 @@ static void _princess_update(struct sprite *sprite,double elapsed) {
  
 static int _princess_hurt(struct sprite *sprite,struct sprite *assailant) {
   if (SPRITE->invincible>0.0) return 0;
+  egg_play_sound(RID_sound_hurt_princess);
   sprite->defunct=1; // The global framework creates our soulballs.
   return 1;
 }

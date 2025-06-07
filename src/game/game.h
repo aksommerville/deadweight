@@ -11,6 +11,7 @@
 #define POI_LIMIT 32
 #define CANDY_LIMIT 4 /* You can drop as many as you have, but only so many will actually work. */
 #define STAYDEAD_LIMIT 2 /* Maps for which monsters have all been killed. I think 2 is correct, the limit is highly significant. */
+#define RECENT_SOUND_LIMIT 4
 
 // World size in maps. We index maps by ID and also by absolute position; they're in a single plane.
 #define WORLDW 12
@@ -66,6 +67,7 @@ extern struct g {
   int pvinput;
   int input_blackout; // These bits must go false before core will report them true again.
   int framec;
+  struct recent_sound { double when; int rid; } recent_soundv[RECENT_SOUND_LIMIT];
   
 // Session state:
   struct map *map; // WEAK, owned by (g.mapv).
@@ -104,5 +106,8 @@ void dw_draw_string_res(int x,int y,int xalign,int yalign,int rid,int ix,int col
  * (dx,dy) are the direction of shuffle. Opposite the direction you swung the snowglobe.
  */
 void dw_earthquake(int dx,int dy);
+
+int dw_sound_ok(int rid);
+#define egg_play_sound(rid) ({ if (dw_sound_ok(rid)) egg_play_sound(rid); })
 
 #endif

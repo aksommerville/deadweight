@@ -115,6 +115,8 @@ static void _bug_update(struct sprite *sprite,double elapsed) {
 }
 
 static int _bug_hurt(struct sprite *sprite,struct sprite *assailant) {
+  if (assailant->type==&sprite_type_bubble) return 0;
+  egg_play_sound(RID_sound_hurt_monster);
   sprite->defunct=1;
   sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x05000000);
   spawn_prize(sprite->x,sprite->y);

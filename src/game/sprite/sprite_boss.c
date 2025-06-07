@@ -72,7 +72,6 @@ static void boss_on_death(int k,int v,void *userdata) {
 static int _boss_init(struct sprite *sprite) {
 
   if (store_get(NS_fld_boss_dead)) {
-    fprintf(stderr,"Boss is dead.\n");
     sprite->defunct=1;
     return 0;
   }
@@ -483,12 +482,26 @@ static void boss_spawn_princess() {
   }
 }
 
+/* When we die, quietly eliminate any in-flight fireballs.
+ */
+ 
+static void boss_kill_fireballs() {
+  int i=g.spritec;
+  while (i-->0) {
+    struct sprite *sprite=g.spritev[i];
+    if (sprite->type==&sprite_type_missile) {
+      sprite->defunct=1;
+    }
+  }
+}
+
 /* Hurt.
  */
  
 static int _boss_hurt(struct sprite *sprite,struct sprite *assailant) {
   if (assailant->type==&sprite_type_bubble) return 0;
   if (SPRITE->hurtclock>0.0) return 0;
+  egg_play_sound(RID_sound_hurt_boss);
   SPRITE->hurtclock=BOSS_HURT_TIME;
   if (--(SPRITE->hp)<=0) {
     if (SPRITE->form==BOSS_FORM_SNAKE) {
@@ -496,7 +509,7 @@ static int _boss_hurt(struct sprite *sprite,struct sprite *assailant) {
       sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x05000000);
       store_set(NS_fld_boss_dead,1);
       boss_spawn_princess();
-      // TODO Cutscene?
+      boss_kill_fireballs();
     } else {
       SPRITE->form--;
       SPRITE->hp=BOSS_HP;

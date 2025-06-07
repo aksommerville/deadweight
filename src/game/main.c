@@ -88,3 +88,23 @@ void dw_draw_string(int x,int y,const char *src,int srcc,int colorp) {
   graf_draw_tile_buffer(&g.graf,g.texid_tilefont,x,y,(void*)src,srcc,1,srcc);
   graf_set_tint(&g.graf,0);
 }
+
+// Prevent the same sound from playing too close to itself (eg killing multiple monsters at once.
+int dw_sound_ok(int rid) {
+  double now=egg_time_real();
+  struct recent_sound *oldest=g.recent_soundv;
+  struct recent_sound *q=g.recent_soundv;
+  int i=RECENT_SOUND_LIMIT,got=0;
+  for (;i-->0;q++) {
+    if (q->when<oldest->when) oldest=q;
+    if (q->rid!=rid) continue;
+    if (q->when>now-0.050) return 0;
+    q->when=now;
+    got=1;
+  }
+  if (!got) {
+    oldest->when=now;
+    oldest->rid=rid;
+  }
+  return 1;
+}

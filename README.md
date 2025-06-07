@@ -29,6 +29,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] Modals.
 - - [ ] Game over. Success only. Game will not be loseable.
 - [ ] 3 side quests.
+- [ ] Switch to turn off the knives, south of frontdoor, so you don't have to do that first loop more than once.
 - [ ] NPCs with helpful dialogue.
 - [ ] Proper graphics.
 - [ ] Earthquake something off the edge, it stops responding, good. But you should be able to earthquake it back toward the action, at least.
@@ -36,13 +37,19 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [ ] '' opening treadle (etc) locks.
 - [ ] Decorative snow during a snowglobe earthquake? Might be conspicuously nes-implausible.
 - [ ] Consider simplifying explosion and pepper-fire; they are both pretty obviously not possible for NES.
-- [ ] Sound effects.
+- [x] Sound effects.
+- - [x] Injure hero.
+- - [x] Injure princess.
+- - [x] Injure boss.
+- - [x] Injure monster.
+- - [x] Stopwatch, ongoing.
 - [ ] Music.
 - - `we_need_norris`: Play, after boss.
 - - `dead_weight`: Finale.
 - - `tickled_pink`: Hello.
 - - [ ] Play, before boss.
 - - [ ] Boss fight.
+- [x] Boss: Kill fireballs when he dies.
 - [ ] Prevent monsters from triggering treadles by accident. Keep it possible when deliberate, eg with wand.
 - [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.
@@ -58,7 +65,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] 2025-05-31 EOD   S Hero, Princess, transitions, dialogue.
 - [x] 2025-06-01 EOD   U Sprites and items.
 - [x] 2025-06-06 EOD   F Rough world layout.
-- [ ] 2025-06-07 EOD   S Sound effects.
+- [x] 2025-06-07 EOD   S Sound effects.
 - [ ] 2025-06-08 EOD   U Music, final graphics.
 - [ ] 2025-06-13 EOD   F Polished and ready to go.
 - [ ] 2025-06-14 EOD   S '' panic if not.

@@ -161,6 +161,7 @@ static void _hero_update(struct sprite *sprite,double elapsed) {
 static int _hero_hurt(struct sprite *sprite,struct sprite *assailant) {
   if (SPRITE->respawn_cooldown>0.0) return 0;
   if (assailant->type==&sprite_type_ssflame) return 0; // Pepper doesn't hurt us, we like it spicy.
+  egg_play_sound(RID_sound_hurt_hero);
   sprite->defunct=1; // Framework manages soulballs and respawn.
   hero_item_end(sprite);
   store_set(NS_fld_death_count,store_get(NS_fld_death_count)+1);

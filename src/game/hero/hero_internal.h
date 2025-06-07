@@ -19,6 +19,7 @@ struct sprite_hero {
   int pvinput; // We can miss inputs due to modals. If this doesn't match (g.pvinput), force an update.
   uint8_t snowglobe; // 0=neutral, or 0x40,0x10,0x08,0x02=N,W,E,S
   double respawn_cooldown;
+  double stopwatch_clock; // For regulating the ticking sound effect.
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)

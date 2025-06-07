@@ -150,7 +150,7 @@ static void pause_new_game(struct modal *modal) {
 static void pause_activate(struct modal *modal) {
   switch (MODAL->labelp) {
     case 0: case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: pause_pick_item(modal,NS_fld_got_broom+MODAL->labelp); break;
-    case 9: modal->defunct=1; break;
+    case 9: pause_dismiss(modal); break;
     case 10: pause_main_menu(modal); break;
     case 11: pause_new_game(modal); break;
   }

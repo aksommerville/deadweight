@@ -114,12 +114,20 @@ static void hero_broom_end(struct sprite *sprite) {
  
 static void hero_stopwatch_begin(struct sprite *sprite) {
   SPRITE->using_item=NS_fld_got_stopwatch;
+  SPRITE->stopwatch_clock=0.0;
   g.time_stopped=1;
 }
 
 static void hero_stopwatch_end(struct sprite *sprite) {
   SPRITE->using_item=0;
   g.time_stopped=0;
+}
+
+static void hero_stopwatch_update(struct sprite *sprite,double elapsed) {
+  if ((SPRITE->stopwatch_clock-=elapsed)<0.0) {
+    SPRITE->stopwatch_clock+=0.500;
+    egg_play_sound(RID_sound_stopwatch);
+  }
 }
 
 /* Camera: Entirely defer to modal_camera.
@@ -327,6 +335,7 @@ void hero_item_end(struct sprite *sprite) {
  
 void hero_item_update(struct sprite *sprite,double elapsed) {
   switch (SPRITE->using_item) {
+    case NS_fld_got_stopwatch: hero_stopwatch_update(sprite,elapsed); break;
     case NS_fld_got_snowglobe: hero_snowglobe_update(sprite,elapsed); break;
     case NS_fld_got_wand: hero_wand_update(sprite,elapsed); break;
   }

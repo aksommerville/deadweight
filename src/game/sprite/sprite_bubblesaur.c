@@ -111,6 +111,7 @@ static void _bubblesaur_render(struct sprite *sprite,int x,int y) {
 }
 
 static int _bubblesaur_hurt(struct sprite *sprite,struct sprite *assailant) {
+  egg_play_sound(RID_sound_hurt_monster);
   sprite->defunct=1;
   sprite_spawn(sprite->x,sprite->y,0,&sprite_type_soulballs,0x05000000);
   spawn_prize(sprite->x,sprite->y);
