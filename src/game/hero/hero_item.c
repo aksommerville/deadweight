@@ -96,6 +96,11 @@ static void hero_broom_end(struct sprite *sprite) {
   }
   sprite->airborne=0;
   SPRITE->using_item=0;
+  if (SPRITE->indy&&!SPRITE->indx) {
+    SPRITE->facedx=0;
+    if (SPRITE->indy<0) SPRITE->facedy=-1;
+    else SPRITE->facedy=1;
+  }
 }
 
 /* Stopwatch.

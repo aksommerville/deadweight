@@ -21,11 +21,6 @@ Actions like Full Moon: (A) to use, (B) to choose.
 One thing equipped at a time.
 Some items will have a count: Pepper, Bomb, Candy.
 
-## TODO
-
-- [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.
-- [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.
-
 ## Agenda
 
 - [x] 2025-05-30T07:00 F Jam begins.
