@@ -23,25 +23,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 ## TODO
 
-- [x] !!! A pepper is mysteriously appearing above my head. Seems only to happen in web.
-- - Happens when if light the pepperfire while the "just picked up" indicator is flashing. The pepper or candy left behind behaves as a prize.
-- - Can't reproduce native.
-- - sprite_prize.c: (got>0.0) is the condition for displaying flashy, and then (got<0.0) to destroy. If it strikes zero, weirdness ensues.
-
-- [x] Need some dialogue from the King, even if we're not doing NPCs generally.
-- - I prefer that it be fully "pull", not an obligatory cutscene.
-- [ ] `embark_at_sunrise` could bear more variety, give it another go.
-- [x] Pre-boss-fight cutscene?
-- [x] Post-boss-fight cutscene? ...NO
-- [x] NPCs with helpful dialogue.
-- [x] Proper graphics.
-- - Keep the existing graphics, I like it.
-- - Decorate the world until we run out of tilesheet.
-- - ...about 3 rows still empty, but i'm feeling done.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.
 - [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.
-- [x] Errata.
-- - [x] Itch page.
 
 ## Agenda
 
@@ -52,7 +35,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] 2025-06-06 EOD   F Rough world layout.
 - [x] 2025-06-07 EOD   S Sound effects.
 - [x] 2025-06-08 EOD   U Music, final graphics.
-- [ ] 2025-06-13 EOD   F Polished and ready to go.
-- [ ] 2025-06-14 EOD   S '' panic if not.
+- [x] 2025-06-13 EOD   F Polished and ready to go.
+- [x] 2025-06-14 EOD   S '' panic if not.
 - [ ] 2025-06-15 EOD   U Have everything finished and submitted.
 - [ ] 2025-06-16T07:00 M Jam ends.
