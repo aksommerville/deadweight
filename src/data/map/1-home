@@ -18,3 +18,6 @@ location 3 5
 sprite @6,9 sprite:hero 0x00000000
 sprite @6,6 sprite:king 0x00000000
 sprite @10,6 sprite:endprincess 0x00000000
+field (u16:fld)kingdlg 0x0000
+pushaction @6,6 (u16:fld)kingdlg
+pushaction @5,6 (u16:fld)kingdlg

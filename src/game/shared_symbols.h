@@ -16,6 +16,7 @@
 #define CMD_map_stompbox    0x42 /* u8:x u8:y u16:fld */
 #define CMD_map_switchable  0x43 /* u8:x u8:y u16:fld */
 #define CMD_map_bombable    0x44 /* u8:x u8:y u16:fld */
+#define CMD_map_pushaction  0x45 /* u8:x u8:y u16:fld ; Sets field to 1 when you press into it, presumably solid. */
 #define CMD_map_sprite      0x61 /* u16:pos u16:spriteid u32:reserved */
 #define CMD_map_door        0x62 /* u16:pos u16:mapid u16:dstpos u16:reserved */
 #define CMD_map_switchable6 0x63 /* u16:pos u8:fld *6 */
@@ -139,6 +140,7 @@
 #define NS_fld_sq3b             42
 #define NS_fld_sq3c             43
 #define NS_fld_win              44 /* Goes true when the princess returns to her throne. Game is over, just winding down now. */
-#define FLD_COUNT               45
+#define NS_fld_kingdlg          45 /* Set 1 to trigger dialogue; sets itself back to zero. */
+#define FLD_COUNT               46
 
 #endif

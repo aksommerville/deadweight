@@ -313,6 +313,7 @@ int enter_map(int rid,int transition) {
       case CMD_map_stompbox:
       case CMD_map_switchable:
       case CMD_map_switchable6:
+      case CMD_map_pushaction:
       case CMD_map_bombable: {
           if (g.poic<POI_LIMIT) {
             struct poi *poi=g.poiv+g.poic++;

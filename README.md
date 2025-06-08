@@ -28,6 +28,9 @@ Some items will have a count: Pepper, Bomb, Candy.
 - - Can't reproduce native.
 - - sprite_prize.c: (got>0.0) is the condition for displaying flashy, and then (got<0.0) to destroy. If it strikes zero, weirdness ensues.
 
+- [x] Need some dialogue from the King, even if we're not doing NPCs generally.
+- - I prefer that it be fully "pull", not an obligatory cutscene.
+- [ ] `embark_at_sunrise` could bear more variety, give it another go.
 - [ ] Pre-boss-fight cutscene?
 - [ ] Post-boss-fight cutscene?
 - [ ] NPCs with helpful dialogue.

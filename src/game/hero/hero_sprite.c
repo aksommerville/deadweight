@@ -29,6 +29,38 @@ static void hero_choose(struct sprite *sprite) {
   g.input_blackout|=EGG_BTN_WEST;
 }
 
+/* pushaction
+ */
+
+static void hero_reset_pushaction(struct sprite *sprite) {
+  SPRITE->pushx=SPRITE->pushy=0xff;
+}
+ 
+static void hero_check_pushaction(struct sprite *sprite) {
+  // These can only trigger when you're indicating a cardinal direction.
+  if (SPRITE->indx&&SPRITE->indy) {
+    hero_reset_pushaction(sprite);
+  } else if (!SPRITE->indx&&!SPRITE->indy) {
+    hero_reset_pushaction(sprite);
+  } else {
+    int x=((int)sprite->x)+SPRITE->indx;
+    int y=((int)sprite->y)+SPRITE->indy;
+    if ((x==SPRITE->pushx)&&(y==SPRITE->pushy)) return;
+    const struct poi *poi=g.poiv;
+    int i=g.poic;
+    for (;i-->0;poi++) {
+      if (poi->opcode!=CMD_map_pushaction) continue;
+      if ((poi->x!=x)||(poi->y!=y)) continue;
+      SPRITE->pushx=x;
+      SPRITE->pushy=y;
+      int k=(poi->argv[2]<<8)|poi->argv[3];
+      store_set(k,1);
+      return;
+    }
+    hero_reset_pushaction(sprite);
+  }
+}
+
 /* Walking.
  */
  
@@ -56,7 +88,13 @@ static void hero_walk_update(struct sprite *sprite,double elapsed) {
   if (SPRITE->walking) {
     double speed=HERO_WALK_SPEED;
     if (SPRITE->using_item==NS_fld_got_broom) speed=HERO_BROOM_SPEED;
-    sprite_move(sprite,speed*SPRITE->indx*elapsed,speed*SPRITE->indy*elapsed);
+    if (sprite_move(sprite,speed*SPRITE->indx*elapsed,speed*SPRITE->indy*elapsed)<2) {
+      hero_check_pushaction(sprite);
+    } else {
+      hero_reset_pushaction(sprite);
+    }
+  } else {
+    hero_reset_pushaction(sprite);
   }
 }
 

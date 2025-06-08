@@ -20,6 +20,7 @@ struct sprite_hero {
   uint8_t snowglobe; // 0=neutral, or 0x40,0x10,0x08,0x02=N,W,E,S
   double respawn_cooldown;
   double stopwatch_clock; // For regulating the ticking sound effect.
+  uint8_t pushx,pushy; // For tracking pushaction.
 };
 
 #define SPRITE ((struct sprite_hero*)sprite)
