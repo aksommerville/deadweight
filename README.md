@@ -34,13 +34,14 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Pre-boss-fight cutscene?
 - [x] Post-boss-fight cutscene? ...NO
 - [x] NPCs with helpful dialogue.
-- [ ] Proper graphics.
+- [x] Proper graphics.
 - - Keep the existing graphics, I like it.
 - - Decorate the world until we run out of tilesheet.
+- - ...about 3 rows still empty, but i'm feeling done.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.
 - [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.
-- [ ] Errata.
-- - [ ] Itch page.
+- [x] Errata.
+- - [x] Itch page.
 
 ## Agenda
 
@@ -50,7 +51,7 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] 2025-06-01 EOD   U Sprites and items.
 - [x] 2025-06-06 EOD   F Rough world layout.
 - [x] 2025-06-07 EOD   S Sound effects.
-- [ ] 2025-06-08 EOD   U Music, final graphics.
+- [x] 2025-06-08 EOD   U Music, final graphics.
 - [ ] 2025-06-13 EOD   F Polished and ready to go.
 - [ ] 2025-06-14 EOD   S '' panic if not.
 - [ ] 2025-06-15 EOD   U Have everything finished and submitted.
