@@ -20,3 +20,4 @@ sprite @2,5 sprite:tank 0x00000000
 sprite @8,7 sprite:tank 0x00000000
 sprite @5,4 sprite:tank 0x00000000
 sprite @13,10 sprite:tank 0x00000000
+sprite @12,5 sprite:bluerobe 34 0x000000
