@@ -143,6 +143,7 @@
 #define NS_fld_sq3c             43
 #define NS_fld_win              44 /* Goes true when the princess returns to her throne. Game is over, just winding down now. */
 #define NS_fld_kingdlg          45 /* Set 1 to trigger dialogue; sets itself back to zero. */
-#define FLD_COUNT               46
+#define NS_fld_boss_cutscene    46 /* Goes 1 when we show the cutscene; it only happens once. */
+#define FLD_COUNT               47
 
 #endif

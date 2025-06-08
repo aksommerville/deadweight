@@ -31,8 +31,8 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] Need some dialogue from the King, even if we're not doing NPCs generally.
 - - I prefer that it be fully "pull", not an obligatory cutscene.
 - [ ] `embark_at_sunrise` could bear more variety, give it another go.
-- [ ] Pre-boss-fight cutscene?
-- [ ] Post-boss-fight cutscene?
+- [x] Pre-boss-fight cutscene?
+- [x] Post-boss-fight cutscene? ...NO
 - [x] NPCs with helpful dialogue.
 - [ ] Proper graphics.
 - - Keep the existing graphics, I like it.

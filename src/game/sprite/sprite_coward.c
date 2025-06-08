@@ -47,6 +47,10 @@ static int coward_check_dialogue(struct sprite *sprite) {
 
 static void _coward_update(struct sprite *sprite,double elapsed) {
   if (all_monsters_dead()) {
+    if (g.hero) {
+      if (g.hero->x>sprite->x) sprite->xform=EGG_XFORM_XREV;
+      else sprite->xform=0;
+    }
     sprite->tileid=SPRITE->tileid0;
     sprite->y=SPRITE->y0;
     if (coward_check_dialogue(sprite)) {

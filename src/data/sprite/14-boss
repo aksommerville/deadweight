@@ -1,5 +1,5 @@
 sprtype (u16:sprtype)boss
 image image:sprites
 tile 0xb0 0
-monster
+# boss MUST NOT have "monster", i know it's illogical. his dead states get tracked separately.
 solid

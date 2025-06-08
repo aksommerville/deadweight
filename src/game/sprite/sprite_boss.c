@@ -338,6 +338,14 @@ static void _boss_update(struct sprite *sprite,double elapsed) {
     SPRITE->cooldown-=elapsed;
     return;
   }
+  
+  // Wait for the initial cooldown, then if it's our first appearance, show the cutscene.
+  if (!store_get(NS_fld_boss_cutscene)) {
+    store_set(NS_fld_boss_cutscene,1);
+    modal_new_boss();
+    return;
+  }
+  
   if ((SPRITE->animclock-=elapsed)<0.0) {
     SPRITE->animclock+=0.200;
     if (++(SPRITE->animframe)>=2) SPRITE->animframe=0;

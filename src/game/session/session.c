@@ -130,7 +130,7 @@ int session_reset() {
     store_set(NS_fld_qty_bomb,22);
     store_set(NS_fld_qty_candy,9);
     store_set(NS_fld_equipped,NS_fld_got_broom);
-    store_set(NS_fld_boss_dead,1);
+    //store_set(NS_fld_boss_dead,1);
     store_set(NS_fld_knivesoff,1);
     store_set(NS_fld_shortcut1,1);
     store_set(NS_fld_bombctr,1);
@@ -346,7 +346,9 @@ int enter_map(int rid,int transition) {
           struct sprite *sprite=sprite_spawn(x+0.5,y+0.5,rid,0,arg);
           if (sprite&&sprite->monster) {
             g.monsters_present=1; // Setting this, and causing it to record again, even if it's already cleared.
-            if (staydead) sprite->defunct=1;
+            if (staydead) {
+              sprite->defunct=1;
+            }
           }
         } break;
       case CMD_map_field: {
