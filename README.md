@@ -23,19 +23,17 @@ Some items will have a count: Pepper, Bomb, Candy.
 
 ## TODO
 
+- [x] !!! A pepper is mysteriously appearing above my head. Seems only to happen in web.
+- - Happens when if light the pepperfire while the "just picked up" indicator is flashing. The pepper or candy left behind behaves as a prize.
+- - Can't reproduce native.
+- - sprite_prize.c: (got>0.0) is the condition for displaying flashy, and then (got<0.0) to destroy. If it strikes zero, weirdness ensues.
+
 - [ ] Pre-boss-fight cutscene?
 - [ ] Post-boss-fight cutscene?
-- [x] Modals.
-- - [x] Game over. Success only. Game will not be loseable.
 - [ ] NPCs with helpful dialogue.
 - [ ] Proper graphics.
-- [x] Prevent monsters from triggering treadles by accident. Keep it possible when deliberate, eg with wand.
-- - Doesn't matter. There's only one place where it can happen, and that lock is already leaky, no big deal.
-- [ ] Game over: Trigger when entering throne room with the princess.
 - [ ] Sometimes face direction doesn't update after dropping the broom. Usually happens to me at the map right after acquiring broom.
 - [ ] There's a bug somewhere in collision detection that lets you pass thru solid sprites sometimes when also colliding against the map. Ignoring it for now.
-- [x] Interrupted transitions snap complete before proceeding (eg enter a neighbor map and quickly change your mind). Is it feasible to start partway thru in those cases?
-- - Not worth the effort.
 - [ ] Errata.
 - - [ ] Itch page.
 
