@@ -130,7 +130,7 @@ int session_reset() {
     store_set(NS_fld_qty_bomb,22);
     store_set(NS_fld_qty_candy,9);
     store_set(NS_fld_equipped,NS_fld_got_broom);
-    //store_set(NS_fld_boss_dead,1);
+    store_set(NS_fld_boss_dead,1);
     store_set(NS_fld_knivesoff,1);
     store_set(NS_fld_shortcut1,1);
     store_set(NS_fld_bombctr,1);
@@ -284,6 +284,7 @@ static void staydead_record_if_applicable() {
 int enter_map(int rid,int transition) {
 
   staydead_record_if_applicable();
+  g.mapchangeseq++;
 
   struct map *map=map_by_id(rid);
   if (!map) return -1;

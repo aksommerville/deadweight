@@ -23,7 +23,7 @@ struct modal_play {
     int scratch;
   } qstepv[PLAY_QSTEP_LIMIT];
   int qstepc;
-  int qstep_mapid;
+  int qstep_mapid; // actually (g.mapchangeseq), not the id
   uint8_t qonv[PLAY_QSTEP_LIMIT];
   int qonc;
 };
@@ -250,10 +250,10 @@ static void play_update_quantized_motion(struct modal *modal) {
   
   // If mapid changed, drop all steps. State changes due to the dropped steps are not our problem.
   if (!g.map) return;
-  if (g.map->rid!=MODAL->qstep_mapid) {
+  if (g.mapchangeseq!=MODAL->qstep_mapid) {
     MODAL->qonc=0;
     MODAL->qstepc=0;
-    MODAL->qstep_mapid=g.map->rid;
+    MODAL->qstep_mapid=g.mapchangeseq;
   }
   
   // It's perfectly reasonable for a map to have no POI. Don't bother tracking quantized motion in those cases.

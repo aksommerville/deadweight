@@ -32,5 +32,11 @@ Some items will have a count: Pepper, Bomb, Candy.
 - [x] 2025-06-08 EOD   U Music, final graphics.
 - [x] 2025-06-13 EOD   F Polished and ready to go.
 - [x] 2025-06-14 EOD   S '' panic if not.
-- [ ] 2025-06-15 EOD   U Have everything finished and submitted.
-- [ ] 2025-06-16T07:00 M Jam ends.
+- [x] 2025-06-15 EOD   U Have everything finished and submitted.
+- [x] 2025-06-16T07:00 M Jam ends.
+
+## TODO
+
+- [x] Should be able to trigger twopass gates by leaving the princess on one and cameraing to the other.
+- - See video by ecaroh.games on our NES Jam submission page -- the princess's switch turns off when you teleport!
+- [x] Return to throne with Princess afield. She's on her throne but shouldn't be.

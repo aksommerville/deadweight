@@ -74,12 +74,19 @@ static int princess_find_valid_row(int col,int row) {
  
 static struct sprite *princess_get_target(struct sprite *sprite) {
   if (g.map->rid==RID_map_home) { // little optimization, we know 'endprincess' is only used on that one map.
-    int i=g.spritec;
-    while (i-->0) {
-      struct sprite *target=g.spritev[i];
-      if (target->defunct) continue;
-      if (target->type!=&sprite_type_endprincess) continue;
-      return target;
+  
+    const double margin=5.0;
+    if ((sprite->x<-margin)||(sprite->y<-margin)||(sprite->x>NS_sys_mapw+margin)||(sprite->y>NS_sys_maph+margin)) {
+      // If we're far offscreen, forget it.
+      // This is super important! If you leave the princess behind, you can't just walk into the throne room and she pops into existence there!
+    } else {
+      int i=g.spritec;
+      while (i-->0) {
+        struct sprite *target=g.spritev[i];
+        if (target->defunct) continue;
+        if (target->type!=&sprite_type_endprincess) continue;
+        return target;
+      }
     }
   }
   return g.hero;

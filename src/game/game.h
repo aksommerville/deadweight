@@ -89,6 +89,7 @@ extern struct g {
   double playtime;
   int deadprincessc;
   int deadmonsterc;
+  int mapchangeseq; // Increments every map change. So modal_play's quantized motion detector knows when we've "travelled" to the same room.
 
 // Room state:
   int transition;
