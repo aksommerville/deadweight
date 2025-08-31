@@ -44,7 +44,10 @@ void egg_client_update(double elapsed) {
   if ((input!=g.pvinput)||(input!=g.input)) {
     g.pvinput=g.input;
     g.input=input;
-    if ((g.input&EGG_BTN_AUX3)&&!(g.pvinput&EGG_BTN_AUX3)) {
+    if (
+      ((g.input&EGG_BTN_AUX3)&&!(g.pvinput&EGG_BTN_AUX3))||
+      ((g.input&EGG_BTN_AUX2)&&!(g.pvinput&EGG_BTN_AUX2))
+    ) {
       egg_terminate(0);
       return;
     }
