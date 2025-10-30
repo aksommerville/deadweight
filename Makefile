@@ -3,6 +3,8 @@ all:
 .SECONDARY:
 PRECMD=echo "  $@" ; mkdir -p "$(@D)" ;
 
+export EGG_SDK:=../egg
+
 ifneq (,$(strip $(filter clean,$(MAKECMDGOALS))))
 clean:;rm -rf mid out
 else

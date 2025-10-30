@@ -68,6 +68,7 @@ extern struct g {
   int input_blackout; // These bits must go false before core will report them true again.
   int framec;
   struct recent_sound { double when; int rid; } recent_soundv[RECENT_SOUND_LIMIT];
+  int bits; // (8,16). Configurable at menu, changes the tile and sprite textures.
   
 // Session state:
   struct map *map; // WEAK, owned by (g.mapv).

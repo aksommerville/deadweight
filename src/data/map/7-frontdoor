@@ -6,14 +6,14 @@
 22df9fcfafbe20231111111112009f10
 220100becfbe30313131313132ef0020
 321a1616161740416d6e4f4142ceae20
-423a36363637606455565f6162dfcf20
+423a36363637604155565f6162dfcf20
 6201bfcfaf9f9e9eaf00af00bebe9f20
 9e9fcfaf9ebebfafbfbeaeaeaf9fbe20
 9ebf9e9ecfcfcfcf9ebfbf009fcf9f20
 12debe9eafafae9ebf0000afcfae0020
 2202cfbf101111111111111111111124
 
-image image:tiles
+image image:tiles16
 location 8 6
 sprite @3,3 sprite:treasure (u8:fld)got_stopwatch 0x000000
 sprite @5,6 sprite:trap 0x00000000

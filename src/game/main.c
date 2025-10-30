@@ -16,11 +16,18 @@ int egg_client_init() {
   if (egg_get_rom(g.rom,g.romc)!=g.romc) return -1;
   strings_set_rom(g.rom,g.romc);
   
+  g.bits=16;
+  
   if (!(g.font=font_new())) return -1;
   if (font_add_image_resource(g.font,0x0020,RID_image_font9_0020)<0) return -1;
   if (egg_texture_load_image(g.texid_tilefont=egg_texture_new(),RID_image_tilefont)<0) return -1;
-  if (egg_texture_load_image(g.texid_tiles=egg_texture_new(),RID_image_tiles)<0) return -1;
-  if (egg_texture_load_image(g.texid_sprites=egg_texture_new(),RID_image_sprites)<0) return -1;
+  if (g.bits==8) {
+    if (egg_texture_load_image(g.texid_tiles=egg_texture_new(),RID_image_tiles)<0) return -1;
+    if (egg_texture_load_image(g.texid_sprites=egg_texture_new(),RID_image_sprites)<0) return -1;
+  } else {
+    if (egg_texture_load_image(g.texid_tiles=egg_texture_new(),RID_image_tiles16)<0) return -1;
+    if (egg_texture_load_image(g.texid_sprites=egg_texture_new(),RID_image_sprites16)<0) return -1;
+  }
   // Being a jam game, we'll try to keep all the map tiles in one image, and ditto all the sprite tiles.
   
   if (egg_texture_load_raw(g.transition_texid=egg_texture_new(),FBW,FBH,FBW<<2,0,0)<0) return -1;
