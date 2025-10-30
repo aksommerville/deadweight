@@ -262,7 +262,11 @@ static int _boss_init(struct modal *modal) {
   modal->opaque=1;
   modal->passive=0;
   
-  egg_texture_load_image(MODAL->texid=egg_texture_new(),RID_image_boss);
+  if (g.bits==8) {
+    egg_texture_load_image(MODAL->texid=egg_texture_new(),RID_image_boss);
+  } else {
+    egg_texture_load_image(MODAL->texid=egg_texture_new(),RID_image_boss16);
+  }
   
   boss_next_slide(modal);
   
